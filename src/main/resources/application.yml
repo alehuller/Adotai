@@ -1,3 +1,16 @@
 spring:
   application: 
     name: sistema-adocao-pets
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ongdoacoes
+    username: postgres 
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
