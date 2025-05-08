@@ -12,5 +12,3 @@ spring:
     show-sql: true
     properties:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-
-
