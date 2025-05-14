@@ -2,8 +2,19 @@ package br.com.alevh.sistema_adocao_pets.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
+import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
+import br.com.alevh.sistema_adocao_pets.data.vo.v1.UsuarioVO;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
@@ -15,8 +26,19 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public List<Usuario> findAll() {
-        return usuarioRepository.findAll();
+    private final PagedResourcesAssembler<UsuarioVO> assembler;
+
+    public PagedModel<EntityModel<UsuarioVO>> findAll(Pageable pageable) {
+
+        var usuarioPage = usuarioRepository.findAll(pageable);
+
+        var usuarioVosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioVO.class));
+        usuarioVosPage.map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharPorId(u.getKey())).withSelfRel()));
+
+        Link link = linkTo(methodOn(UsuarioController.class).listarUsuarios(pageable.getPageNumber(),
+                pageable.getPageSize(), "asc")).withSelfRel();
+        return assembler.toModel(usuarioVosPage, link);
+        // return usuarioRepository.findAll();
     }
 
     public Usuario create(Usuario user) {
@@ -32,6 +54,7 @@ public class UsuarioService {
     }
 
     public Usuario findById(Long id) {
-        return usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Usuário de id %d não encontrado", id)));
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Usuário de id %d não encontrado", id)));
     }
 }
