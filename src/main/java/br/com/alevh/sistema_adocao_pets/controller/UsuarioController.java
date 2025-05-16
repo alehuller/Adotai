@@ -1,6 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.data.domain.Pageable;

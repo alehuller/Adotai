@@ -1,5 +1,11 @@
 package br.com.alevh.sistema_adocao_pets.model;
-import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +18,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Entity
 @Table(name = "usuario")
-public class Usuario implements Serializable {
+public class Usuario implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -34,5 +40,20 @@ public class Usuario implements Serializable {
 
     @Column(name = "cpf", nullable = false, unique = true, length = 11)
     private String cpf;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+}
+
+    @Override
+    public String getPassword() {
+        return this.senha;    
+    }
+
+    @Override
+    public String getUsername() {
+        return this.nome;
+    }
 }
 

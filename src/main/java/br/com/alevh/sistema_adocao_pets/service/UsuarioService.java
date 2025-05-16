@@ -1,7 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;

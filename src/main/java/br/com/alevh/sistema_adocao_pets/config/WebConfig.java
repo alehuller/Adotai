@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        // Via HEADER PARAM. http://localhost:8080/api/person/v1
+        // Via HEADER PARAM. http://localhost:8080/api/usuario/v1
         configurer.favorParameter(false)
                 .ignoreAcceptHeader(false)
                 .useRegisteredExtensionsOnly(false)
