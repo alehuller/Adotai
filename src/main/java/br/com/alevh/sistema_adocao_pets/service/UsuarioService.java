@@ -5,6 +5,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -24,6 +25,8 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final PagedResourcesAssembler<UsuarioVO> assembler;
 
     public PagedModel<EntityModel<UsuarioVO>> findAll(Pageable pageable) {
@@ -40,7 +43,8 @@ public class UsuarioService {
     }
 
     public Usuario create(Usuario user) {
-        return usuarioRepository.save(user);
+        user.setSenha(passwordEncoder.encode(user.getSenha()));
+        return usuarioRepository.save(user); 
     }
 
     public void delete(Long id) {
