@@ -62,7 +62,7 @@ public class UsuarioController {
                 return ResponseEntity.ok(usuarioService.findAll(pageable));
         }
 
-        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/pesquisa", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Retorna o usuário de id especificado", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -74,7 +74,7 @@ public class UsuarioController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public Usuario acharPorId(@PathVariable Long id) {
+        public Usuario acharPorId(@RequestParam(value = "id") Long id) {
                 logger.info(String.format("Consultando usuário de id $d", id));
                 return usuarioService.findById(id);
         }
@@ -95,7 +95,7 @@ public class UsuarioController {
                 return usuarioService.create(user);
         }
 
-        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Apaga o usuário de id especificado", responses = {
                         @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -104,7 +104,7 @@ public class UsuarioController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public ResponseEntity<?> deletarPorId(@PathVariable(value = "id") Long id) {
+        public ResponseEntity<?> deletarPorId(@RequestParam(name = "id") Long id) {
                 logger.info(String.format("Apagando usuário de id %d", id));
                 usuarioService.delete(id);
                 return ResponseEntity.noContent().build();
