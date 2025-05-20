@@ -21,13 +21,13 @@ public class UserServices implements UserDetailsService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("Carregando usuário pelo nome: " + username);
-        var usuario = usuarioRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.info("Carregando usuário pelo email: " + email);
+        var usuario = usuarioRepository.findByUsername(email);
         if (usuario != null) {
             return usuario;
         } else {
-            throw new UsernameNotFoundException(String.format("%s não foi encontrado.", username));
+            throw new UsernameNotFoundException(String.format("%s não foi encontrado.", email));
         }
     }
 }
