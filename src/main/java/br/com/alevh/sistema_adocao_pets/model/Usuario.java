@@ -56,4 +56,3 @@ public class Usuario implements UserDetails {
         return this.email;
     }
 }
-

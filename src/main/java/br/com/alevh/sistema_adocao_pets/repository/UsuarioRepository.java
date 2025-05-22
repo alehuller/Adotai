@@ -11,5 +11,5 @@ import br.com.alevh.sistema_adocao_pets.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
         @Query("SELECT u FROM Usuario u WHERE u.email =:email")
-        Usuario findByUsername(@Param("email") String email);
+        Usuario findUsuarioByEmail(@Param("email") String email);
 }

@@ -25,13 +25,23 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/signin")
-    public ResponseEntity<TokenVO> login(@RequestBody AuthRequest authRequest) {
+    @PostMapping("/signin/usuario")
+    public ResponseEntity<TokenVO> loginUsuario(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
 
         TokenVO token = jwtTokenProvider.createAccessToken(authentication.getName(), List.of("ROLE_USER"));
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/signin/ong")
+    public ResponseEntity<TokenVO> loginOng(@RequestBody AuthRequest authRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+        );
+
+        TokenVO token = jwtTokenProvider.createAccessToken(authentication.getName(), List.of("ROLE_ONG"));
         return ResponseEntity.ok(token);
     }
 

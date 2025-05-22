@@ -59,5 +59,4 @@ public class OngService {
     public void delete(Long id) {
         ongRepository.deleteById(id);
     }
-
 }

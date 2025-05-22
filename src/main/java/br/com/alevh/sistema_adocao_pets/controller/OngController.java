@@ -24,7 +24,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -79,14 +78,14 @@ public class OngController {
     @PostMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML },
                 consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
     @Operation(summary = "Registra uma ong", responses = {
-                        @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ong.class))) /*mudar para VO */
-                        }),
-                        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Success", responseCode = "200", content = {
+                                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ong.class))) /*mudar para VO */
+                    }),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
-    public Ong criarOng(@RequestBody Ong ong) {
+    public Ong registrarOng(@RequestBody Ong ong) {
         return ongService.create(ong);
     }   
     
