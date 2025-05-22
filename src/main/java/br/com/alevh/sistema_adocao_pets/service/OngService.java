@@ -5,6 +5,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -24,6 +25,8 @@ public class OngService {
 
     private final OngRepository ongRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final PagedResourcesAssembler<OngVO> assembler;
 
     public PagedModel<EntityModel<OngVO>> findAll(Pageable pageable) {
@@ -31,7 +34,7 @@ public class OngService {
         var ongPage = ongRepository.findAll(pageable);
 
         var ongVosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngVO.class));
-        ongVosPage.map(o -> o.add(linkTo(methodOn(OngController.class).acharPorId(o.getKey())).withSelfRel()));
+        ongVosPage.map(o -> o.add(linkTo(methodOn(OngController.class).acharOngPorId(o.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(OngController.class).listarOngs(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
@@ -40,7 +43,21 @@ public class OngService {
 
     public Ong findById(Long id) {
         return ongRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Usuário com id %d não encontrado!", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ong com id %d não encontrado!", id)));
+    }
+
+    public Ong create(Ong ong) {
+        ong.setSenha(passwordEncoder.encode(ong.getSenha()));
+        return ongRepository.save(ong);
+    }
+
+    public Ong update(Ong ong) {
+        ong.setSenha(passwordEncoder.encode(ong.getSenha()));
+        return ongRepository.save(ong);
+    }
+
+    public void delete(Long id) {
+        ongRepository.deleteById(id);
     }
 
 }
