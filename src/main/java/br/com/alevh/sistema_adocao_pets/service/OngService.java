@@ -13,6 +13,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.vo.v1.OngVO;
+import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
@@ -41,19 +42,47 @@ public class OngService {
         return assembler.toModel(ongVosPage, link);
     }
 
-    public Ong findById(Long id) {
-        return ongRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ong com id %d não encontrado!", id)));
+    public OngVO findById(Long id) {
+        
+        var entity = ongRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+
+        var vo = DozerMapper.parseObject(entity, OngVO.class);
+        vo.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
+        return vo;
+
     }
 
-    public Ong create(Ong ong) {
+    public OngVO create(OngVO ong) {
+        
+        if(ong == null) throw new RequiredObjectIsNullException();
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
-        return ongRepository.save(ong);
+        var entity = DozerMapper.parseObject(ong, Ong.class);
+        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngVO.class);
+        vo.add(linkTo(methodOn(OngController.class).acharOngPorId(vo.getKey())).withSelfRel());
+        return vo;
     }
 
-    public Ong update(Ong ong) {
+    public OngVO update(OngVO ong) {
+        
+        if(ong == null) throw new RequiredObjectIsNullException();
+
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
-        return ongRepository.save(ong);
+        
+        var entity = ongRepository.findById(ong.getKey())
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+
+        entity.setNome(ong.getNome());
+        entity.setEmail(ong.getEmail());
+        entity.setSenha(ong.getSenha());
+        entity.setEndereco(ong.getEndereco());
+        entity.setTelefone(ong.getTelefone());
+        entity.setCnpj(ong.getCnpj());
+        entity.setResponsavel(ong.getResponsavel());
+
+        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngVO.class);
+        vo.add(linkTo(methodOn(OngController.class).acharOngPorId(vo.getKey())).withSelfRel());
+        return vo;
     }
 
     public void delete(Long id) {

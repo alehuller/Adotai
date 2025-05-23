@@ -63,7 +63,7 @@ public class OngController {
     @GetMapping(value = "/pesquisa", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
     @Operation(summary = "Retorna a ONG de id especificado", responses = {
                    @ApiResponse(description = "Success", responseCode = "200", content = {
-                                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ong.class)))
+                                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OngVO.class)))
                    }),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -71,7 +71,7 @@ public class OngController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     })
-    public Ong acharOngPorId(@RequestParam(value = "id") Long id) {
+    public OngVO acharOngPorId(@RequestParam(value = "id") Long id) {
         return ongService.findById(id);
     }
 
@@ -79,13 +79,13 @@ public class OngController {
                 consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
     @Operation(summary = "Registra uma ong", responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = {
-                                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ong.class))) /*mudar para VO */
+                                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OngVO.class))) /*mudar para VO */
                     }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
-    public Ong registrarOng(@RequestBody Ong ong) {
+    public OngVO registrarOng(@RequestBody OngVO ong) {
         return ongService.create(ong);
     }   
     
@@ -93,13 +93,13 @@ public class OngController {
                 consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
     @Operation(summary = "Atualiza a ong", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ong.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OngVO.class))) /*mudar para VO */
                         }),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
-    public Ong atualizarOng(@RequestBody Ong ong) {
+    public OngVO atualizarOng(@RequestBody OngVO ong) {
         return ongService.update(ong);
     }  
     

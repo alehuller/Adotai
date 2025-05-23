@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
@@ -22,7 +21,6 @@ import lombok.Setter;
 public class OngVO extends RepresentationModel<OngVO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    @JsonIgnore
     @JsonProperty("idOng")
     @Mapping("idOng")
     private Long key;
@@ -31,7 +29,6 @@ public class OngVO extends RepresentationModel<OngVO> implements Serializable{
 
     private String email;
 
-    @JsonIgnore
     private String senha;
 
     private String endereco;
