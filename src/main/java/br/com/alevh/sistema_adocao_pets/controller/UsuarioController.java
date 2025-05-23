@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevh.sistema_adocao_pets.data.vo.v1.UsuarioVO;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.service.UsuarioService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,7 +64,7 @@ public class UsuarioController {
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Retorna o usuário de id especificado", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Usuario.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioVO.class))) /*mudar para VO */
                         }),
                         @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -73,7 +72,7 @@ public class UsuarioController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public Usuario acharPorId(@RequestParam(value = "id") Long id) {
+        public UsuarioVO acharPorId(@RequestParam(value = "id") Long id) {
                 logger.info(String.format("Consultando usuário de id $d", id));
                 return usuarioService.findById(id);
         }
@@ -83,13 +82,13 @@ public class UsuarioController {
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Registra um usuário", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Usuario.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioVO.class))) /*mudar para VO */
                         }),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public Usuario registrarUsuario(@RequestBody Usuario user) {
+        public UsuarioVO registrarUsuario(@RequestBody UsuarioVO user) {
                 logger.info("Criando um usuário");
                 return usuarioService.create(user);
         }
@@ -114,14 +113,14 @@ public class UsuarioController {
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Atualiza o usuário", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Usuario.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioVO.class))) /*mudar para VO */
                         }),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public Usuario atualizarUsuario(@RequestBody Usuario usuario) {
+        public UsuarioVO atualizarUsuario(@RequestBody UsuarioVO usuario) {
                 logger.info(String.format("Atualizando usuário de nome %s", usuario.getNome()));
                 return usuarioService.update(usuario);
         }

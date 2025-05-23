@@ -23,17 +23,6 @@ public class UserServices implements UserDetailsService{
         this.ongRepository = ongRepository;
     }
 
-    // @Override
-    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    //     logger.info("Carregando usuário pelo email: " + email);
-    //     var usuario = usuarioRepository.findUsuarioByEmail(email);
-    //     if (usuario != null) {
-    //         return usuario;
-    //     } else {
-    //         throw new UsernameNotFoundException(String.format("%s não foi encontrado.", email));
-    //     }
-    // }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         logger.info("Carregando usuário pelo email: " + email);

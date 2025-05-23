@@ -14,6 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.vo.v1.UsuarioVO;
+import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
@@ -42,22 +43,45 @@ public class UsuarioService {
         // return usuarioRepository.findAll();
     }
 
-    public Usuario create(Usuario user) {
-        user.setSenha(passwordEncoder.encode(user.getSenha()));
-        return usuarioRepository.save(user); 
+    public UsuarioVO create(UsuarioVO usuario) {
+        
+        if(usuario == null) throw new RequiredObjectIsNullException();
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        var entity = DozerMapper.parseObject(usuario, Usuario.class);
+        var vo = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioVO.class);
+        vo.add(linkTo(methodOn(UsuarioController.class).acharPorId(vo.getKey())).withSelfRel());
+        return vo;
     }
 
     public void delete(Long id) {
         usuarioRepository.deleteById(id);
     }
 
-    public Usuario update(Usuario usuario) {
+    public UsuarioVO update(UsuarioVO usuario) { 
+        
+        if(usuario == null) throw new RequiredObjectIsNullException();
+
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        return usuarioRepository.save(usuario);
+        
+        var entity = usuarioRepository.findById(usuario.getKey()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        entity.setNome(usuario.getNome());
+        entity.setEmail(usuario.getEmail());
+        entity.setSenha(usuario.getSenha());
+        entity.setCell(usuario.getCell());
+        entity.setCpf(usuario.getCpf());
+
+        var vo = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioVO.class);
+        vo.add(linkTo(methodOn(UsuarioController.class).acharPorId(vo.getKey())).withSelfRel());
+        return vo;
     }
 
-    public Usuario findById(Long id) {
-        return usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Usuário de id %d não encontrado", id)));
+    public UsuarioVO findById(Long id) {
+
+        var entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        var vo = DozerMapper.parseObject(entity, UsuarioVO.class);
+        vo.add(linkTo(methodOn(UsuarioController.class).acharPorId(id)).withSelfRel());
+        return vo;
     }
 }
