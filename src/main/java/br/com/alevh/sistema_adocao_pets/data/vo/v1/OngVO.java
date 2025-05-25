@@ -29,6 +29,7 @@ public class OngVO extends RepresentationModel<OngVO> implements Serializable{
 
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
     private String endereco;
