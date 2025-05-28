@@ -1,5 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -32,24 +33,24 @@ public class OngService {
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
         
-        var ongPage = ongRepository.findAll(pageable);
+        Page<Ong> ongPage = ongRepository.findAll(pageable);
 
-        var ongVosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngDTO.class));
-        ongVosPage.map(o -> o.add(linkTo(methodOn(OngController.class).acharOngPorId(o.getKey())).withSelfRel()));
+        Page<OngDTO> ongDtosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngDTO.class));
+        ongDtosPage.map(o -> o.add(linkTo(methodOn(OngController.class).acharOngPorId(o.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(OngController.class).listarOngs(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
-        return assembler.toModel(ongVosPage, link);
+        return assembler.toModel(ongDtosPage, link);
     }
 
     public OngDTO findById(Long id) {
         
-        var entity = ongRepository.findById(id)
+        Ong entity = ongRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
-        var vo = DozerMapper.parseObject(entity, OngDTO.class);
-        vo.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
-        return vo;
+        OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
+        dto.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
+        return dto;
 
     }
 
@@ -57,10 +58,10 @@ public class OngService {
         
         if(ong == null) throw new RequiredObjectIsNullException();
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
-        var entity = DozerMapper.parseObject(ong, Ong.class);
-        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
-        vo.add(linkTo(methodOn(OngController.class).acharOngPorId(vo.getKey())).withSelfRel());
-        return vo;
+        Ong entity = DozerMapper.parseObject(ong, Ong.class);
+        OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
+        dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public OngDTO update(OngDTO ong) {
@@ -69,7 +70,7 @@ public class OngService {
 
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         
-        var entity = ongRepository.findById(ong.getKey())
+        Ong entity = ongRepository.findById(ong.getKey())
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         entity.setNome(ong.getNome());
@@ -80,9 +81,9 @@ public class OngService {
         entity.setCnpj(ong.getCnpj());
         entity.setResponsavel(ong.getResponsavel());
 
-        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
-        vo.add(linkTo(methodOn(OngController.class).acharOngPorId(vo.getKey())).withSelfRel());
-        return vo;
+        OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
+        dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public void delete(Long id) {

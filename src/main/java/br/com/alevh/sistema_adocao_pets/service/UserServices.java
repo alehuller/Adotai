@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import br.com.alevh.sistema_adocao_pets.model.Ong;
+import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 
 @Service
@@ -26,8 +28,8 @@ public class UserServices implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         logger.info("Carregando usuário pelo email: " + email);
-        var usuario = usuarioRepository.findUsuarioByEmail(email);
-        var ong = ongRepository.findOngByEmail(email);
+        Usuario usuario = usuarioRepository.findUsuarioByEmail(email);
+        Ong ong = ongRepository.findOngByEmail(email);
         if (usuario != null) {
             return usuario;
         } else if (ong != null) {

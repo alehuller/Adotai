@@ -1,5 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -32,14 +33,14 @@ public class UsuarioService {
 
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
 
-        var usuarioPage = usuarioRepository.findAll(pageable);
+        Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
 
-        var usuarioVosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioDTO.class));
-        usuarioVosPage.map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharPorId(u.getKey())).withSelfRel()));
+        Page<UsuarioDTO> usuarioDtosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioDTO.class));
+        usuarioDtosPage.map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharPorId(u.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(UsuarioController.class).listarUsuarios(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
-        return assembler.toModel(usuarioVosPage, link);
+        return assembler.toModel(usuarioDtosPage, link);
         // return usuarioRepository.findAll();
     }
 
@@ -47,10 +48,10 @@ public class UsuarioService {
         
         if(usuario == null) throw new RequiredObjectIsNullException();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        var entity = DozerMapper.parseObject(usuario, Usuario.class);
-        var vo = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
-        vo.add(linkTo(methodOn(UsuarioController.class).acharPorId(vo.getKey())).withSelfRel());
-        return vo;
+        Usuario entity = DozerMapper.parseObject(usuario, Usuario.class);
+        UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharPorId(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public void delete(Long id) {
@@ -63,7 +64,7 @@ public class UsuarioService {
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         
-        var entity = usuarioRepository.findById(usuario.getKey()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+        Usuario entity = usuarioRepository.findById(usuario.getKey()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuario.getNome());
         entity.setEmail(usuario.getEmail());
@@ -71,17 +72,17 @@ public class UsuarioService {
         entity.setCell(usuario.getCell());
         entity.setCpf(usuario.getCpf());
 
-        var vo = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
-        vo.add(linkTo(methodOn(UsuarioController.class).acharPorId(vo.getKey())).withSelfRel());
-        return vo;
+        UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharPorId(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public UsuarioDTO findById(Long id) {
 
-        var entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+        Usuario entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
-        var vo = DozerMapper.parseObject(entity, UsuarioDTO.class);
-        vo.add(linkTo(methodOn(UsuarioController.class).acharPorId(id)).withSelfRel());
-        return vo;
+        UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharPorId(id)).withSelfRel());
+        return dto;
     }
 }
