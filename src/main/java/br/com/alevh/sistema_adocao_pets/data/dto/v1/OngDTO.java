@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.data.vo.v1;
+package br.com.alevh.sistema_adocao_pets.data.dto.v1;
 
 import java.io.Serializable;
 
@@ -17,12 +17,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@JsonPropertyOrder({ "nome", "email", "cell" })
-public class UsuarioVO extends RepresentationModel<UsuarioVO> implements Serializable {
+@JsonPropertyOrder ({ "nome, email, endereco, telefone, cnpj, responsavel" })
+public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("idUsuario")
-    @Mapping("idUsuario")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idOng")
+    @Mapping("idOng")
     private Long key;
 
     private String nome;
@@ -32,8 +32,11 @@ public class UsuarioVO extends RepresentationModel<UsuarioVO> implements Seriali
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
-    private String cell;
+    private String endereco;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String cpf;
+    private String telefone;
+
+    private String cnpj;
+
+    private String responsavel;
 }

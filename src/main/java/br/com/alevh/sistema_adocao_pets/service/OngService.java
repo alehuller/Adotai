@@ -12,7 +12,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
-import br.com.alevh.sistema_adocao_pets.data.vo.v1.OngVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
@@ -28,13 +28,13 @@ public class OngService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final PagedResourcesAssembler<OngVO> assembler;
+    private final PagedResourcesAssembler<OngDTO> assembler;
 
-    public PagedModel<EntityModel<OngVO>> findAll(Pageable pageable) {
+    public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
         
         var ongPage = ongRepository.findAll(pageable);
 
-        var ongVosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngVO.class));
+        var ongVosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngDTO.class));
         ongVosPage.map(o -> o.add(linkTo(methodOn(OngController.class).acharOngPorId(o.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(OngController.class).listarOngs(pageable.getPageNumber(),
@@ -42,28 +42,28 @@ public class OngService {
         return assembler.toModel(ongVosPage, link);
     }
 
-    public OngVO findById(Long id) {
+    public OngDTO findById(Long id) {
         
         var entity = ongRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
-        var vo = DozerMapper.parseObject(entity, OngVO.class);
+        var vo = DozerMapper.parseObject(entity, OngDTO.class);
         vo.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
         return vo;
 
     }
 
-    public OngVO create(OngVO ong) {
+    public OngDTO create(OngDTO ong) {
         
         if(ong == null) throw new RequiredObjectIsNullException();
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         var entity = DozerMapper.parseObject(ong, Ong.class);
-        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngVO.class);
+        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         vo.add(linkTo(methodOn(OngController.class).acharOngPorId(vo.getKey())).withSelfRel());
         return vo;
     }
 
-    public OngVO update(OngVO ong) {
+    public OngDTO update(OngDTO ong) {
         
         if(ong == null) throw new RequiredObjectIsNullException();
 
@@ -80,7 +80,7 @@ public class OngService {
         entity.setCnpj(ong.getCnpj());
         entity.setResponsavel(ong.getResponsavel());
 
-        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngVO.class);
+        var vo = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         vo.add(linkTo(methodOn(OngController.class).acharOngPorId(vo.getKey())).withSelfRel());
         return vo;
     }

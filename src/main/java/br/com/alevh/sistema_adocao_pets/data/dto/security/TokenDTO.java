@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.data.vo.security;
+package br.com.alevh.sistema_adocao_pets.data.dto.security;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class TokenVO implements Serializable {
+public class TokenDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String nome;
@@ -20,7 +20,7 @@ public class TokenVO implements Serializable {
     private String accessToken;
     private String refreshToken;
     
-    public TokenVO(String nome, Boolean authenticated, Date created, Date expiration, String accessToken,
+    public TokenDTO(String nome, Boolean authenticated, Date created, Date expiration, String accessToken,
             String refreshToken) {
         this.nome = nome;
         this.authenticated = authenticated;

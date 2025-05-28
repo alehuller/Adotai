@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.alevh.sistema_adocao_pets.data.vo.security.TokenVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.security.jwt.JwtTokenProvider;
 
 @RestController
@@ -26,22 +26,22 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/signin/usuario")
-    public ResponseEntity<TokenVO> loginUsuario(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<TokenDTO> loginUsuario(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
 
-        TokenVO token = jwtTokenProvider.createAccessToken(authentication.getName(), List.of("ROLE_USER"));
+        TokenDTO token = jwtTokenProvider.createAccessToken(authentication.getName(), List.of("ROLE_USER"));
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/signin/ong")
-    public ResponseEntity<TokenVO> loginOng(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<TokenDTO> loginOng(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
 
-        TokenVO token = jwtTokenProvider.createAccessToken(authentication.getName(), List.of("ROLE_ONG"));
+        TokenDTO token = jwtTokenProvider.createAccessToken(authentication.getName(), List.of("ROLE_ONG"));
         return ResponseEntity.ok(token);
     }
 

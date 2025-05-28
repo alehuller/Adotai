@@ -18,7 +18,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import br.com.alevh.sistema_adocao_pets.data.vo.security.TokenVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.InvalidJwtAuthenticationException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,16 +43,16 @@ public class JwtTokenProvider {
 		algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenVO createAccessToken(String username, List<String> roles) {
+    public TokenDTO createAccessToken(String username, List<String> roles) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds);
 		var accessToken = getAccessToken(username, roles, now, validity);
 		var refreshToken = getRefreshToken(username, roles, now);
 		
-		return new TokenVO(username, true, now, validity, accessToken, refreshToken);
+		return new TokenDTO(username, true, now, validity, accessToken, refreshToken);
 	}
 	
-	public TokenVO refreshToken(String refreshToken) {
+	public TokenDTO refreshToken(String refreshToken) {
 		if (refreshToken.contains("Bearer ")) refreshToken =
 				refreshToken.substring("Bearer ".length());
 		
