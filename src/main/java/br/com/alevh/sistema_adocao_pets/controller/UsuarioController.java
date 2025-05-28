@@ -77,7 +77,7 @@ public class UsuarioController {
                 return usuarioService.findById(id);
         }
 
-        @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PostMapping(value = "/signup", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Registra um usuário", responses = {

@@ -74,7 +74,7 @@ public class OngController {
         return ongService.findById(id);
     }
 
-    @PostMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML },
+    @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML },
                 consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
     @Operation(summary = "Registra uma ong", responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = {
