@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@JsonPropertyOrder ({ "nome, email, endereco, telefone, cnpj, responsavel" })
+@JsonPropertyOrder ({ "nome", "email", "endereco", "telefone", "cnpj", "responsavel" })
 public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
