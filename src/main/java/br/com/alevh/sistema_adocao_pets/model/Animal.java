@@ -3,6 +3,7 @@ package br.com.alevh.sistema_adocao_pets.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -58,8 +59,7 @@ public class Animal implements Serializable{
     @Column(name = "status", length = 50)
     private String status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ong_id", nullable = false)
     private Ong ong;
-
 }

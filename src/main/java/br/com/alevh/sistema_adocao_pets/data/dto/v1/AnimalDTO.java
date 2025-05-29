@@ -23,7 +23,7 @@ import lombok.Setter;
 public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idAnimal")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY, value = "idAnimal")
     @Mapping("idAnimal")
     private Long key;
     
@@ -46,6 +46,7 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
 
     private String status;
 
+    @Mapping("ong.idOng")
     private Long idOng;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
