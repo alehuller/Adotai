@@ -12,13 +12,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
-import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Animal;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
+import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
+
+    private final OngService ongService;
 
     private final PagedResourcesAssembler<AnimalDTO> assembler;
 
@@ -50,6 +52,46 @@ public class AnimalService {
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharPorId(id)).withSelfRel());
+        return dto;
+    }
+
+    public AnimalDTO create(AnimalDTO animal) {
+        
+        if(animal == null) throw new RequiredObjectIsNullException();
+        Animal entity = DozerMapper.parseObject(animal, Animal.class);
+        AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
+        dto.add(linkTo(methodOn(AnimalController.class).acharPorId(dto.getKey())).withSelfRel());
+        return dto;
+    }
+
+    public void delete(Long id) {
+        animalRepository.deleteById(id);
+    }
+
+    public AnimalDTO update(AnimalDTO animal) { 
+        
+        if(animal == null) throw new RequiredObjectIsNullException();
+        
+        Animal entity = animalRepository.findById(animal.getKey()).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+        
+        OngDTO ongDTO = ongService.findById(animal.getIdOng());
+        Ong ong = DozerMapper.parseObject(ongDTO, Ong.class);
+
+        System.out.println("ID da ong: " + ong.getIdOng());
+
+        entity.setNome(animal.getNome());
+        entity.setEspecie(animal.getEspecie());
+        entity.setRaca(animal.getRaca());
+        entity.setDataNascimento(animal.getDataNascimento());
+        entity.setFoto(animal.getFoto());
+        entity.setDescricao(animal.getDescricao());
+        entity.setPorte(animal.getPorte());
+        entity.setSexo(animal.getSexo());
+        entity.setStatus(animal.getStatus());
+        entity.setOng(ong);
+
+        AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
+        dto.add(linkTo(methodOn(AnimalController.class).acharPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 }

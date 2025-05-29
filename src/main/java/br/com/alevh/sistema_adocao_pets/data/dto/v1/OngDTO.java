@@ -21,7 +21,7 @@ import lombok.Setter;
 public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY, value = "idOng")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idOng")
     @Mapping("idOng")
     private Long key;
 
