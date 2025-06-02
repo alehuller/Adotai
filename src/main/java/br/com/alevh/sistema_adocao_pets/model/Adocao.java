@@ -23,44 +23,28 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "animal")
-public class Animal implements Serializable{
+@Table(name = "adocao")
+public class Adocao implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAnimal;
+    private Long idAdocao;
 
-    @Column(name = "nome", nullable = false, length = 255)
-    private String nome;
+    @Column(name = "data_adocao", nullable = false)
+    private LocalDate dataAdocao;
 
-    @Column(name = "especie", nullable = false, length = 100)
-    private String especie;
-
-    @Column(name = "raca", nullable = false, length = 100)
-    private String raca;
-
-    @Column(name = "data_nascimento", nullable = false)
-    private LocalDate dataNascimento;
-
-    @Column(name = "foto")
-    private String foto;
-
-    @Column(name = "descricao")
-    private String descricao;
-
-    @Column(name = "porte", nullable = false, length = 50)
-    private String porte;
-
-    @Column(name = "sexo", nullable = false, length = 10)
-    private String sexo;
-
-    @Column(name = "status", length = 50)
+    @Column(name = "status", nullable = false, length = 50)
     private String status;
 
-    //varios animais podem estar associados a uma única ong
+    //do ponto de vista da adoção, cada registro está ligado a um único usuário, mas o mesmo usuário pode aparecer em várias adoções.
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "ong_id", nullable = false)
-    private Ong ong;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    //muitas adoções podem estar associadas a um mesmo animal (por exemplo, em um sistema que mantém histórico de tentativas de adoção, ou onde um animal é devolvido e adotado novamente).
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "animal_id", nullable = false)
+    private Long idAnimal;
 }
