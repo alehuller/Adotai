@@ -46,5 +46,5 @@ public class Adocao implements Serializable{
     //muitas adoções podem estar associadas a um mesmo animal (por exemplo, em um sistema que mantém histórico de tentativas de adoção, ou onde um animal é devolvido e adotado novamente).
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "animal_id", nullable = false)
-    private Long idAnimal;
+    private Animal animal;
 }
