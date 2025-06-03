@@ -64,14 +64,13 @@ public class OngService {
         return dto;
     }
 
-    public OngDTO update(OngDTO ong) {
+    public OngDTO update(OngDTO ong, Long id) {
         
         if(ong == null) throw new RequiredObjectIsNullException();
 
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         
-        Ong entity = ongRepository.findById(ong.getKey())
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+        Ong entity = ongRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         entity.setNome(ong.getNome());
         entity.setEmail(ong.getEmail());

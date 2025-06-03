@@ -11,6 +11,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +61,7 @@ public class AnimalController {
                 return ResponseEntity.ok(animalService.findAll(pageable));
         }
 
-        @GetMapping(value = "/pesquisa", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Retorna o animal de id especificado", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -72,7 +73,7 @@ public class AnimalController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AnimalDTO acharPorId(@RequestParam(value = "id") Long id) {
+        public AnimalDTO acharPorId(@PathVariable(value = "id") Long id) {
                 logger.info(String.format("Consultando animal de id $d", id));
                 return animalService.findById(id);
         }
@@ -93,7 +94,7 @@ public class AnimalController {
                 return animalService.create(user);
         }
 
-        @DeleteMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(value = "{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Apaga o animal de id especificado", responses = {
                         @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -102,13 +103,13 @@ public class AnimalController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public ResponseEntity<?> deletarPorId(@RequestParam(name = "id") Long id) {
+        public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
                 logger.info(String.format("Apagando animal de id %d", id));
                 animalService.delete(id);
                 return ResponseEntity.noContent().build();
         }
 
-        @PutMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PutMapping(value = "{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Atualiza o animal", responses = {
@@ -120,8 +121,8 @@ public class AnimalController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AnimalDTO atualizarAnimal(@RequestBody AnimalDTO animal) {
+        public AnimalDTO atualizarAnimal(@PathVariable(value = "id") Long id, @RequestBody AnimalDTO animal) {
                 logger.info(String.format("Atualizando animal de nome %s", animal.getNome()));
-                return animalService.update(animal);
+                return animalService.update(animal, id);
         }
 }

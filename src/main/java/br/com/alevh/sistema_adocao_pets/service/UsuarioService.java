@@ -36,12 +36,11 @@ public class UsuarioService {
         Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
 
         Page<UsuarioDTO> usuarioDtosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioDTO.class));
-        usuarioDtosPage.map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharPorId(u.getKey())).withSelfRel()));
+        usuarioDtosPage.map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(u.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(UsuarioController.class).listarUsuarios(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
         return assembler.toModel(usuarioDtosPage, link);
-        // return usuarioRepository.findAll();
     }
 
     public UsuarioDTO create(UsuarioDTO usuario) {
@@ -50,7 +49,7 @@ public class UsuarioService {
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario entity = DozerMapper.parseObject(usuario, Usuario.class);
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharPorId(dto.getKey())).withSelfRel());
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 
@@ -58,13 +57,13 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public UsuarioDTO update(UsuarioDTO usuario) { 
+    public UsuarioDTO update(UsuarioDTO usuario, Long id) { 
         
         if(usuario == null) throw new RequiredObjectIsNullException();
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         
-        Usuario entity = usuarioRepository.findById(usuario.getKey()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+        Usuario entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuario.getNome());
         entity.setEmail(usuario.getEmail());
@@ -73,7 +72,7 @@ public class UsuarioService {
         entity.setCpf(usuario.getCpf());
 
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharPorId(dto.getKey())).withSelfRel());
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 
@@ -82,7 +81,7 @@ public class UsuarioService {
         Usuario entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharPorId(id)).withSelfRel());
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
         return dto;
     }
 }

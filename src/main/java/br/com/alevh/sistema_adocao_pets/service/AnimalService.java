@@ -68,11 +68,11 @@ public class AnimalService {
         animalRepository.deleteById(id);
     }
 
-    public AnimalDTO update(AnimalDTO animal) { 
+    public AnimalDTO update(AnimalDTO animal, Long id) { 
         
         if(animal == null) throw new RequiredObjectIsNullException();
         
-        Animal entity = animalRepository.findById(animal.getKey()).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+        Animal entity = animalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
         
         OngDTO ongDTO = ongService.findById(animal.getIdOng());
         Ong ong = DozerMapper.parseObject(ongDTO, Ong.class);
