@@ -1,7 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
-import java.util.logging.Logger;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,8 +32,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("api/v1/adocoes")
 @Tag(name = "Adoções", description = "Endpoints para manipulação do registro de adoções.")
 public class AdocaoController {
-
-        private Logger logger = Logger.getLogger(AdocaoService.class.getName());
 
         private final AdocaoService adocaoService;
 
@@ -72,8 +68,7 @@ public class AdocaoController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AdocaoDTO acharPorId(@RequestParam(value = "id") Long id) {
-                logger.info(String.format("Consultando adoção de id $d", id));
+        public AdocaoDTO acharAdocaoPorId(@RequestParam(value = "id") Long id) {
                 return adocaoService.findById(id);
         }
 
@@ -89,7 +84,6 @@ public class AdocaoController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public AdocaoDTO registrarAdocao(@RequestBody AdocaoDTO adocao) {
-                logger.info("Registrando uma adoção");
                 return adocaoService.create(adocao);
         }
 
@@ -103,7 +97,6 @@ public class AdocaoController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public ResponseEntity<?> deletarPorId(@RequestParam(name = "id") Long id) {
-                logger.info(String.format("Apagando adoção de id %d", id));
                 adocaoService.delete(id);
                 return ResponseEntity.noContent().build();
         }

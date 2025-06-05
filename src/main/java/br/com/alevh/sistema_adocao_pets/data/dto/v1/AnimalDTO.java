@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @JsonPropertyOrder ({ "nome", "especie", "raca", "dataNascimento", "foto", "descricao", "porte", "sexo", "status", "nomeOng", "telefoneOng", "enderecoOng"})
 public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Serializable {
     private static final long serialVersionUID = 1L;

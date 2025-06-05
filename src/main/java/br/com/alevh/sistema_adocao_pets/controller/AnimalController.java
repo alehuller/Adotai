@@ -1,7 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
-import java.util.logging.Logger;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,8 +33,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/animais")
 @Tag(name = "Animais", description = "Endpoints para manipulação do registro dos animais.")
 public class AnimalController {
-
-        private Logger logger = Logger.getLogger(AnimalService.class.getName());
 
         private final AnimalService animalService;
 
@@ -73,8 +69,7 @@ public class AnimalController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AnimalDTO acharPorId(@PathVariable(value = "id") Long id) {
-                logger.info(String.format("Consultando animal de id $d", id));
+        public AnimalDTO acharAnimalPorId(@PathVariable(value = "id") Long id) {
                 return animalService.findById(id);
         }
 
@@ -89,9 +84,8 @@ public class AnimalController {
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AnimalDTO registrarAnimal(@RequestBody AnimalDTO user) {
-                logger.info("Criando um animal");
-                return animalService.create(user);
+        public AnimalDTO registrarAnimal(@RequestBody AnimalDTO animal) {
+                return animalService.create(animal);
         }
 
         @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -104,7 +98,6 @@ public class AnimalController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
-                logger.info(String.format("Apagando animal de id %d", id));
                 animalService.delete(id);
                 return ResponseEntity.noContent().build();
         }
@@ -122,7 +115,6 @@ public class AnimalController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public AnimalDTO atualizarAnimal(@PathVariable(value = "id") Long id, @RequestBody AnimalDTO animal) {
-                logger.info(String.format("Atualizando animal de nome %s", animal.getNome()));
                 return animalService.update(animal, id);
         }
 }

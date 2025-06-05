@@ -13,14 +13,14 @@ import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 
 @Service
-public class UserServices implements UserDetailsService{
+public class UserService implements UserDetailsService{
     
-    private Logger logger = Logger.getLogger(UserServices.class.getName());
+    private Logger logger = Logger.getLogger(UserService.class.getName());
 
     UsuarioRepository usuarioRepository;
     OngRepository ongRepository;
 
-    public UserServices(UsuarioRepository usuarioRepository, OngRepository ongRepository) {
+    public UserService(UsuarioRepository usuarioRepository, OngRepository ongRepository) {
         this.usuarioRepository = usuarioRepository;
         this.ongRepository = ongRepository;
     }

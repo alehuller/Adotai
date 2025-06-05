@@ -37,7 +37,7 @@ public class AnimalService {
         Page<Animal> animalPage = animalRepository.findAll(pageable);
 
         Page<AnimalDTO> animalDtosPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
-        animalDtosPage.map(a -> a.add(linkTo(methodOn(AnimalController.class).acharPorId(a.getKey())).withSelfRel()));
+        animalDtosPage.map(a -> a.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(a.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(AnimalController.class).listarAnimais(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
@@ -51,7 +51,7 @@ public class AnimalService {
                 .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
-        dto.add(linkTo(methodOn(AnimalController.class).acharPorId(id)).withSelfRel());
+        dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(id)).withSelfRel());
         return dto;
     }
 
@@ -60,7 +60,7 @@ public class AnimalService {
         if(animal == null) throw new RequiredObjectIsNullException();
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
-        dto.add(linkTo(methodOn(AnimalController.class).acharPorId(dto.getKey())).withSelfRel());
+        dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 
@@ -77,8 +77,6 @@ public class AnimalService {
         OngDTO ongDTO = ongService.findById(animal.getIdOng());
         Ong ong = DozerMapper.parseObject(ongDTO, Ong.class);
 
-        System.out.println("ID da ong: " + ong.getIdOng());
-
         entity.setNome(animal.getNome());
         entity.setEspecie(animal.getEspecie());
         entity.setRaca(animal.getRaca());
@@ -91,7 +89,7 @@ public class AnimalService {
         entity.setOng(ong);
 
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
-        dto.add(linkTo(methodOn(AnimalController.class).acharPorId(dto.getKey())).withSelfRel());
+        dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 }

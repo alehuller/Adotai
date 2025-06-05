@@ -45,7 +45,7 @@ public class AdocaoService {
         Page<Adocao> adocaoPage = adocaoRepository.findAll(pageable);
 
         Page<AdocaoDTO> adocaoDtosPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
-        adocaoDtosPage.map(a -> a.add(linkTo(methodOn(AdocaoController.class).acharPorId(a.getKey())).withSelfRel()));
+        adocaoDtosPage.map(a -> a.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(a.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(AdocaoController.class).listarAdocoes(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
@@ -58,7 +58,7 @@ public class AdocaoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
 
         AdocaoDTO dto = DozerMapper.parseObject(entity, AdocaoDTO.class);
-        dto.add(linkTo(methodOn(AdocaoController.class).acharPorId(id)).withSelfRel());
+        dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
         return dto;
     }
 
@@ -67,7 +67,7 @@ public class AdocaoService {
         if (adocao == null) throw new RequiredObjectIsNullException();
         Adocao entity = DozerMapper.parseObject(adocao, Adocao.class);
         AdocaoDTO dto = DozerMapper.parseObject(adocaoRepository.save(entity), AdocaoDTO.class);
-        dto.add(linkTo(methodOn(AdocaoController.class).acharPorId(dto.getKey())).withSelfRel());
+        dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 
@@ -97,7 +97,7 @@ public class AdocaoService {
         entity.setAnimal(animal);
 
         AdocaoDTO dto = DozerMapper.parseObject(adocaoRepository.save(entity), AdocaoDTO.class);
-        dto.add(linkTo(methodOn(AdocaoController.class).acharPorId(dto.getKey())).withSelfRel());
+        dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 

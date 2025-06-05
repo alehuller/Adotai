@@ -1,7 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
-import java.util.logging.Logger;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,8 +33,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("api/v1/usuarios")
 @Tag(name = "Usuários", description = "Endpoints para manipulação do registro dos usuários.")
 public class UsuarioController {
-
-        private Logger logger = Logger.getLogger(UsuarioService.class.getName());
 
         private final UsuarioService usuarioService;
 
@@ -74,7 +70,6 @@ public class UsuarioController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public UsuarioDTO acharUsuarioPorId(@PathVariable(value = "id") Long id) {
-                logger.info(String.format("Consultando usuário de id $d", id));
                 return usuarioService.findById(id);
         }
 
@@ -89,9 +84,8 @@ public class UsuarioController {
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public UsuarioDTO registrarUsuario(@RequestBody UsuarioDTO user) {
-                logger.info("Criando um usuário");
-                return usuarioService.create(user);
+        public UsuarioDTO registrarUsuario(@RequestBody UsuarioDTO usuario) {
+                return usuarioService.create(usuario);
         }
 
         @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -104,7 +98,6 @@ public class UsuarioController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
-                logger.info(String.format("Apagando usuário de id %d", id));
                 usuarioService.delete(id);
                 return ResponseEntity.noContent().build();
         }
@@ -122,7 +115,6 @@ public class UsuarioController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id,@RequestBody UsuarioDTO usuario) {
-                logger.info(String.format("Atualizando usuário de nome %s", usuario.getNome()));
                 return usuarioService.update(usuario, id);
         }
 }
