@@ -75,11 +75,11 @@ public class AdocaoService {
         adocaoRepository.deleteById(id);
     }
 
-    public AdocaoDTO update(AdocaoDTO adocao) {
+    public AdocaoDTO update(AdocaoDTO adocao, Long id) {
         
         if(adocao == null) throw new RequiredObjectIsNullException();
 
-        Adocao entity = adocaoRepository.findById(adocao.getKey()).orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
+        Adocao entity = adocaoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
 
         UsuarioDTO usuarioDTO = usuarioService.findById(adocao.getIdUsuario());
         Usuario usuario = DozerMapper.parseObject(usuarioDTO, Usuario.class);

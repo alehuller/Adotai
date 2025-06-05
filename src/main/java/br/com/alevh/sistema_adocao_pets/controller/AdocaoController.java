@@ -9,6 +9,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,7 @@ public class AdocaoController {
                 return ResponseEntity.ok(adocaoService.findAll(pageable));
         }
 
-        @GetMapping(value = "/pesquisa", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Retorna a adoção de id especificado", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -68,7 +69,7 @@ public class AdocaoController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AdocaoDTO acharAdocaoPorId(@RequestParam(value = "id") Long id) {
+        public AdocaoDTO acharAdocaoPorId(@PathVariable(value = "id") Long id) {
                 return adocaoService.findById(id);
         }
 
@@ -87,7 +88,7 @@ public class AdocaoController {
                 return adocaoService.create(adocao);
         }
 
-        @DeleteMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Apaga a adoção de id especificado", responses = {
                         @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -96,12 +97,12 @@ public class AdocaoController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public ResponseEntity<?> deletarPorId(@RequestParam(name = "id") Long id) {
+        public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
                 adocaoService.delete(id);
                 return ResponseEntity.noContent().build();
         }
 
-        @PutMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Atualiza a adoção", responses = {
@@ -113,7 +114,7 @@ public class AdocaoController {
                         @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public AdocaoDTO atualizarAdocao(@RequestBody AdocaoDTO adocao) {
-                return adocaoService.update(adocao);
+        public AdocaoDTO atualizarAdocao(@PathVariable(value = "id") Long id, @RequestBody AdocaoDTO adocao) {
+                return adocaoService.update(adocao, id);
         }
 }
