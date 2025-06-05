@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@JsonPropertyOrder({ "nome", "email", "cell" })
+@JsonPropertyOrder({ "nome", "email", "celular" })
 public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -32,6 +32,7 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
+    @JsonProperty(value = "celular")
     private String cell;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

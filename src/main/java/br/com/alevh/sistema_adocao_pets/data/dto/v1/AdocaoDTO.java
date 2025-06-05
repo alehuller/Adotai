@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@JsonPropertyOrder({})
+@JsonPropertyOrder({"dataAdocao", "status", "nomeAnimal", "especieAnimal", "sexoAnimal", "nomeUsuario", "emailUsuario", "celularUsuario"})
 public class AdocaoDTO extends RepresentationModel<AdocaoDTO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -32,6 +32,7 @@ public class AdocaoDTO extends RepresentationModel<AdocaoDTO> implements Seriali
 
     private String status;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Mapping("animal.idAnimal")
     private Long idAnimal;
 
@@ -47,6 +48,7 @@ public class AdocaoDTO extends RepresentationModel<AdocaoDTO> implements Seriali
     @Mapping("animal.sexo")
     private String sexoAnimal;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Mapping("usuario.idUsuario")
     private Long idUsuario;
 
@@ -56,9 +58,9 @@ public class AdocaoDTO extends RepresentationModel<AdocaoDTO> implements Seriali
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Mapping("usuario.email")
-    private String emailusuario;
+    private String emailUsuario;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY, value = "celularUsuario")
     @Mapping("usuario.cell")
     private String cellUsuario;
 }

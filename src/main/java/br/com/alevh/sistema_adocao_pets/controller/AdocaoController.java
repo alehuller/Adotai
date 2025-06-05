@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.service.AdocaoService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;

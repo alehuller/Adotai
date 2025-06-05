@@ -94,7 +94,7 @@ public class AnimalController {
                 return animalService.create(user);
         }
 
-        @DeleteMapping(value = "{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Apaga o animal de id especificado", responses = {
                         @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -109,7 +109,7 @@ public class AnimalController {
                 return ResponseEntity.noContent().build();
         }
 
-        @PutMapping(value = "{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Atualiza o animal", responses = {
