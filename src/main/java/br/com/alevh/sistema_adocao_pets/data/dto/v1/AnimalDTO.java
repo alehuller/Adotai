@@ -46,6 +46,7 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
 
     private String status;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Mapping("ong.idOng")
     private Long idOng;
 
