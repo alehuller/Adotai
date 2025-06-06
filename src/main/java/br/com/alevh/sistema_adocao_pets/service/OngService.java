@@ -8,13 +8,18 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
-import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
@@ -112,5 +117,22 @@ public class OngService {
                 .withSelfRel();
 
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
+    }
+
+    public OngDTO partialUpdate(Long id, Map<String, Object> updates) {
+        Ong ong = ongRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+
+        ObjectMapper mapper = new ObjectMapper();
+        updates.forEach((campo, valor) -> {
+            Field field = ReflectionUtils.findField(Ong.class, campo);
+            if (field != null) {
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
+            }
+        });
+
+        ongRepository.save(ong);
+        return DozerMapper.parseObject(ong, OngDTO.class);
     }
 }
