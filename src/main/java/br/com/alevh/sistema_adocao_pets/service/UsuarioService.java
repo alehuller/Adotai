@@ -8,9 +8,15 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
@@ -113,5 +119,22 @@ public class UsuarioService {
                 .withSelfRel();
     
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
+    }
+
+    public UsuarioDTO partialUpdate(Long id, Map<String, Object> updates) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        ObjectMapper mapper = new ObjectMapper();
+        updates.forEach((campo, valor) -> {
+            Field field = ReflectionUtils.findField(Usuario.class, campo);
+            if (field != null) {
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, usuario, mapper.convertValue(valor, field.getType()));
+            }
+        });
+
+        usuarioRepository.save(usuario);
+        return DozerMapper.parseObject(usuario, UsuarioDTO.class);
     }
 }
