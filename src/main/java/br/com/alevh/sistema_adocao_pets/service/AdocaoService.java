@@ -24,6 +24,8 @@ import br.com.alevh.sistema_adocao_pets.model.Animal;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
+import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
+import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,6 +33,10 @@ import lombok.RequiredArgsConstructor;
 public class AdocaoService {
 
     private final AdocaoRepository adocaoRepository;
+
+    private final AnimalRepository animalRepository;
+
+    private final UsuarioRepository usuarioRepository;
 
     private final UsuarioService usuarioService;
 
@@ -63,9 +69,17 @@ public class AdocaoService {
     }
 
     public AdocaoDTO create(AdocaoDTO adocao) {
-        
         if (adocao == null) throw new RequiredObjectIsNullException();
+        
+        Animal animal = animalRepository.findById(adocao.getIdAnimal())
+        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
+
+        Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
+        .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
         Adocao entity = DozerMapper.parseObject(adocao, Adocao.class);
+        entity.setAnimal(animal);
+        entity.setUsuario(usuario);
         AdocaoDTO dto = DozerMapper.parseObject(adocaoRepository.save(entity), AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel());
         return dto;

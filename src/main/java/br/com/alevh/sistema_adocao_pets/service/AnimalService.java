@@ -20,6 +20,7 @@ import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Animal;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
+import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
+
+    private final OngRepository ongRepository;
 
     private final OngService ongService;
 
@@ -56,9 +59,13 @@ public class AnimalService {
     }
 
     public AnimalDTO create(AnimalDTO animal) {
-        
         if(animal == null) throw new RequiredObjectIsNullException();
+
+        Ong ong = ongRepository.findById(animal.getIdOng())
+            .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada"));
+
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
+        entity.setOng(ong);
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
         return dto;
