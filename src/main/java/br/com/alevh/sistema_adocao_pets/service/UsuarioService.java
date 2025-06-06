@@ -1,5 +1,8 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
+import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
+import br.com.alevh.sistema_adocao_pets.util.UsuarioRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -15,8 +18,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
-import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +44,18 @@ public class UsuarioService {
         return assembler.toModel(usuarioDtosPage, link);
     }
 
-    public UsuarioDTO create(UsuarioDTO usuario) {
-        
-        if(usuario == null) throw new RequiredObjectIsNullException();
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        Usuario entity = DozerMapper.parseObject(usuario, Usuario.class);
+    public UsuarioDTO create(RegistroDTO registroDTO) {
+//        if(registroDTO == null) throw new RequiredObjectIsNullException();
+        Usuario entity = DozerMapper.parseObject(registroDTO, Usuario.class);
+        entity.setSenha(passwordEncoder.encode(registroDTO.getPassword()));
+        entity.setRole(UsuarioRole.USER);
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
+
+        dto.add(
+                linkTo(
+                        methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())
+                ).withSelfRel()
+        );
         return dto;
     }
 
@@ -59,7 +65,7 @@ public class UsuarioService {
 
     public UsuarioDTO update(UsuarioDTO usuario, Long id) { 
         
-        if(usuario == null) throw new RequiredObjectIsNullException();
+//        if(usuario == null) throw new RequiredObjectIsNullException();
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         
@@ -83,5 +89,9 @@ public class UsuarioService {
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
         return dto;
+    }
+
+    public boolean existsUsuarioWithEmail(String email){
+        return usuarioRepository.findUsuarioByEmail(email) != null;
     }
 }

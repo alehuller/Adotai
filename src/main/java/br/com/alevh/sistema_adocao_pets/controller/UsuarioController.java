@@ -2,6 +2,7 @@ package br.com.alevh.sistema_adocao_pets.controller;
 
 import java.util.logging.Logger;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -89,9 +90,9 @@ public class UsuarioController {
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
-        public UsuarioDTO registrarUsuario(@RequestBody UsuarioDTO user) {
+        public UsuarioDTO registrarUsuario(@RequestBody RegistroDTO registroDTO) {
                 logger.info("Criando um usuário");
-                return usuarioService.create(user);
+                return usuarioService.create(registroDTO);
         }
 
         @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,

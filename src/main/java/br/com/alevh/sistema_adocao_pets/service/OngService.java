@@ -1,5 +1,7 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
+import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -14,8 +16,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
-import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;

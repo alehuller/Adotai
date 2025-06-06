@@ -1,75 +1,57 @@
 package br.com.alevh.sistema_adocao_pets.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import br.com.alevh.sistema_adocao_pets.security.jwt.JwtTokenFilter;
-import br.com.alevh.sistema_adocao_pets.security.jwt.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
-
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
-    private final JwtTokenProvider jwtTokenProvider;
+
+    private final SecurityFilter securityFilter;
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        Map<String, PasswordEncoder> encoders = new HashMap<>();
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        return  httpSecurity
+                .csrf(csrf -> csrf.disable()) // possibilita redirecionamento de dados em cyberataques de um site logado para outro
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateful -> guarda no site as infos de user/senha, Stateless -> tokenização, n armazena nada no servidor
+                // gerencia as rotas e os acessos com token e sem
+                .authorizeHttpRequests(authorize -> authorize
 
-        Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder("", 8, 256, SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
-        encoders.put("pbkdf2", pbkdf2Encoder);
-        DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
-        passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
-        return passwordEncoder;
+                        // permite que todos disparem requisições de login e de registro
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+
+                        // permite que apenas admins adicionem novos produtos
+                        .requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMIN")
+
+                        // demais requisições são para usuarios autenticados
+                        .anyRequest().authenticated()
+                )
+
+                // antes de verificar as roles, vai validar o token do usuário
+                .addFilterBefore(securityFilter,  UsernamePasswordAuthenticationFilter.class) // ordem dos filtros, primeiro parâmetro e dps o segundo, q é do spring
+                .build();
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenProvider);
-
-        return http
-                .httpBasic(basic -> basic.disable())
-                .csrf(csrf -> csrf.disable())
-                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
-                    .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(
-                        authorizeHttpRequests -> authorizeHttpRequests
-                            .requestMatchers(
-                                                            "auth/signin/**",
-                                                                        "auth/refresh/**",
-                                                                        "api/v1/usuarios/signup/**",
-                                                                        "api/v1/ongs/signup/**",
-                                    "/swagger-ui/**",
-                                    "/v3/api-docs/**"
-                                    ).permitAll()
-                                .requestMatchers("/api/**").authenticated()
-                                .requestMatchers("/usuarios").denyAll()
-                                .requestMatchers("/ongs").denyAll()
-                    )
-                .cors(cors -> {})
-                    .build();
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
