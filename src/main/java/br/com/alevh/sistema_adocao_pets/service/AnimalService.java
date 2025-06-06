@@ -7,9 +7,15 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
@@ -98,5 +104,22 @@ public class AnimalService {
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
         return dto;
+    }
+
+    public AnimalDTO partialUpdate(Long id, Map<String, Object> updates) {
+        Animal animal = animalRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+
+        ObjectMapper mapper = new ObjectMapper();
+        updates.forEach((campo, valor) -> {
+            Field field = ReflectionUtils.findField(Animal.class, campo);
+            if (field != null) {
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, animal, mapper.convertValue(valor, field.getType()));
+            }
+        });
+
+        animalRepository.save(animal);
+        return DozerMapper.parseObject(animal, AnimalDTO.class);
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import br.com.alevh.sistema_adocao_pets.service.OngService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -162,7 +161,7 @@ public class OngController {
                     MediaType.APPLICATION_XML })
     @Operation(summary = "Atualização parcial da ong", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
-                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OngDTO.class)))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
             @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

@@ -7,9 +7,15 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
@@ -113,6 +119,23 @@ public class AdocaoService {
         AdocaoDTO dto = DozerMapper.parseObject(adocaoRepository.save(entity), AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel());
         return dto;
+    }
+
+    public AdocaoDTO partialUpdate(Long id, Map<String, Object> updates) {
+        Adocao adocao = adocaoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
+
+        ObjectMapper mapper = new ObjectMapper();
+        updates.forEach((campo, valor) -> {
+            Field field = ReflectionUtils.findField(Adocao.class, campo);
+            if (field != null) {
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, adocao, mapper.convertValue(valor, field.getType()));
+            }
+        });
+
+        adocaoRepository.save(adocao);
+        return DozerMapper.parseObject(adocao, AdocaoDTO.class);
     }
 
 }
