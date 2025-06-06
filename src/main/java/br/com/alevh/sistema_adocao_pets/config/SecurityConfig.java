@@ -25,14 +25,15 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     PasswordEncoder passwordEncoder() {
         Map<String, PasswordEncoder> encoders = new HashMap<>();
 
-        Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder("", 8, 256, SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
+        Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder("", 8, 256,
+                SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
         encoders.put("pbkdf2", pbkdf2Encoder);
         DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
         passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
@@ -40,7 +41,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -53,23 +55,25 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
-                    .sessionManagement(
+                .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(
+                .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                            .requestMatchers(
-                                                            "auth/signin/**",
-                                                                        "auth/refresh/**",
-                                                                        "api/v1/usuarios/signup/**",
-                                                                        "api/v1/ongs/signup/**",
-                                    "/swagger-ui/**",
-                                    "/v3/api-docs/**"
-                                    ).permitAll()
+                                .requestMatchers(
+                                        "auth/signin/**",
+                                        "auth/refresh/**",
+                                        "api/v1/usuarios/signup/**",
+                                        "api/v1/ongs/signup/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**")
+                                .permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .requestMatchers("/usuarios").denyAll()
                                 .requestMatchers("/ongs").denyAll()
-                    )
-                .cors(cors -> {})
-                    .build();
+                                //.requestMatchers("/ongs").hasRole()
+                                )
+                .cors(cors -> {
+                })
+                .build();
     }
 }

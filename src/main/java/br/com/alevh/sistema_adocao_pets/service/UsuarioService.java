@@ -13,11 +13,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
+import br.com.alevh.sistema_adocao_pets.model.Adocao;
+import br.com.alevh.sistema_adocao_pets.model.Usuario;
+import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
+import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -27,16 +31,21 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
+    private final AdocaoRepository adocaoRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final PagedResourcesAssembler<UsuarioDTO> assembler;
+
+    private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
 
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
 
         Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
 
         Page<UsuarioDTO> usuarioDtosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioDTO.class));
-        usuarioDtosPage.map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(u.getKey())).withSelfRel()));
+        usuarioDtosPage
+                .map(u -> u.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(u.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(UsuarioController.class).listarUsuarios(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
@@ -44,8 +53,9 @@ public class UsuarioService {
     }
 
     public UsuarioDTO create(UsuarioDTO usuario) {
-        
-        if(usuario == null) throw new RequiredObjectIsNullException();
+
+        if (usuario == null)
+            throw new RequiredObjectIsNullException();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario entity = DozerMapper.parseObject(usuario, Usuario.class);
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
@@ -57,13 +67,15 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public UsuarioDTO update(UsuarioDTO usuario, Long id) { 
-        
-        if(usuario == null) throw new RequiredObjectIsNullException();
+    public UsuarioDTO update(UsuarioDTO usuario, Long id) {
+
+        if (usuario == null)
+            throw new RequiredObjectIsNullException();
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        
-        Usuario entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        Usuario entity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuario.getNome());
         entity.setEmail(usuario.getEmail());
@@ -78,10 +90,28 @@ public class UsuarioService {
 
     public UsuarioDTO findById(Long id) {
 
-        Usuario entity = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+        Usuario entity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
         return dto;
+    }
+
+    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByUsuarioId(Long idUsuario, Pageable pageable) {
+
+        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByUsuarioId(idUsuario, pageable);
+    
+        Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
+    
+        adocaoDtoPage = adocaoDtoPage.map(dto ->
+            dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel())
+        );
+    
+        Link selfLink = linkTo(methodOn(UsuarioController.class)
+                .listarAdocoesPorUsuarioId(idUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+    
+        return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 }
