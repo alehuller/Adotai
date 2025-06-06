@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+import br.com.alevh.sistema_adocao_pets.enums.StatusAdocao;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class AdocaoDTO extends RepresentationModel<AdocaoDTO> implements Seriali
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataAdocao;
 
-    private String status;
+    private StatusAdocao status;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Mapping("animal.idAnimal")

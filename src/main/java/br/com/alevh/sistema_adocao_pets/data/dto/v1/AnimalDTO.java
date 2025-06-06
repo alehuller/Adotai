@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,7 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
 
     private String sexo;
 
-    private String status;
+    private StatusAnimal status;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Mapping("ong.idOng")

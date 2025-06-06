@@ -3,9 +3,12 @@ package br.com.alevh.sistema_adocao_pets.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import br.com.alevh.sistema_adocao_pets.enums.StatusAdocao;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,8 +38,9 @@ public class Adocao implements Serializable{
     @Column(name = "data_adocao", nullable = false)
     private LocalDate dataAdocao;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
-    private String status;
+    private StatusAdocao status;
 
     //do ponto de vista da adoção, cada registro está ligado a um único usuário, mas o mesmo usuário pode aparecer em várias adoções.
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

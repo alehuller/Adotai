@@ -3,9 +3,12 @@ package br.com.alevh.sistema_adocao_pets.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -56,8 +59,9 @@ public class Animal implements Serializable{
     @Column(name = "sexo", nullable = false, length = 10)
     private String sexo;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private String status;
+    private StatusAnimal status;
 
     //varios animais podem estar associados a uma única ong
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
