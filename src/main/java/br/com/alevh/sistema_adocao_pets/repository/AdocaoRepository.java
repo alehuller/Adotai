@@ -14,4 +14,7 @@ public interface AdocaoRepository extends JpaRepository<Adocao, Long> {
 
     @Query("SELECT a FROM Adocao a WHERE a.usuario.id = :idUsuario")
     Page<Adocao> findAdocoesByUsuarioId(@Param("idUsuario") Long idUsuario, Pageable pageable);
+
+    @Query("SELECT a FROM Adocao a WHERE a.animal.ong.id = :idOng")
+    Page<Adocao> findAdocoesByOngId(@Param("idOng") Long idOng, Pageable pageable);
 }

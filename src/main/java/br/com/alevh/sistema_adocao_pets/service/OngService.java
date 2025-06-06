@@ -12,12 +12,17 @@ import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
+import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
+import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
+import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +32,13 @@ public class OngService {
 
     private final OngRepository ongRepository;
 
+    private final AdocaoRepository adocaoRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final PagedResourcesAssembler<OngDTO> assembler;
+
+    private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
         
@@ -87,5 +96,21 @@ public class OngService {
 
     public void delete(Long id) {
         ongRepository.deleteById(id);
+    }
+
+    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByOngId(Long idOng, Pageable pageable) {
+
+        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByOngId(idOng, pageable);
+
+        Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
+
+        adocaoDtoPage = adocaoDtoPage.map(
+                dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
+
+        Link selfLink = linkTo(methodOn(OngController.class)
+                .listarAdocoesPorOngId(idOng, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 }

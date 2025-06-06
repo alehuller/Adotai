@@ -152,7 +152,7 @@ public class UsuarioController {
                         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
         })
         public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorUsuarioId(
-                        @PathVariable("id") Long idUsuario,
+                        @PathVariable("id") Long id,
                         @RequestParam(value = "page", defaultValue = "0") int page,
                         @RequestParam(value = "size", defaultValue = "10") int size,
                         @RequestParam(value = "direction", defaultValue = "asc") String direction) {
@@ -160,7 +160,7 @@ public class UsuarioController {
                 var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
                 Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
 
-                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByUsuarioId(idUsuario,
+                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByUsuarioId(id,
                                 pageable);
 
                 return ResponseEntity.ok(pagedModel);
