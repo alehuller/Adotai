@@ -1,5 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.config;
 
+import br.com.alevh.sistema_adocao_pets.exceptions.InvalidJwtAuthenticationException;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,12 +28,14 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
-        if(token != null){
-            var usuario = tokenService.validateToken(token);// valida o token
-            UserDetails userDetails = usuarioRepository.findUsuarioByEmail(usuario); //
 
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        // n tem token, passa mas tbm n autentica nessa porra
+        if(token != null){
+        var usuario = tokenService.validateToken(token);// valida o token
+        UserDetails userDetails = usuarioRepository.findUsuarioByEmail(usuario); //
+
+        var authentication = new UsernamePasswordAuthenticationToken(usuario, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
     }

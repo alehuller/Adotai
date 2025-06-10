@@ -1,11 +1,13 @@
 package br.com.alevh.sistema_adocao_pets.config;
 
+import br.com.alevh.sistema_adocao_pets.exceptions.InvalidJwtAuthenticationException;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -46,8 +48,10 @@ public class TokenService {
                     .build() // Constrói o verificador JWT
                     .verify(token) // Verifica e decodifica o token JWT fornecido
                     .getSubject(); // Retorna o "subject" do token -> identificador do usuário
-        } catch (JWTVerificationException exception){
-            return ""; // token inválido
+        } catch (JWTVerificationException e) {
+            throw new AuthenticationCredentialsNotFoundException("Token JWT inválido.");
+        } catch (InvalidJwtAuthenticationException e){
+            throw new InvalidJwtAuthenticationException("Token JWT ausente.");
         }
     }
 
