@@ -49,10 +49,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegistroDTO data){
-        // se encontrar o usuario no bd retorna badrequest
-        if(usuarioService.existsUsuarioWithEmail(data.getEmail())){
-            return ResponseEntity.badRequest().build();
-        }
+
         UsuarioDTO usuarioDTO = usuarioService.create(data);
         return ResponseEntity.ok().build();
     }

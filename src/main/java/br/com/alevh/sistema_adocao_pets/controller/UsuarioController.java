@@ -66,7 +66,7 @@ public class UsuarioController {
                         MediaType.APPLICATION_XML })
         @Operation(summary = "Retorna o usuário de id especificado", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))
                         }),
                         @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -84,7 +84,7 @@ public class UsuarioController {
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Registra um usuário", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))
                         }),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -115,7 +115,7 @@ public class UsuarioController {
                                         MediaType.APPLICATION_XML })
         @Operation(summary = "Atualiza o usuário", responses = {
                         @ApiResponse(description = "Success", responseCode = "200", content = {
-                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class))) /*mudar para VO */
+                                        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))
                         }),
                         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
