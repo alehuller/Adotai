@@ -1,7 +1,9 @@
 package br.com.alevh.sistema_adocao_pets.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-// import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +14,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
         // @Query("SELECT u FROM Usuario u WHERE u.email =:email")
         Usuario findUsuarioByEmail(@Param("email") String email);
+
+        @Query("SELECT u FROM Usuario u WHERE u.nomeUsuario =:nomeUsuario")
+        Optional<Usuario> findUsuarioByNomeUsuario(@Param("nomeUsuario") String nomeUsuario);
 }

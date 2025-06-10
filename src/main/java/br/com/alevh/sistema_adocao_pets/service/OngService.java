@@ -46,7 +46,7 @@ public class OngService {
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
-        
+
         Page<Ong> ongPage = ongRepository.findAll(pageable);
 
         Page<OngDTO> ongDtosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngDTO.class));
@@ -58,7 +58,7 @@ public class OngService {
     }
 
     public OngDTO findById(Long id) {
-        
+
         Ong entity = ongRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
@@ -68,9 +68,21 @@ public class OngService {
 
     }
 
+    public OngDTO findByNomeUsuario(String nomeUsuario) {
+
+        Ong entity = ongRepository.findOngByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+
+        OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
+        dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
+        return dto;
+
+    }
+
     public OngDTO create(OngDTO ong) {
-        
-        if(ong == null) throw new RequiredObjectIsNullException();
+
+        if (ong == null)
+            throw new RequiredObjectIsNullException();
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
@@ -79,14 +91,17 @@ public class OngService {
     }
 
     public OngDTO update(OngDTO ong, Long id) {
-        
-        if(ong == null) throw new RequiredObjectIsNullException();
+
+        if (ong == null)
+            throw new RequiredObjectIsNullException();
 
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
-        
+
         Ong entity = ongRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         entity.setNome(ong.getNome());
+        entity.setNomeUsuario(ong.getNomeUsuario());
+        entity.setFotoPerfil(ong.getFotoPerfil());
         entity.setEmail(ong.getEmail());
         entity.setSenha(ong.getSenha());
         entity.setEndereco(ong.getEndereco());
@@ -121,7 +136,7 @@ public class OngService {
 
     public OngDTO partialUpdate(Long id, Map<String, Object> updates) {
         Ong ong = ongRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
 
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {

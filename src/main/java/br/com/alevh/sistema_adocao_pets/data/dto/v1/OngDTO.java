@@ -27,6 +27,10 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
 
     private String nome;
 
+    private String nomeUsuario;
+
+    private String fotoPerfil;
+
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

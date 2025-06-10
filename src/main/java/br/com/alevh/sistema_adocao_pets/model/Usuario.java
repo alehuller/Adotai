@@ -29,11 +29,17 @@ public class Usuario implements UserDetails {
     @Column(name = "nome", nullable = false, length = 255)
     private String nome;
 
+    @Column(name = "nome_usuario", nullable = false, unique = true, length = 255)
+    private String nomeUsuario;
+
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
     @Column(name = "senha", nullable = false, length = 255)
     private String senha;
+
+    @Column(name = "foto_perfil", nullable = true, length = 255)
+    private String fotoPerfil;
 
     @Column(name = "cell", nullable = false, unique = true, length = 11)
     private String cell;

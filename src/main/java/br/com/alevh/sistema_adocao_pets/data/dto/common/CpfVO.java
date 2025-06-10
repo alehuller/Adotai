@@ -15,10 +15,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CpfDTO extends RepresentationModel<CpfDTO> implements Serializable{
+public class CpfVO extends RepresentationModel<CpfVO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "O CPF é obrigatório")
     @Pattern(regexp = "\\d{11}", message = "O CPF deve conter 11 dígitos numéricos")
     private String cpf;
+
+    //Regex para validação do CPF:
+    //CPF: "^((\d{3}).(\d{3}).(\d{3})-(\d{2}))*$"
 }

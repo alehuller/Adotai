@@ -84,6 +84,8 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuario.getNome());
+        entity.setNomeUsuario(usuario.getNomeUsuario());
+        entity.setFotoPerfil(usuario.getFotoPerfil());
         entity.setEmail(usuario.getEmail());
         entity.setSenha(usuario.getSenha());
         entity.setCell(usuario.getCell());
@@ -104,26 +106,35 @@ public class UsuarioService {
         return dto;
     }
 
+    public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
+
+        Usuario entity = usuarioRepository.findUsuarioByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
+        return dto;
+    }
+
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByUsuarioId(Long idUsuario, Pageable pageable) {
 
         Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByUsuarioId(idUsuario, pageable);
-    
+
         Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
-    
-        adocaoDtoPage = adocaoDtoPage.map(dto ->
-            dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel())
-        );
-    
+
+        adocaoDtoPage = adocaoDtoPage.map(
+                dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
+
         Link selfLink = linkTo(methodOn(UsuarioController.class)
                 .listarAdocoesPorUsuarioId(idUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
                 .withSelfRel();
-    
+
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 
     public UsuarioDTO partialUpdate(Long id, Map<String, Object> updates) {
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {

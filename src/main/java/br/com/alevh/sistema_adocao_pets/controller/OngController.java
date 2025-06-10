@@ -33,72 +33,78 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/ongs")
 @Tag(name = "Ongs", description = "Endpoints para manipulação do registro das ONGS.")
-public class OngController implements OngControllerDocs{
+public class OngController implements OngControllerDocs {
 
-    private final OngService ongService;
+        private final OngService ongService;
 
-    @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
-    public ResponseEntity<PagedModel<EntityModel<OngDTO>>> listarOngs(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+        @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
+        public ResponseEntity<PagedModel<EntityModel<OngDTO>>> listarOngs(
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+                var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "nome"));
-        return ResponseEntity.ok(ongService.findAll(pageable));
-    }
+                Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "nome"));
+                return ResponseEntity.ok(ongService.findAll(pageable));
+        }
 
-    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML })
-    public OngDTO acharOngPorId(@PathVariable(value = "id") Long id) {
-        return ongService.findById(id);
-    }
+        @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public OngDTO acharOngPorId(@PathVariable(value = "id") Long id) {
+                return ongService.findById(id);
+        }
 
-    @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                    MediaType.APPLICATION_XML })
-    public OngDTO registrarOng(@RequestBody OngDTO ong) {
-        return ongService.create(ong);
-    }
+        @GetMapping(value = "/{nome_usuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public OngDTO acharOngPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario) {
+                return ongService.findByNomeUsuario(nomeUsuario);
+        }
 
-    @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                    MediaType.APPLICATION_XML })
-    public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody OngDTO ong) {
-        return ongService.update(ong, id);
-    }
+        @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                                        MediaType.APPLICATION_XML })
+        public OngDTO registrarOng(@RequestBody OngDTO ong) {
+                return ongService.create(ong);
+        }
 
-    @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML })
-    public ResponseEntity<?> deletarOngPorId(@PathVariable(name = "id") Long id) {
-        ongService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+        @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                                        MediaType.APPLICATION_XML })
+        public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody OngDTO ong) {
+                return ongService.update(ong, id);
+        }
 
-    @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML })
-    public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorOngId(
-            @PathVariable("id") Long id,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public ResponseEntity<?> deletarOngPorId(@PathVariable(name = "id") Long id) {
+                ongService.delete(id);
+                return ResponseEntity.noContent().build();
+        }
 
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
+        @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorOngId(
+                        @PathVariable("id") Long id,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
-        PagedModel<EntityModel<AdocaoDTO>> pagedModel = ongService.findAllAdocoesByOngId(id,
-                pageable);
+                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
 
-        return ResponseEntity.ok(pagedModel);
-    }
+                PagedModel<EntityModel<AdocaoDTO>> pagedModel = ongService.findAllAdocoesByOngId(id,
+                                pageable);
 
-    @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                    MediaType.APPLICATION_XML })
-    public ResponseEntity<OngDTO> atualizarParcialOng(@PathVariable(value = "id") Long id,
-            @RequestBody Map<String, Object> updates) {
-        OngDTO ongAtualizada = ongService.partialUpdate(id, updates);
-        return ResponseEntity.ok(ongAtualizada);
-    }
+                return ResponseEntity.ok(pagedModel);
+        }
+
+        @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                                        MediaType.APPLICATION_XML })
+        public ResponseEntity<OngDTO> atualizarParcialOng(@PathVariable(value = "id") Long id,
+                        @RequestBody Map<String, Object> updates) {
+                OngDTO ongAtualizada = ongService.partialUpdate(id, updates);
+                return ResponseEntity.ok(ongAtualizada);
+        }
 }

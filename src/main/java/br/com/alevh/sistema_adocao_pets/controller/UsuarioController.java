@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/usuarios")
 @Tag(name = "Usuários", description = "Endpoints para manipulação do registro dos usuários.")
-public class UsuarioController implements UsuarioControllerDocs{
+public class UsuarioController implements UsuarioControllerDocs {
 
         private final UsuarioService usuarioService;
 
@@ -49,10 +49,16 @@ public class UsuarioController implements UsuarioControllerDocs{
                 return ResponseEntity.ok(usuarioService.findAll(pageable));
         }
 
-        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public UsuarioDTO acharUsuarioPorId(@PathVariable(value = "id") Long id) {
                 return usuarioService.findById(id);
+        }
+
+        @GetMapping(value = "/{nome_usuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario) {
+                return usuarioService.findByNomeUsuario(nomeUsuario);
         }
 
         @PostMapping(value = "/signup", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -79,7 +85,8 @@ public class UsuarioController implements UsuarioControllerDocs{
         @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "id") Long id, @RequestBody Map<String, Object> updates) {
+        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "id") Long id,
+                        @RequestBody Map<String, Object> updates) {
                 UsuarioDTO usuarioAtualizado = usuarioService.partialUpdate(id, updates);
                 return ResponseEntity.ok(usuarioAtualizado);
         }

@@ -29,6 +29,10 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
 
     private String email;
 
+    private String nomeUsuario;
+
+    private String fotoPerfil;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 

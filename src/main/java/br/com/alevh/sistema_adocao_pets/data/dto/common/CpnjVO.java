@@ -15,10 +15,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CpnjDTO extends RepresentationModel<CpnjDTO> implements Serializable{
+public class CpnjVO extends RepresentationModel<CpnjVO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "O CNPJ é obrigatório")
     @Pattern(regexp = "\\d{14}", message = "O CNPJ deve conter 14 dígitos numéricos")
     private String cnpj;
+
+    //Regex para validação do CNPJ:
+    //CNPJ: "^((\d{2}).(\d{3}).(\d{3})/(\d{4})-(\d{2}))*$"
 }
