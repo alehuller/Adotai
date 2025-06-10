@@ -36,5 +36,6 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     private String cell;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //Trocar para CpfDTO
     private String cpf;
 }

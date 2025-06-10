@@ -36,6 +36,7 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
 
     private String telefone;
 
+    //Trocar para CnpjDTO
     private String cnpj;
 
     private String responsavel;
