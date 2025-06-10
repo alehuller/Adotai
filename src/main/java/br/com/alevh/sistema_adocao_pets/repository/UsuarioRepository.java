@@ -9,5 +9,6 @@ import br.com.alevh.sistema_adocao_pets.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         Usuario findUsuarioByEmail(@Param("email") String email);
-
+        Usuario findUsuarioByCpf(@Param("cpf") String cpf);
+        Usuario findUsuarioByCell(@Param("cell") String cell);
 }
