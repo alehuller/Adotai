@@ -3,6 +3,8 @@ package br.com.alevh.sistema_adocao_pets.service;
 import br.com.alevh.sistema_adocao_pets.config.TokenService;
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.AuthDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginResponseDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
@@ -23,6 +25,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -90,6 +94,23 @@ public class UsuarioService {
         );
         return dto;
     }
+
+    public LoginResponseDTO logar(AuthDTO data){
+
+        if(data.email() == null){
+            throw new BadCredentialsException("Usuário ou senha inválidos.");
+        }
+        // credenciais do spring security
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+
+        // autentica de forma milagrosa as credenciais
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
+
+        return new LoginResponseDTO(token);
+    }
+
 
     public void delete(Long id) {
         usuarioRepository.deleteById(id);
