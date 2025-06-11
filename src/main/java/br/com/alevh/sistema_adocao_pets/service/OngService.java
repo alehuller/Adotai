@@ -85,6 +85,7 @@ public class OngService {
             throw new RequiredObjectIsNullException();
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
+        entity.setCnpj(ong.getCnpj().getCnpj());
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
         return dto;
@@ -106,7 +107,7 @@ public class OngService {
         entity.setSenha(ong.getSenha());
         entity.setEndereco(ong.getEndereco());
         entity.setTelefone(ong.getTelefone());
-        entity.setCnpj(ong.getCnpj());
+        entity.setCnpj(ong.getCnpj().getCnpj());
         entity.setResponsavel(ong.getResponsavel());
 
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);

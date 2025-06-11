@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.CnpjVO;
+import jakarta.validation.Valid;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +42,8 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
 
     private String telefone;
 
-    //Trocar para CnpjDTO
-    private String cnpj;
+    @Valid
+    private CnpjVO cnpj;
 
     private String responsavel;
 }

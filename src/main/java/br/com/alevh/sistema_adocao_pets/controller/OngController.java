@@ -9,6 +9,7 @@ import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.service.OngService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -64,7 +65,7 @@ public class OngController implements OngControllerDocs {
         @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO registrarOng(@RequestBody OngDTO ong) {
+        public OngDTO registrarOng(@RequestBody @Valid OngDTO ong) {
                 return ongService.create(ong);
         }
 

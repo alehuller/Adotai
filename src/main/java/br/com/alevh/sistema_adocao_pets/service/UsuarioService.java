@@ -64,6 +64,7 @@ public class UsuarioService {
             throw new RequiredObjectIsNullException();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario entity = DozerMapper.parseObject(usuario, Usuario.class);
+        entity.setCpf(usuario.getCpf().getCpf());
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
         return dto;
@@ -89,7 +90,7 @@ public class UsuarioService {
         entity.setEmail(usuario.getEmail());
         entity.setSenha(usuario.getSenha());
         entity.setCell(usuario.getCell());
-        entity.setCpf(usuario.getCpf());
+        entity.setCpf(usuario.getCpf().getCpf());
 
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());

@@ -44,7 +44,7 @@ public class Usuario implements UserDetails {
     @Column(name = "cell", nullable = false, unique = true, length = 11)
     private String cell;
 
-    @Column(name = "cpf", nullable = false, unique = true, length = 11)
+    @Column(name = "cpf", nullable = false, unique = true, length = 14)
     private String cpf;
 
     @Override

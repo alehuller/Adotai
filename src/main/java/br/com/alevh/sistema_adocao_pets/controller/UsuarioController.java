@@ -26,6 +26,7 @@ import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import br.com.alevh.sistema_adocao_pets.service.UsuarioService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -64,7 +65,7 @@ public class UsuarioController implements UsuarioControllerDocs {
         @PostMapping(value = "/signup", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO registrarUsuario(@RequestBody UsuarioDTO usuario) {
+        public UsuarioDTO registrarUsuario(@RequestBody @Valid UsuarioDTO usuario) {
                 return usuarioService.create(usuario);
         }
 

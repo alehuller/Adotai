@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.CpfVO;
+import jakarta.validation.Valid;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +41,7 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     @JsonProperty(value = "celular")
     private String cell;
 
+    @Valid
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    //Trocar para CpfDTO
-    private String cpf;
+    private CpfVO cpf;
 }
