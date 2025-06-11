@@ -84,4 +84,30 @@ public class UsuarioController implements UsuarioControllerDocs {
         public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id,@RequestBody UsuarioDTO usuario) {
                 return usuarioService.update(usuario, id);
         }
+
+        @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                MediaType.APPLICATION_XML })
+        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "id") Long id,
+                                                                  @RequestBody Map<String, Object> updates) {
+                UsuarioDTO usuarioAtualizado = usuarioService.partialUpdate(id, updates);
+                return ResponseEntity.ok(usuarioAtualizado);
+        }
+
+        @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                MediaType.APPLICATION_XML })
+        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorUsuarioId(
+                @PathVariable("id") Long id,
+                @RequestParam(value = "page", defaultValue = "0") int page,
+                @RequestParam(value = "size", defaultValue = "10") int size,
+                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+
+                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
+
+                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByUsuarioId(id,
+                        pageable);
+
+                return ResponseEntity.ok(pagedModel);
+        }
 }

@@ -1,7 +1,10 @@
 package br.com.alevh.sistema_adocao_pets.data.dto.security;
 
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.CpfVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +22,7 @@ public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Seri
     String password;
     String nome;
     String cell;
-    String cpf;
+    @Valid
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private CpfVO cpf;
 }

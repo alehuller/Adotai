@@ -2,6 +2,7 @@ package br.com.alevh.sistema_adocao_pets.controller.docs;
 
 import java.util.Map;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO registrarUsuario(UsuarioDTO usuario);
+    UsuarioDTO registrarUsuario(RegistroDTO usuario);
 
     @Operation(summary = "Apaga o usuário de id especificado", responses = {
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
