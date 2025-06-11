@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,10 +32,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         // n tem token, passa mas tbm n autentica nessa porra
         if(token != null){
-        var usuario = tokenService.validateToken(token);// valida o token
-        UserDetails userDetails = usuarioRepository.findUsuarioByEmail(usuario); //
+        var email = tokenService.validateToken(token);// valida o token
+        UserDetails userDetails = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
 
-        var authentication = new UsernamePasswordAuthenticationToken(usuario, null, userDetails.getAuthorities());
+        var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);

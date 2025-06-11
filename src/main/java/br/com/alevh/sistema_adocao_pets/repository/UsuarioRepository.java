@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 
+import java.util.Optional;
+
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-        Usuario findUsuarioByEmail(@Param("email") String email);
-        Usuario findUsuarioByCpf(@Param("cpf") String cpf);
-        Usuario findUsuarioByCell(@Param("cell") String cell);
+        Optional<Usuario> findByEmail(String email);
+        Optional<Usuario> findByCpf(@Param("cpf") String cpf);
+        Optional<Usuario> findByCell(@Param("cell") String cell);
 }
