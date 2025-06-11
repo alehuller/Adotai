@@ -57,8 +57,8 @@ public class TokenService {
 
     // tempo de expiração pro token
     private Instant genExpirationDate(){
-        return LocalDateTime.now() // hora atual
-                .plusHours(2) // mais duas horas
+        return LocalDateTime.now()
+                .plusHours(1)
                 .toInstant(ZoneOffset.of("-03:00")); // no fuso do Brasil
     }
 }
