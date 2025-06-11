@@ -1,5 +1,8 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.config.TokenService;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.AuthDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginResponseDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
@@ -10,7 +13,9 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +38,10 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
 
     private final PagedResourcesAssembler<UsuarioDTO> assembler;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final TokenService tokenService;
 
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
 
@@ -74,6 +83,22 @@ public class UsuarioService {
         return dto;
     }
 
+    public LoginResponseDTO logar(AuthDTO data){
+
+        if(data.email() == null){
+            throw new BadCredentialsException("Usuário ou senha inválidos.");
+        }
+        // credenciais do spring security
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+
+        // autentica de forma milagrosa as credenciais
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
+
+        return new LoginResponseDTO(token);
+    }
+
     public void delete(Long id) {
         usuarioRepository.deleteById(id);
     }
@@ -107,14 +132,14 @@ public class UsuarioService {
     }
 
     public boolean existsUsuarioWithEmail(String email){
-        return usuarioRepository.findUsuarioByEmail(email) != null;
+        return usuarioRepository.findByEmail(email).isPresent();
     }
 
     public boolean existsUsuarioWithCpf(String cpf){
-        return usuarioRepository.findUsuarioByCpf(cpf) != null;
+        return usuarioRepository.findByCpf(cpf).isPresent();
     }
 
     public boolean existsUsuarioWithCell(String cell){
-        return usuarioRepository.findUsuarioByCell(cell) != null;
+        return usuarioRepository.findByCell(cell).isPresent();
     }
 }

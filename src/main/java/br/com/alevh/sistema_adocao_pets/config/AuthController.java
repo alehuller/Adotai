@@ -34,17 +34,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthDTO data){
-        // credenciais do spring security
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-
-        // autentica de forma milagrosa as credenciais
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        //
-        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-
-        // exceções são lançadas pelo authentication manager na classe security config
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(usuarioService.logar(data));
     }
 
     @PostMapping("/register")
