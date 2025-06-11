@@ -6,6 +6,9 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -25,6 +28,7 @@ import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
@@ -43,6 +47,10 @@ public class UsuarioService {
 
     private final PagedResourcesAssembler<UsuarioDTO> assembler;
 
+    private final AuthenticationManager authenticationManager;
+
+    private final TokenService tokenService;
+
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
 
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
@@ -58,15 +66,30 @@ public class UsuarioService {
         return assembler.toModel(usuarioDtosPage, link);
     }
 
-    public UsuarioDTO create(UsuarioDTO usuario) {
-
-        if (usuario == null)
-            throw new RequiredObjectIsNullException();
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        Usuario entity = DozerMapper.parseObject(usuario, Usuario.class);
+    public UsuarioDTO create(RegistroDTO registroDTO) {
+        if(registroDTO == null){
+            throw new RequiredObjectIsNullException("JSON vazio.");
+        }
+        // se encontrar o usuario no bd retorna badrequest
+        if(existsUsuarioWithEmail(registroDTO.getEmail())){
+            throw new IllegalStateException("E-mail já está em uso.");
+        }
+        if(existsUsuarioWithCpf(registroDTO.getCpf())){
+            throw new IllegalStateException("CPF já está em uso.");
+        }
+        if(existsUsuarioWithCell(registroDTO.getCell())){
+            throw new IllegalStateException("Cell já está em uso.");
+        }
+        Usuario entity = DozerMapper.parseObject(registroDTO, Usuario.class);
         entity.setCpf(usuario.getCpf().getCpf());
+        entity.setSenha(passwordEncoder.encode(registroDTO.getPassword()));
+        entity.setRole(UsuarioRole.USER);
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
+        dto.add(
+                linkTo(
+                        methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())
+                ).withSelfRel()
+        );
         return dto;
     }
 
@@ -74,10 +97,9 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public UsuarioDTO update(UsuarioDTO usuario, Long id) {
-
-        if (usuario == null)
-            throw new RequiredObjectIsNullException();
+    public UsuarioDTO update(UsuarioDTO usuario, Long id) { 
+        
+//        if(usuario == null) throw new RequiredObjectIsNullException();
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
@@ -106,6 +128,19 @@ public class UsuarioService {
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
         return dto;
     }
+
+    public boolean existsUsuarioWithEmail(String email){
+        return usuarioRepository.findByEmail(email).isPresent();
+    }
+
+    public boolean existsUsuarioWithCpf(String cpf){
+        return usuarioRepository.findByCpf(cpf).isPresent();
+    }
+
+    public boolean existsUsuarioWithCell(String cell){
+        return usuarioRepository.findByCell(cell).isPresent();
+    }
+}
 
     public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
 

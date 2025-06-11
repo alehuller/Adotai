@@ -1,5 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Map;
@@ -52,6 +53,7 @@ public class UsuarioController implements UsuarioControllerDocs {
 
         @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
+
         public UsuarioDTO acharUsuarioPorId(@PathVariable(value = "id") Long id) {
                 return usuarioService.findById(id);
         }
@@ -65,8 +67,8 @@ public class UsuarioController implements UsuarioControllerDocs {
         @PostMapping(value = "/signup", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO registrarUsuario(@RequestBody @Valid UsuarioDTO usuario) {
-                return usuarioService.create(usuario);
+        public UsuarioDTO registrarUsuario(@RequestBody @Valid RegistroDTO registroDTO) {
+                return usuarioService.create(registroDTO);
         }
 
         @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -79,33 +81,7 @@ public class UsuarioController implements UsuarioControllerDocs {
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id, @RequestBody UsuarioDTO usuario) {
+        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id,@RequestBody UsuarioDTO usuario) {
                 return usuarioService.update(usuario, id);
-        }
-
-        @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                                        MediaType.APPLICATION_XML })
-        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "id") Long id,
-                        @RequestBody Map<String, Object> updates) {
-                UsuarioDTO usuarioAtualizado = usuarioService.partialUpdate(id, updates);
-                return ResponseEntity.ok(usuarioAtualizado);
-        }
-
-        @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML })
-        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorUsuarioId(
-                        @PathVariable("id") Long id,
-                        @RequestParam(value = "page", defaultValue = "0") int page,
-                        @RequestParam(value = "size", defaultValue = "10") int size,
-                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
-
-                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
-                Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
-
-                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByUsuarioId(id,
-                                pageable);
-
-                return ResponseEntity.ok(pagedModel);
         }
 }

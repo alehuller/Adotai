@@ -1,11 +1,15 @@
 package br.com.alevh.sistema_adocao_pets.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ExceptionResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
     private Date timestamp;
     private String message;
     private String details;

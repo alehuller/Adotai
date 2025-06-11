@@ -1,16 +1,15 @@
 package br.com.alevh.sistema_adocao_pets.model;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import br.com.alevh.sistema_adocao_pets.util.UsuarioRole;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -47,18 +46,36 @@ public class Usuario implements UserDetails {
     @Column(name = "cpf", nullable = false, unique = true, length = 14)
     private String cpf;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-}
+    @Column(name = "role", nullable = false, length = 255, columnDefinition = "smallint default 0")
+    private UsuarioRole role;
 
-    @Override
-    public String getPassword() {
-        return this.senha;    
+    public Usuario(String email, String senha, UsuarioRole role, String nome, String cell, String cpf){
+        this.email = email;
+        this.senha = senha;
+        this.role = role;
+        this.nome = nome;
+        this.cell = cell;
+        this.cpf = cpf;
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UsuarioRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        else{
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    //
+    @Override
     public String getUsername() {
-        return this.email;
+        return email;
     }
 }
