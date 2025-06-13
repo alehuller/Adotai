@@ -37,9 +37,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
-                        // permite que apenas admins adicionem novos produtos
-                        .requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMIN")
-
                         // demais requisições são para usuarios autenticados
                         .anyRequest().authenticated()
                 )

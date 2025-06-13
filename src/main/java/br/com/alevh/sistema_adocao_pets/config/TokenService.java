@@ -21,6 +21,11 @@ public class TokenService {
     @Value("${security.jwt.secret}") // application.properties
     private String secret;
 
+    @Value("${security.jwt.token.expire-length}")
+    private long expireLength;
+
+
+
     public String generateToken(Usuario usuario){
 
         try {
@@ -57,8 +62,6 @@ public class TokenService {
 
     // tempo de expiração pro token
     private Instant genExpirationDate(){
-        return LocalDateTime.now()
-                .plusHours(1)
-                .toInstant(ZoneOffset.of("-03:00")); // no fuso do Brasil
+        return Instant.now().plusMillis(expireLength);
     }
 }
