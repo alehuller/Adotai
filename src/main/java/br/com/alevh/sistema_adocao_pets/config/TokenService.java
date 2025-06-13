@@ -11,12 +11,11 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
-    //faz com que os hashs sejam unicos na aplicação (evitar padrões -> evitar ataques)
+    // faz com que os hashs sejam unicos na aplicação (evitar padrões -> evitar
+    // ataques)
     // guardar à 7 chaves
     @Value("${security.jwt.secret}") // application.properties
     private String secret;
@@ -37,16 +36,16 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("auth-api") // emissor do token -> nome aplicação, colocar o nome que quiser
                     .withSubject(usuario.getUsername()) // quem recebe o token -> usuário
-                    .withExpiresAt(genExpirationDate()) //  tempo pra expirar o token
+                    .withExpiresAt(genExpirationDate()) // tempo pra expirar o token
                     .sign(algorithm); // fazer a assinatura/geração final com o algoritmo ;
             return token;
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new RuntimeException("Error while generating token", exception);
         }
     }
 
-    public String validateToken(String token){
-        try{
+    public String validateToken(String token) {
+        try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
                     .withIssuer("auth-api") // Define o emissor esperado do token
@@ -55,7 +54,7 @@ public class TokenService {
                     .getSubject(); // Retorna o "subject" do token -> identificador do usuário
         } catch (JWTVerificationException e) {
             throw new AuthenticationCredentialsNotFoundException("Token JWT inválido.");
-        } catch (InvalidJwtAuthenticationException e){
+        } catch (InvalidJwtAuthenticationException e) {
             throw new InvalidJwtAuthenticationException("Token JWT ausente.");
         }
     }

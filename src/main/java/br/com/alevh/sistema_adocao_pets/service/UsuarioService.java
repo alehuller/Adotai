@@ -25,7 +25,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -89,19 +88,14 @@ public class UsuarioService {
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(
                 linkTo(
-                        methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())
-                ).withSelfRel()
-        );
+                        methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
         return dto;
     }
 
-    public LoginResponseDTO logar(AuthDTO data){
+    public LoginResponseDTO logar(AuthDTO data) {
 
-        if(data.email() == null){
-            throw new BadCredentialsException("Usuário ou senha inválidos.");
-        }
         // credenciais do spring security
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.identifier(), data.password());
 
         // autentica de forma milagrosa as credenciais
         var auth = this.authenticationManager.authenticate(usernamePassword);
@@ -111,14 +105,13 @@ public class UsuarioService {
         return new LoginResponseDTO(token);
     }
 
-
     public void delete(Long id) {
         usuarioRepository.deleteById(id);
     }
 
     public UsuarioDTO update(UsuarioDTO usuario, Long id) {
 
-//        if(usuario == null) throw new RequiredObjectIsNullException();
+        // if(usuario == null) throw new RequiredObjectIsNullException();
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
@@ -150,14 +143,13 @@ public class UsuarioService {
 
     public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
 
-        Usuario entity = usuarioRepository.findUsuarioByNomeUsuario(nomeUsuario)
+        Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
         return dto;
     }
-
 
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByUsuarioId(Long idUsuario, Pageable pageable) {
 

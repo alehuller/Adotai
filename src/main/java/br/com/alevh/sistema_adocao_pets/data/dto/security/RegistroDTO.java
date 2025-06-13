@@ -21,6 +21,8 @@ public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Seri
     String email;
     String password;
     String nome;
+    String nomeUsuario;
+    String fotoPerfil;
     String cell;
     @Valid
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

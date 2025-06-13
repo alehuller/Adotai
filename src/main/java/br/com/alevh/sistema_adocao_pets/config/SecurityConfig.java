@@ -23,13 +23,29 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        return  httpSecurity
-                .csrf(csrf -> csrf.disable()) // possibilita redirecionamento de dados em cyberataques de um site logado para outro
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(csrf -> csrf.disable()) // possibilita redirecionamento de dados em cyberataques de um site logado
+                                              // para outro
                 .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // trata as exceções lançadas dentro do filtro
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // trata as exceções lançadas dentro do
+                                                                               // filtro
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateful -> guarda no site as infos de user/senha, Stateless -> tokenização, n armazena nada no servidor
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateful
+                                                                                                              // ->
+                                                                                                              // guarda
+                                                                                                              // no site
+                                                                                                              // as
+                                                                                                              // infos
+                                                                                                              // de
+                                                                                                              // user/senha,
+                                                                                                              // Stateless
+                                                                                                              // ->
+                                                                                                              // tokenização,
+                                                                                                              // n
+                                                                                                              // armazena
+                                                                                                              // nada no
+                                                                                                              // servidor
                 // gerencia as rotas e os acessos com token e sem
                 .authorizeHttpRequests(authorize -> authorize
 
@@ -38,21 +54,23 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
                         // demais requisições são para usuarios autenticados
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
 
                 // antes de verificar as roles, vai validar o token do usuário
-                .addFilterBefore(securityFilter,  UsernamePasswordAuthenticationFilter.class) // ordem dos filtros, primeiro parâmetro e dps o segundo, q é do spring
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // ordem dos filtros,
+                                                                                             // primeiro parâmetro e dps
+                                                                                             // o segundo, q é do spring
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
