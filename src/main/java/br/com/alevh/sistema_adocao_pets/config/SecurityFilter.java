@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import br.com.alevh.sistema_adocao_pets.service.TokenBlackListService;
 import br.com.alevh.sistema_adocao_pets.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,13 +27,21 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final UsuarioRepository usuarioRepository;
 
+    private final TokenBlackListService tokenBlackListService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         var token = this.recoverToken(request);
 
-        // n tem token, passa mas tbm n autentica nessa porra
         if (token != null) {
+
+            if(tokenBlackListService.isTokenBlacklisted(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido: usuário fez logout");
+                return;
+            }
+
             var email = tokenService.validateToken(token);// valida o token
             UserDetails userDetails = usuarioRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //

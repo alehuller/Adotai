@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.AuthDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.service.TokenBlackListService;
 import br.com.alevh.sistema_adocao_pets.service.TokenService;
 import br.com.alevh.sistema_adocao_pets.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -28,6 +30,8 @@ public class AuthController {
 
     private final TokenService tokenService;
 
+    private final TokenBlackListService tokenBlackListService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthDTO data) {
         return ResponseEntity.ok(usuarioService.logar(data));
@@ -38,5 +42,20 @@ public class AuthController {
 
         UsuarioDTO usuarioDTO = usuarioService.create(data);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/signout")
+    public ResponseEntity<String> signOut(HttpServletRequest request) {
+        String token = extractToken(request);
+        tokenBlackListService.addToBlacklist(token);
+        return ResponseEntity.ok("Logout realizado com sucesso");
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        throw new RuntimeException("Token não encontrado na requisição");
     }
 }
