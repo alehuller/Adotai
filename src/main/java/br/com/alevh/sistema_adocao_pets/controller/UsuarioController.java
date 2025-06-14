@@ -53,7 +53,6 @@ public class UsuarioController implements UsuarioControllerDocs {
 
         @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-
         public UsuarioDTO acharUsuarioPorId(@PathVariable(value = "id") Long id) {
                 return usuarioService.findById(id);
         }
