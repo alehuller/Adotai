@@ -24,6 +24,7 @@ public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Seri
     @Email(message = "E-mail inválido. Insira um endereço de e-mail válido")
     String email;
 
+    @JsonProperty(value = "senha")
     String password;
 
     String nome;
@@ -32,6 +33,7 @@ public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Seri
 
     String fotoPerfil;
 
+    @JsonProperty(value = "celular")
     String cell;
     
     @Valid
