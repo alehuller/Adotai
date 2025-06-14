@@ -39,7 +39,7 @@ public class Usuario implements UserDetails {
     @Column(name = "foto_perfil", nullable = true, length = 255)
     private String fotoPerfil;
 
-    @Column(name = "cell", nullable = false, unique = true, length = 11)
+    @Column(name = "cell", nullable = false, unique = true, length = 15)
     private String cell;
 
     @Column(name = "cpf", nullable = false, unique = true, length = 14)

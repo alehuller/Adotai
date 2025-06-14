@@ -12,6 +12,7 @@ import br.com.alevh.sistema_adocao_pets.data.dto.common.CpfVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +44,7 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     private String senha;
 
     @JsonProperty(value = "celular")
+    @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O celular deve estar no formato (XX) XXXXX-XXXX")
     private String cell;
 
     @Valid
