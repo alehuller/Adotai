@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Serializable{
     String email;
     String password;

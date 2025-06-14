@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.config;
+package br.com.alevh.sistema_adocao_pets.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.AuthDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.service.TokenService;
 import br.com.alevh.sistema_adocao_pets.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

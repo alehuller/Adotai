@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.config;
+package br.com.alevh.sistema_adocao_pets.service;
 
 import br.com.alevh.sistema_adocao_pets.exceptions.InvalidJwtAuthenticationException;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;

@@ -3,7 +3,6 @@ package br.com.alevh.sistema_adocao_pets.exceptions;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class ExceptionResponse implements Serializable {

@@ -1,6 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
-import br.com.alevh.sistema_adocao_pets.config.TokenService;
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.AuthDTO;

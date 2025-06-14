@@ -1,6 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.model;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import br.com.alevh.sistema_adocao_pets.util.UsuarioRole;
