@@ -10,6 +10,8 @@ import com.github.dozermapper.core.Mapping;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.common.CpfVO;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,8 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
 
     private String nome;
 
+    @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "E-mail inválido. Insira um endereço de e-mail válido")
     private String email;
 
     private String nomeUsuario;
