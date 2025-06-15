@@ -106,7 +106,7 @@ public class OngService {
         entity.setEmail(ong.getEmail());
         entity.setSenha(ong.getSenha());
         entity.setEndereco(ong.getEndereco());
-        entity.setTelefone(ong.getTelefone());
+        entity.setCell(ong.getCell());
         entity.setCnpj(ong.getCnpj().getCnpj());
         entity.setResponsavel(ong.getResponsavel());
 
