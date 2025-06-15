@@ -40,7 +40,7 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
 
     private String endereco;
 
-    private String cell;
+    private String telefone;
 
     @Valid
     private CnpjVO cnpj;

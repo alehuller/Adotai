@@ -3,8 +3,8 @@ package br.com.alevh.sistema_adocao_pets.service;
 import br.com.alevh.sistema_adocao_pets.config.TokenService;
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.AuthDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginResponseDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
@@ -92,7 +92,7 @@ public class UsuarioService {
         return dto;
     }
 
-    public LoginResponseDTO logar(AuthDTO data) {
+    public TokenDTO logar(LoginDTO data) {
 
         // credenciais do spring security
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.identifier(), data.password());
@@ -102,7 +102,7 @@ public class UsuarioService {
 
         var token = tokenService.generateToken((Usuario) auth.getPrincipal());
 
-        return new LoginResponseDTO(token);
+        return new TokenDTO(token);
     }
 
     public void delete(Long id) {
