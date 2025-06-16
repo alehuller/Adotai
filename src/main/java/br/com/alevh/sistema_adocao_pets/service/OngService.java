@@ -86,6 +86,7 @@ public class OngService {
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
         entity.setCnpj(ong.getCnpj().getCnpj());
+        entity.setEmail(ong.getEmail().toLowerCase());
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
         return dto;
@@ -103,7 +104,7 @@ public class OngService {
         entity.setNome(ong.getNome());
         entity.setNomeUsuario(ong.getNomeUsuario());
         entity.setFotoPerfil(ong.getFotoPerfil());
-        entity.setEmail(ong.getEmail());
+        entity.setEmail(ong.getEmail().toLowerCase());
         entity.setSenha(ong.getSenha());
         entity.setEndereco(ong.getEndereco());
         entity.setTelefone(ong.getTelefone());
@@ -144,6 +145,10 @@ public class OngService {
             Field field = ReflectionUtils.findField(Ong.class, campo);
             if (field != null) {
                 field.setAccessible(true);
+
+                if(campo.equalsIgnoreCase("email") && valor instanceof String) {
+                    valor = ((String) valor).toLowerCase();
+                }
                 ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
             }
         });
