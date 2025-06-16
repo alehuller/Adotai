@@ -36,6 +36,7 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     @Email(message = "E-mail inválido. Insira um endereço de e-mail válido")
     private String email;
 
+    @Pattern(regexp = "^\\S+$", message = "O nome de usuário não pode conter espaços")
     private String nomeUsuario;
 
     private String fotoPerfil;

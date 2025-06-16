@@ -30,6 +30,7 @@ public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Seri
 
     String nome;
 
+    @Pattern(regexp = "^\\S+$", message = "O nome de usuário não pode conter espaços")
     String nomeUsuario;
 
     String fotoPerfil;
