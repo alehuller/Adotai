@@ -32,6 +32,7 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
 
     private String nome;
 
+    @Pattern(regexp = "^\\S+$", message = "O nome de usuário não pode conter espaços")
     private String nomeUsuario;
 
     private String fotoPerfil;
