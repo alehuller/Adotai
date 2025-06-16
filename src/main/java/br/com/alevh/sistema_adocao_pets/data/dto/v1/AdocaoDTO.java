@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import br.com.alevh.sistema_adocao_pets.enums.StatusAdocao;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +30,13 @@ public class AdocaoDTO extends RepresentationModel<AdocaoDTO> implements Seriali
     @Mapping("idAdocao")
     private Long key;
 
+    @NotBlank(message = "A data de adoção é obrigatória")
+    @NotNull(message = "A data de adoção é obrigatória")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataAdocao;
 
+    @NotBlank(message = "O status da adoção é obrigatório")
+    @NotNull(message = "O status da adoção é obrigatório")
     private StatusAdocao status;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

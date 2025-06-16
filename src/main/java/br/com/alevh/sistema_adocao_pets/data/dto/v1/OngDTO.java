@@ -12,6 +12,7 @@ import br.com.alevh.sistema_adocao_pets.data.dto.common.CnpjVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,28 +31,43 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     @Mapping("idOng")
     private Long key;
 
+    @NotBlank(message = "O nome da ong é obrigatório")
+    @NotNull(message = "O nome da ong é obrigatório")
     private String nome;
 
+    @NotBlank(message = "O nome de usuário da ong é obrigatório")
+    @NotNull(message = "O nome de usuário da ong é obrigatório")
     @Pattern(regexp = "^\\S+$", message = "O nome de usuário não pode conter espaços")
     private String nomeUsuario;
 
+    @NotBlank(message = "A foto de perfil da ong é obrigatória")
+    @NotNull(message = "A foto de perfil da ong é obrigatória")
     private String fotoPerfil;
 
     @NotBlank(message = "O e-mail é obrigatório")
+    @NotNull(message = "O e-mail é obrigatório")
     @Email(message = "E-mail inválido. Insira um endereço de e-mail válido")
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
+    @NotBlank(message = "O endereço da ong é obrigatório")
+    @NotNull(message = "O endereço da ong é obrigatório")
     private String endereco;
 
+    @NotBlank(message = "O telefone da ong é obrigatório")
+    @NotNull(message = "O telefone da ong é obrigatório")
     @JsonProperty(value = "celular")
     @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O celular deve estar no formato (XX) XXXXX-XXXX")
     private String telefone;
 
+    @NotBlank(message = "O cnpj da ong é obrigatório")
+    @NotNull(message = "O cnpj da ong é obrigatório")
     @Valid
     private CnpjVO cnpj;
 
+    @NotBlank(message = "O responsável pela ong é obrigatório")
+    @NotNull(message = "O responsável pela ong é obrigatório")
     private String responsavel;
 }
