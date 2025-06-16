@@ -83,6 +83,7 @@ public class UsuarioService {
         Usuario entity = DozerMapper.parseObject(registroDTO, Usuario.class);
         entity.setCpf(registroDTO.getCpf().getCpf());
         entity.setSenha(passwordEncoder.encode(registroDTO.getPassword()));
+        entity.setEmail(registroDTO.getEmail().toLowerCase());
         entity.setRole(UsuarioRole.USER);
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(
@@ -92,9 +93,16 @@ public class UsuarioService {
     }
 
     public LoginResponseDTO logar(AuthDTO data) {
+        
+        String identifier = data.identifier();
+
+        //Se for um e-mail (tem '@'), transforma para lowercase
+        if (identifier.contains("@")) {
+            identifier = identifier.toLowerCase();
+        }
 
         // credenciais do spring security
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.identifier(), data.password());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(identifier, data.password());
 
         // autentica de forma milagrosa as credenciais
         var auth = this.authenticationManager.authenticate(usernamePassword);
@@ -120,7 +128,7 @@ public class UsuarioService {
         entity.setNome(usuario.getNome());
         entity.setNomeUsuario(usuario.getNomeUsuario());
         entity.setFotoPerfil(usuario.getFotoPerfil());
-        entity.setEmail(usuario.getEmail());
+        entity.setEmail(usuario.getEmail().toLowerCase());
         entity.setSenha(usuario.getSenha());
         entity.setCell(usuario.getCell());
         entity.setCpf(usuario.getCpf().getCpf());
@@ -175,6 +183,10 @@ public class UsuarioService {
             Field field = ReflectionUtils.findField(Usuario.class, campo);
             if (field != null) {
                 field.setAccessible(true);
+
+                if(campo.equalsIgnoreCase("email") && valor instanceof String) {
+                    valor = ((String) valor).toLowerCase();
+                }
                 ReflectionUtils.setField(field, usuario, mapper.convertValue(valor, field.getType()));
             }
         });
