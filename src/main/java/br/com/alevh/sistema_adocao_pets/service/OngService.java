@@ -1,13 +1,19 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.config.TokenService;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
+import br.com.alevh.sistema_adocao_pets.util.Roles;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -45,6 +51,10 @@ public class OngService {
 
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
 
+    private final AuthenticationManager authenticationManager;
+
+    private final TokenService tokenService;
+
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
 
         Page<Ong> ongPage = ongRepository.findAll(pageable);
@@ -70,7 +80,7 @@ public class OngService {
 
     public OngDTO findByNomeUsuario(String nomeUsuario) {
 
-        Ong entity = ongRepository.findOngByNomeUsuario(nomeUsuario)
+        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
@@ -82,13 +92,32 @@ public class OngService {
     public OngDTO create(OngDTO ong) {
 
         if (ong == null)
-            throw new RequiredObjectIsNullException();
+            throw new RequiredObjectIsNullException("JSON vazio");
+
+        // se encontrar a ong no bd retorna badrequest
+        if (existsUsuarioWithEmail(ong.getEmail())) {
+            throw new IllegalStateException("E-mail já está em uso");
+        }
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
         entity.setCnpj(ong.getCnpj().getCnpj());
+        entity.setRole(Roles.ONG);
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
         return dto;
+    }
+
+    public TokenDTO logar(LoginDTO data) {
+
+        // credenciais do spring security
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.identifier(), data.password());
+
+        // autentica de forma milagrosa as credenciais
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateToken((Ong) auth.getPrincipal());
+
+        return new TokenDTO(token);
     }
 
     public OngDTO update(OngDTO ong, Long id) {
@@ -151,4 +180,13 @@ public class OngService {
         ongRepository.save(ong);
         return DozerMapper.parseObject(ong, OngDTO.class);
     }
+
+    public boolean existsUsuarioWithEmail(String email) {
+        return ongRepository.findByEmail(email).isPresent();
+    }
+
+
+
+
+
 }

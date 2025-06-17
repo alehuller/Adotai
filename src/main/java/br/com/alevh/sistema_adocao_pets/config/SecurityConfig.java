@@ -50,8 +50,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 
                         // permite que todos disparem requisições de login e de registro
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+
+                        .requestMatchers("/api/v1/usuarios/**").hasRole("USER")
+                        .requestMatchers("/api/v1/ongs/**").hasRole("ONG")
 
                         // demais requisições são para usuarios autenticados
                         .anyRequest().authenticated())
