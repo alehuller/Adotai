@@ -1,12 +1,13 @@
 package br.com.alevh.sistema_adocao_pets.util;
 
-public enum UsuarioRole {
+public enum Roles {
     ADMIN("admin"),
-    USER("usuario");
+    USER("usuario"),
+    ONG("ong");
 
     private String role;
 
-    UsuarioRole(String role){
+    Roles(String role){
         this.role = role;
     }
     public String getRole(){

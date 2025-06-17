@@ -38,12 +38,12 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
-    private String endereco;
-
-    private String telefone;
-
     @Valid
     private CnpjVO cnpj;
+
+    private String endereco;
+
+    private String cell;
 
     private String responsavel;
 }

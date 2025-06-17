@@ -1,6 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
-import br.com.alevh.sistema_adocao_pets.util.UsuarioRole;
+import br.com.alevh.sistema_adocao_pets.util.Roles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,5 +32,5 @@ public abstract class PerfilBase {
     private String cell;
 
     @Column(name = "role", nullable = false, length = 255, columnDefinition = "smallint default 0")
-    private UsuarioRole role;
+    private Roles role;
 }
