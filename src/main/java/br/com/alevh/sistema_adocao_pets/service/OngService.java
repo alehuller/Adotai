@@ -5,6 +5,7 @@ import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
+import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
 import br.com.alevh.sistema_adocao_pets.util.Roles;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -115,7 +116,7 @@ public class OngService {
         // autentica de forma milagrosa as credenciais
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((Ong) auth.getPrincipal());
+        var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
 
         return new TokenDTO(token);
     }

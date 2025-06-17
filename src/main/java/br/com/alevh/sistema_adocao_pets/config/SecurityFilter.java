@@ -2,7 +2,7 @@ package br.com.alevh.sistema_adocao_pets.config;
 
 import java.io.IOException;
 
-import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityRepository;
+import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +23,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
 
-    private final LoginIdentityRepository loginIdentityRepository;
+    private final LoginIdentityViewRepository loginIdentityViewRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -33,7 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         // n tem token, passa mas tbm n autentica nessa porra
         if (token != null) {
             var email = tokenService.validateToken(token);// valida o token
-            UserDetails userDetails = loginIdentityRepository.findByEmail(email)
+            UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
 
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
