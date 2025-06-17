@@ -61,7 +61,6 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     private String cell;
 
     @Valid
-    @NotBlank(message = "O cpf de usuário é obrigatório")
     @NotNull(message = "O cpf de usuário é obrigatório")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private CpfVO cpf;

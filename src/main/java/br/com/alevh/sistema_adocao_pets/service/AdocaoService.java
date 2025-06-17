@@ -18,6 +18,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Set;
 
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
@@ -32,6 +33,9 @@ import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -51,6 +55,8 @@ public class AdocaoService {
     private final OngService ongService;
 
     private final PagedResourcesAssembler<AdocaoDTO> assembler;
+
+    private final Validator validator;
 
     public PagedModel<EntityModel<AdocaoDTO>> findAll(Pageable pageable) {
 
@@ -133,6 +139,21 @@ public class AdocaoService {
                 ReflectionUtils.setField(field, adocao, mapper.convertValue(valor, field.getType()));
             }
         });
+
+        // Mapeia a entidade para o DTO
+        AdocaoDTO adocaoDTO = DozerMapper.parseObject(adocao, AdocaoDTO.class);
+
+        // Faz a validação do DTO
+        Set<ConstraintViolation<AdocaoDTO>> violations = validator.validate(adocaoDTO);
+
+        // Se houver erros de validação, lança uma exceção
+        if (!violations.isEmpty()) {
+            StringBuilder errors = new StringBuilder();
+            for (ConstraintViolation<AdocaoDTO> violation : violations) {
+                errors.append(violation.getMessage());
+            }
+            throw new ConstraintViolationException("Erro de validação: " + errors.toString(), violations);
+        }
 
         adocaoRepository.save(adocao);
         return DozerMapper.parseObject(adocao, AdocaoDTO.class);

@@ -58,11 +58,9 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
 
     @NotBlank(message = "O telefone da ong é obrigatório")
     @NotNull(message = "O telefone da ong é obrigatório")
-    @JsonProperty(value = "celular")
-    @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O celular deve estar no formato (XX) XXXXX-XXXX")
+    @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O telefone deve estar no formato (XX) XXXXX-XXXX")
     private String telefone;
 
-    @NotBlank(message = "O cnpj da ong é obrigatório")
     @NotNull(message = "O cnpj da ong é obrigatório")
     @Valid
     private CnpjVO cnpj;

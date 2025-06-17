@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.service;
+package br.com.alevh.sistema_adocao_pets.service.auth;
 
 import java.util.HashSet;
 import java.util.Set;

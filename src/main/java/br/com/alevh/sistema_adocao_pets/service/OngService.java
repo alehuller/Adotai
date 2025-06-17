@@ -19,6 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Set;
 
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
@@ -29,6 +30,9 @@ import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,6 +48,8 @@ public class OngService {
     private final PagedResourcesAssembler<OngDTO> assembler;
 
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
+
+    private final Validator validator;
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
 
@@ -152,6 +158,21 @@ public class OngService {
                 ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
             }
         });
+
+        // Mapeia a entidade para o DTO
+        OngDTO ongDTO = DozerMapper.parseObject(ong, OngDTO.class);
+
+        // Faz a validação do DTO
+        Set<ConstraintViolation<OngDTO>> violations = validator.validate(ongDTO);
+
+        // Se houver erros de validação, lança uma exceção
+        if (!violations.isEmpty()) {
+            StringBuilder errors = new StringBuilder();
+            for (ConstraintViolation<OngDTO> violation : violations) {
+                errors.append(violation.getMessage());
+            }
+            throw new ConstraintViolationException("Erro de validação: " + errors.toString(), violations);
+        }
 
         ongRepository.save(ong);
         return DozerMapper.parseObject(ong, OngDTO.class);

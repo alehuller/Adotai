@@ -14,7 +14,12 @@ import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
 import br.com.alevh.sistema_adocao_pets.util.UsuarioRole;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +36,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -52,6 +58,8 @@ public class UsuarioService {
     private final TokenService tokenService;
 
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
+
+    private final Validator validator;
 
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
 
@@ -184,12 +192,28 @@ public class UsuarioService {
             if (field != null) {
                 field.setAccessible(true);
 
-                if(campo.equalsIgnoreCase("email") && valor instanceof String) {
+                if (campo.equalsIgnoreCase("email") && valor instanceof String) {
                     valor = ((String) valor).toLowerCase();
                 }
+
                 ReflectionUtils.setField(field, usuario, mapper.convertValue(valor, field.getType()));
             }
         });
+
+        // Mapeia a entidade para o DTO
+        UsuarioDTO usuarioDTO = DozerMapper.parseObject(usuario, UsuarioDTO.class);
+
+        // Faz a validação do DTO
+        Set<ConstraintViolation<UsuarioDTO>> violations = validator.validate(usuarioDTO);
+
+        // Se houver erros de validação, lança uma exceção
+        if (!violations.isEmpty()) {
+            StringBuilder errors = new StringBuilder();
+            for (ConstraintViolation<UsuarioDTO> violation : violations) {
+                errors.append(violation.getMessage());
+            }
+            throw new ConstraintViolationException("Erro de validação: " + errors.toString(), violations);
+        }
 
         usuarioRepository.save(usuario);
         return DozerMapper.parseObject(usuario, UsuarioDTO.class);

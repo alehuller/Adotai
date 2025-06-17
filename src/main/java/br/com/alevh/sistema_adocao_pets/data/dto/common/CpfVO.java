@@ -19,7 +19,6 @@ public class CpfVO extends RepresentationModel<CpfVO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "O CPF é obrigatório")
-    //@Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "O CPF deve estar no formato XXX.XXX.XXX-XX")
     @CPF
     private String cpf;
 

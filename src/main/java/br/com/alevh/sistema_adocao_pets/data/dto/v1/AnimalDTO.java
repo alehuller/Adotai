@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,19 +29,15 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
     @Mapping("idAnimal")
     private Long key;
     
-    @NotBlank(message = "O nome do animal é obrigatório")
     @NotNull(message = "O nome do animal é obrigatório")
     private String nome;
 
-    @NotBlank(message = "A espécie do animal é obrigatória")
     @NotNull(message = "A espécie do animal é obrigatória")
     private String especie;
 
-    @NotBlank(message = "A raça do animal é obrigatória")
     @NotNull(message = "A raça do animal é obrigatória")
     private String raca;
 
-    @NotBlank(message = "A data de nascimento do animal é obrigatória")
     @NotNull(message = "A data de nascimento do animal é obrigatória")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
@@ -51,11 +46,9 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
 
     private String descricao;
 
-    @NotBlank(message = "O porte do animal é obrigatório")
     @NotNull(message = "O porte do animal é obrigatório")
     private String porte;
 
-    @NotBlank(message = "O sexo do animal é obrigatório")
     @NotNull(message = "O sexo do animal é obrigatório")
     private String sexo;
 

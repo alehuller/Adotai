@@ -50,7 +50,7 @@ public class Ong implements UserDetails {
     @Column(name = "endereco", nullable = false, length = 255)
     private String endereco;
 
-    @Column(name = "telefone", nullable = false, unique = true, length = 11)
+    @Column(name = "telefone", nullable = false, unique = true, length = 15)
     private String telefone;
 
     @Column(name = "cnpj", nullable = false, unique = true, length = 18)

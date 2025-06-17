@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.service;
+package br.com.alevh.sistema_adocao_pets.service.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
-import br.com.alevh.sistema_adocao_pets.service.TokenBlackListService;
-import br.com.alevh.sistema_adocao_pets.service.TokenService;
+import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;
+import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
