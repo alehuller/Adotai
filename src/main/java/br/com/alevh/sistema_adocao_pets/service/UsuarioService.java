@@ -15,7 +15,7 @@ import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
-import br.com.alevh.sistema_adocao_pets.util.UsuarioRole;
+import br.com.alevh.sistema_adocao_pets.util.Roles;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -69,22 +69,22 @@ public class UsuarioService {
 
     public UsuarioDTO create(RegistroDTO registroDTO) {
         if (registroDTO == null) {
-            throw new RequiredObjectIsNullException("JSON vazio.");
+            throw new RequiredObjectIsNullException("JSON vazio");
         }
         // se encontrar o usuario no bd retorna badrequest
         if (existsUsuarioWithEmail(registroDTO.getEmail())) {
-            throw new IllegalStateException("E-mail já está em uso.");
+            throw new IllegalStateException("E-mail já está em uso");
         }
         if (existsUsuarioWithCpf(registroDTO.getCpf().getCpf())) {
-            throw new IllegalStateException("CPF já está em uso.");
+            throw new IllegalStateException("CPF já está em uso");
         }
         if (existsUsuarioWithCell(registroDTO.getCell())) {
-            throw new IllegalStateException("Cell já está em uso.");
+            throw new IllegalStateException("Cell já está em uso");
         }
         Usuario entity = DozerMapper.parseObject(registroDTO, Usuario.class);
         entity.setCpf(registroDTO.getCpf().getCpf());
         entity.setSenha(passwordEncoder.encode(registroDTO.getPassword()));
-        entity.setRole(UsuarioRole.USER);
+        entity.setRole(Roles.USER);
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(
                 linkTo(
