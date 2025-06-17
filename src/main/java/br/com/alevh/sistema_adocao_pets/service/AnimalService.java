@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -117,6 +118,7 @@ public class AnimalService {
             .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         updates.forEach((campo, valor) -> {
             Field field = ReflectionUtils.findField(Animal.class, campo);
             if (field != null) {
