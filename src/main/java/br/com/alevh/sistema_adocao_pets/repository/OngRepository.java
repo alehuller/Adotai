@@ -13,8 +13,10 @@ import br.com.alevh.sistema_adocao_pets.model.Ong;
 public interface OngRepository extends JpaRepository<Ong, Long> {
 
     // @Query("SELECT o FROM Ong o WHERE o.email =:email")
-    Ong findOngByEmail(@Param("email") String email);
+    Optional<Ong> findByEmail(@Param("email") String email);
 
-    @Query("SELECT o FROM Ong o WHERE o.nomeUsuario =:nomeUsuario")
-    Optional<Ong> findOngByNomeUsuario(@Param("nomeUsuario") String nomeUsuario);
+//    @Query("SELECT o FROM Ong o WHERE o.nomeUsuario =:nomeUsuario")
+    Optional<Ong> findByNomeUsuario(@Param("nomeUsuario") String nomeUsuario);
+
+
 }
