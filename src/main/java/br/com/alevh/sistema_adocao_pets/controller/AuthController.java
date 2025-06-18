@@ -65,16 +65,7 @@ public class AuthController {
 
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request) {
-        String token = extractToken(request);
-        tokenBlackListService.addToBlacklist(token);
+        tokenBlackListService.addToBlacklist(request);
         return ResponseEntity.ok("Logout realizado com sucesso");
-    }
-
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        throw new RuntimeException("Token não encontrado na requisição");
     }
 }
