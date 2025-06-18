@@ -116,8 +116,15 @@ public class OngService {
 
     public TokenDTO logar(LoginDTO data) {
 
+        String identifier = data.identifier();
+
+        //Se for um e-mail (tem '@'), transforma para lowercase
+        if (identifier.contains("@")) {
+            identifier = identifier.toLowerCase();
+        }
+
         // credenciais do spring security
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.identifier(), data.password());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(identifier, data.password());
 
         // autentica de forma milagrosa as credenciais
         var auth = this.authenticationManager.authenticate(usernamePassword);

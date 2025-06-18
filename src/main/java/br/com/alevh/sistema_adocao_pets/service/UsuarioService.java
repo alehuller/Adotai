@@ -105,7 +105,6 @@ public class UsuarioService {
         
         String identifier = data.identifier();
 
-
         //Se for um e-mail (tem '@'), transforma para lowercase
         if (identifier.contains("@")) {
             identifier = identifier.toLowerCase();
