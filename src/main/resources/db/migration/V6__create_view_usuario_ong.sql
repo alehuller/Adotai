@@ -1,0 +1,6 @@
+CREATE OR REPLACE VIEW v_login_identity AS
+SELECT id, email, senha, nome_usuario, role
+FROM usuario
+UNION
+SELECT id, email, senha, nome_usuario, role
+FROM ong;

@@ -48,17 +48,13 @@ public class SecurityConfig {
                                                                                                               // servidor
                 // gerencia as rotas e os acessos com token e sem
                 .authorizeHttpRequests(authorize -> authorize
-
-                        // permite que todos disparem requisições de login e de registro
-                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-
                         .requestMatchers("/api/v1/usuarios/**").hasRole("USER")
                         .requestMatchers("/api/v1/ongs/**").hasRole("ONG")
+                        .requestMatchers("/api/v1/**").authenticated()
 
                         // demais requisições são para usuarios autenticados
-                        .anyRequest().authenticated())
-
+                        .anyRequest().permitAll())
+                
                 // antes de verificar as roles, vai validar o token do usuário
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // ordem dos filtros,
                                                                                              // primeiro parâmetro e dps

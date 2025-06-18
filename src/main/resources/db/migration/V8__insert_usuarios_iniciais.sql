@@ -11,7 +11,7 @@ INSERT INTO
 VALUES (
         'Usuario 1',
         'usuario1@email.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '046.625.940-90',
         '(18)97420-5304',
         'Nome Usuario 1',
@@ -20,7 +20,7 @@ VALUES (
     (
         'Usuario 2',
         'usuario2@email.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '367.244.700-56',
         '(13)99385-5115',
         'Nome Usuario 2',
@@ -29,7 +29,7 @@ VALUES (
     (
         'Usuario 3',
         'usuario3@gmail.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '030.706.100-05',
         '(15)98823-4176',
         'Nome Usuario 3',
@@ -38,7 +38,7 @@ VALUES (
     (
         'Usuario 4',
         'usuario4@gmail.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '913.146.750-44',
         '(17)98637-6231',
         'Nome Usuario 4',
@@ -47,7 +47,7 @@ VALUES (
     (
         'Usuario 5',
         'usuario5@gmail.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '072.296.000-06',
         '(14)98466-3112',
         'Nome Usuario 5',

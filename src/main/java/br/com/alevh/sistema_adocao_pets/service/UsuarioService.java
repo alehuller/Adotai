@@ -130,10 +130,6 @@ public class UsuarioService {
 
     public UsuarioDTO update(UsuarioDTO usuario, Long id) {
 
-        // if(usuario == null) throw new RequiredObjectIsNullException();
-
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-
         Usuario entity = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
@@ -141,7 +137,7 @@ public class UsuarioService {
         entity.setNomeUsuario(usuario.getNomeUsuario());
         entity.setFotoPerfil(usuario.getFotoPerfil());
         entity.setEmail(usuario.getEmail().toLowerCase());
-        entity.setSenha(usuario.getSenha());
+        entity.setSenha(passwordEncoder.encode(usuario.getSenha()));
         entity.setCell(usuario.getCell());
         entity.setCpf(usuario.getCpf().getCpf());
 
