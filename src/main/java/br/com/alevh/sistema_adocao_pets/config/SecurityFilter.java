@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         var token = this.recoverToken(request);
-
+        token = null;
         // n tem token, passa mas tbm n autentica nessa porra
         if (token != null) {
 
@@ -55,13 +55,10 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     // recupera o token que está presente no header da requisição
     private String recoverToken(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
-        if (authHeader == null) {
-            return null;
-        }
+        var authHeader = request.getHeader("Authorization").replace("Bearer ", "");
         // no header ele vem "Bearer token123125135413"
         // desse jeito ele tira esse começo e deixa só o token
-        return authHeader.replace("Bearer ", "");
+        return authHeader;
     }
 
 }
