@@ -11,6 +11,8 @@ import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
+import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
+import br.com.alevh.sistema_adocao_pets.model.PerfilBase;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
@@ -30,6 +32,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -116,7 +119,7 @@ public class UsuarioService {
         // autentica de forma milagrosa as credenciais
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
+        var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
 
         return new TokenDTO(token);
     }

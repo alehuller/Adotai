@@ -2,6 +2,8 @@ package br.com.alevh.sistema_adocao_pets.controller;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.service.OngService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,22 +30,37 @@ public class AuthController {
 
     private final UsuarioService usuarioService;
 
+    private final OngService ongService;
+
     private final AuthenticationManager authenticationManager;
 
     private final TokenService tokenService;
 
     private final TokenBlackListService tokenBlackListService;
 
-    @PostMapping("/login")
+    // auth de user
+    @PostMapping("/user/login")
     public ResponseEntity<TokenDTO> login(@RequestBody @Valid LoginDTO data) {
         return ResponseEntity.ok(usuarioService.logar(data));
     }
 
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public ResponseEntity<UsuarioDTO> register(@RequestBody @Valid RegistroDTO data) {
 
         UsuarioDTO usuarioDTO = usuarioService.create(data);
         return ResponseEntity.ok(usuarioDTO);
+    }
+
+    // auth de ong
+    @PostMapping("/ong/login")
+    public ResponseEntity loginOng(@RequestBody @Valid LoginDTO data) {
+        return ResponseEntity.ok(ongService.logar(data));
+    }
+
+    @PostMapping("/ong/register")
+    public ResponseEntity registerOng(@RequestBody @Valid OngDTO data) {
+        OngDTO ongDTO = ongService.create(data);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/signout")

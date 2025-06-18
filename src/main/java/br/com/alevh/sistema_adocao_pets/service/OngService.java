@@ -1,13 +1,19 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
+import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
+import br.com.alevh.sistema_adocao_pets.util.Roles;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -19,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Set;
 
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
@@ -29,6 +36,9 @@ import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,6 +54,12 @@ public class OngService {
     private final PagedResourcesAssembler<OngDTO> assembler;
 
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
+
+    private final Validator validator;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final br.com.alevh.sistema_adocao_pets.service.auth.TokenService tokenService;
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
 
@@ -82,13 +98,33 @@ public class OngService {
     public OngDTO create(OngDTO ong) {
 
         if (ong == null)
-            throw new RequiredObjectIsNullException();
+            throw new RequiredObjectIsNullException("JSON vazio");
+
+        // se encontrar a ong no bd retorna badrequest
+        if (existsUsuarioWithEmail(ong.getEmail())) {
+            throw new IllegalStateException("E-mail já está em uso");
+        }
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
         entity.setCnpj(ong.getCnpj().getCnpj());
+        entity.setEmail(ong.getEmail().toLowerCase());
+        entity.setRole(Roles.ONG);
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
         return dto;
+    }
+
+    public TokenDTO logar(LoginDTO data) {
+
+        // credenciais do spring security
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.identifier(), data.password());
+
+        // autentica de forma milagrosa as credenciais
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
+
+        return new TokenDTO(token);
     }
 
     public OngDTO update(OngDTO ong, Long id) {
@@ -103,7 +139,7 @@ public class OngService {
         entity.setNome(ong.getNome());
         entity.setNomeUsuario(ong.getNomeUsuario());
         entity.setFotoPerfil(ong.getFotoPerfil());
-        entity.setEmail(ong.getEmail());
+        entity.setEmail(ong.getEmail().toLowerCase());
         entity.setSenha(ong.getSenha());
         entity.setEndereco(ong.getEndereco());
         entity.setCell(ong.getCell());
@@ -144,11 +180,39 @@ public class OngService {
             Field field = ReflectionUtils.findField(Ong.class, campo);
             if (field != null) {
                 field.setAccessible(true);
+
+                if(campo.equalsIgnoreCase("email") && valor instanceof String) {
+                    valor = ((String) valor).toLowerCase();
+                }
                 ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
             }
         });
 
+        // Mapeia a entidade para o DTO
+        OngDTO ongDTO = DozerMapper.parseObject(ong, OngDTO.class);
+
+        // Faz a validação do DTO
+        Set<ConstraintViolation<OngDTO>> violations = validator.validate(ongDTO);
+
+        // Se houver erros de validação, lança uma exceção
+        if (!violations.isEmpty()) {
+            StringBuilder errors = new StringBuilder();
+            for (ConstraintViolation<OngDTO> violation : violations) {
+                errors.append(violation.getMessage());
+            }
+            throw new ConstraintViolationException("Erro de validação: " + errors.toString(), violations);
+        }
+
         ongRepository.save(ong);
         return DozerMapper.parseObject(ong, OngDTO.class);
     }
+
+    public boolean existsUsuarioWithEmail(String email) {
+        return ongRepository.findByEmail(email).isPresent();
+    }
+
+
+
+
+
 }
