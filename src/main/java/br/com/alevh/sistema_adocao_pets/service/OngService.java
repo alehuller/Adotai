@@ -101,8 +101,17 @@ public class OngService {
             throw new RequiredObjectIsNullException("JSON vazio");
 
         // se encontrar a ong no bd retorna badrequest
-        if (existsUsuarioWithEmail(ong.getEmail())) {
+        if (existsOngWithEmail(ong.getEmail().toLowerCase())) {
             throw new IllegalStateException("E-mail já está em uso");
+        }
+        if (existsOngWithCnpj(ong.getCnpj().getCnpj())) {
+            throw new IllegalStateException("CNPJ já está em uso");
+        }
+        if (existsOngWithCell(ong.getCell())) {
+            throw new IllegalStateException("Celular já está em uso");
+        }
+        if (existsOngWithNomeUsuario(ong.getNomeUsuario())) {
+            throw new IllegalStateException("Nome Usuário já está em uso");
         }
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
@@ -214,12 +223,19 @@ public class OngService {
         return DozerMapper.parseObject(ong, OngDTO.class);
     }
 
-    public boolean existsUsuarioWithEmail(String email) {
+    public boolean existsOngWithEmail(String email) {
         return ongRepository.findByEmail(email).isPresent();
     }
 
+    public boolean existsOngWithCnpj(String cnpj) {
+        return ongRepository.findByCnpj(cnpj).isPresent();
+    }
 
+    public boolean existsOngWithNomeUsuario(String nomeUsuario) {
+        return ongRepository.findByNomeUsuario(nomeUsuario).isPresent();
+    }
 
-
-
+    public boolean existsOngWithCell(String cell) {
+        return ongRepository.findByCell(cell).isPresent();
+    }
 }

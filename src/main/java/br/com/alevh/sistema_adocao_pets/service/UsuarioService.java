@@ -80,7 +80,7 @@ public class UsuarioService {
             throw new RequiredObjectIsNullException("JSON vazio");
         }
         // se encontrar o usuario no bd retorna badrequest
-        if (existsUsuarioWithEmail(registroDTO.getEmail())) {
+        if (existsUsuarioWithEmail(registroDTO.getEmail().toLowerCase())) {
             throw new IllegalStateException("E-mail já está em uso");
         }
         if (existsUsuarioWithCpf(registroDTO.getCpf().getCpf())) {
@@ -88,6 +88,9 @@ public class UsuarioService {
         }
         if (existsUsuarioWithCell(registroDTO.getCell())) {
             throw new IllegalStateException("Cell já está em uso");
+        }
+        if (existsUsuarioWithNomeUsuario(registroDTO.getNomeUsuario())) {
+            throw new IllegalStateException("Nome de Usuário já está em uso");
         }
         Usuario entity = DozerMapper.parseObject(registroDTO, Usuario.class);
         entity.setCpf(registroDTO.getCpf().getCpf());
@@ -230,5 +233,9 @@ public class UsuarioService {
 
     public boolean existsUsuarioWithCell(String cell) {
         return usuarioRepository.findByCell(cell).isPresent();
+    }
+
+    public boolean existsUsuarioWithNomeUsuario(String nomeUsuario) {
+        return usuarioRepository.findByNomeUsuario(nomeUsuario).isPresent();
     }
 }
