@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 public abstract class PerfilBase {
 
-    private static final long serialVersionUID = 1L;
-
     @Column(name = "nome", nullable = false, length = 255)
     private String nome;
 

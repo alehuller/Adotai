@@ -1,8 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.service.auth;
 
 import br.com.alevh.sistema_adocao_pets.exceptions.InvalidJwtAuthenticationException;
-import br.com.alevh.sistema_adocao_pets.model.Ong;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

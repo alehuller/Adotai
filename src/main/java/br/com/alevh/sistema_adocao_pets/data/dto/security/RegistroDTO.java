@@ -52,7 +52,6 @@ public class RegistroDTO extends RepresentationModel<UsuarioDTO> implements Seri
     String cell;
     
     @Valid
-    @NotBlank(message = "O cpf de usuário é obrigatório")
     @NotNull(message = "O cpf de usuário é obrigatório")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private CpfVO cpf;

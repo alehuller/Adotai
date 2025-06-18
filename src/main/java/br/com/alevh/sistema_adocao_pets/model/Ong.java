@@ -1,7 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -14,12 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import static jakarta.persistence.InheritanceType.JOINED;
-
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "ong")
 

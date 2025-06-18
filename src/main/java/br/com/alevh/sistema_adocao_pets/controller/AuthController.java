@@ -53,14 +53,14 @@ public class AuthController {
 
     // auth de ong
     @PostMapping("/ong/login")
-    public ResponseEntity loginOng(@RequestBody @Valid LoginDTO data) {
+    public ResponseEntity<TokenDTO> loginOng(@RequestBody @Valid LoginDTO data) {
         return ResponseEntity.ok(ongService.logar(data));
     }
 
     @PostMapping("/ong/register")
-    public ResponseEntity registerOng(@RequestBody @Valid OngDTO data) {
+    public ResponseEntity<OngDTO> registerOng(@RequestBody @Valid OngDTO data) {
         OngDTO ongDTO = ongService.create(data);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ongDTO);
     }
 
     @PostMapping("/signout")
