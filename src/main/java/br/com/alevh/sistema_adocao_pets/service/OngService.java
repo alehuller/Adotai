@@ -19,7 +19,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Set;
 
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
@@ -30,9 +29,6 @@ import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,8 +44,6 @@ public class OngService {
     private final PagedResourcesAssembler<OngDTO> assembler;
 
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
-
-    private final Validator validator;
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
 
@@ -76,7 +70,7 @@ public class OngService {
 
     public OngDTO findByNomeUsuario(String nomeUsuario) {
 
-        Ong entity = ongRepository.findOngByNomeUsuario(nomeUsuario)
+        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
@@ -92,7 +86,6 @@ public class OngService {
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
         entity.setCnpj(ong.getCnpj().getCnpj());
-        entity.setEmail(ong.getEmail().toLowerCase());
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
         return dto;
@@ -110,10 +103,10 @@ public class OngService {
         entity.setNome(ong.getNome());
         entity.setNomeUsuario(ong.getNomeUsuario());
         entity.setFotoPerfil(ong.getFotoPerfil());
-        entity.setEmail(ong.getEmail().toLowerCase());
+        entity.setEmail(ong.getEmail());
         entity.setSenha(ong.getSenha());
         entity.setEndereco(ong.getEndereco());
-        entity.setTelefone(ong.getTelefone());
+        entity.setCell(ong.getCell());
         entity.setCnpj(ong.getCnpj().getCnpj());
         entity.setResponsavel(ong.getResponsavel());
 
@@ -151,28 +144,9 @@ public class OngService {
             Field field = ReflectionUtils.findField(Ong.class, campo);
             if (field != null) {
                 field.setAccessible(true);
-
-                if(campo.equalsIgnoreCase("email") && valor instanceof String) {
-                    valor = ((String) valor).toLowerCase();
-                }
                 ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
             }
         });
-
-        // Mapeia a entidade para o DTO
-        OngDTO ongDTO = DozerMapper.parseObject(ong, OngDTO.class);
-
-        // Faz a validação do DTO
-        Set<ConstraintViolation<OngDTO>> violations = validator.validate(ongDTO);
-
-        // Se houver erros de validação, lança uma exceção
-        if (!violations.isEmpty()) {
-            StringBuilder errors = new StringBuilder();
-            for (ConstraintViolation<OngDTO> violation : violations) {
-                errors.append(violation.getMessage());
-            }
-            throw new ConstraintViolationException("Erro de validação: " + errors.toString(), violations);
-        }
 
         ongRepository.save(ong);
         return DozerMapper.parseObject(ong, OngDTO.class);

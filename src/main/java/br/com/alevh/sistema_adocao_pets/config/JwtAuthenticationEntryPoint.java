@@ -2,6 +2,7 @@ package br.com.alevh.sistema_adocao_pets.config;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -30,7 +31,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 String json = new ObjectMapper().writeValueAsString(
                                 new ExceptionResponse(
                                                 new Date(),
-                                                "Acesso negado: " + authException.getMessage(),
+                                        List.of("Acesso negado: " + authException.getMessage()),
                                                 request.getRequestURI()));
 
                 response.getWriter().write(json);

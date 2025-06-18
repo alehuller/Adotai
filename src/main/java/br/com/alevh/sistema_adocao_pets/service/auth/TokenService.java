@@ -1,6 +1,7 @@
 package br.com.alevh.sistema_adocao_pets.service.auth;
 
 import br.com.alevh.sistema_adocao_pets.exceptions.InvalidJwtAuthenticationException;
+import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -8,6 +9,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,9 +25,8 @@ public class TokenService {
     @Value("${security.jwt.token.expire-length}")
     private long expireLength;
 
-
-
-    public String generateToken(Usuario usuario){
+    // gere tokens de Ong
+    public String generateToken(UserDetails userDetails){
 
         try {
             // algoritmo de geração de token, vem dentro da biblioteca do jwt
@@ -35,7 +36,7 @@ public class TokenService {
             // geração do token em si
             String token = JWT.create()
                     .withIssuer("auth-api") // emissor do token -> nome aplicação, colocar o nome que quiser
-                    .withSubject(usuario.getUsername()) // quem recebe o token -> usuário
+                    .withSubject(userDetails.getUsername()) // quem recebe o token -> usuário
                     .withExpiresAt(genExpirationDate()) // tempo pra expirar o token
                     .sign(algorithm); // fazer a assinatura/geração final com o algoritmo ;
             return token;
@@ -43,6 +44,9 @@ public class TokenService {
             throw new RuntimeException("Error while generating token", exception);
         }
     }
+
+    // gere tokens de Usuario
+
 
     public String validateToken(String token) {
         try {

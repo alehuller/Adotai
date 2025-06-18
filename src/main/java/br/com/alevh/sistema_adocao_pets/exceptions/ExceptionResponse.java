@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class ExceptionResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
     private Date timestamp;
-    private String message;
+    private List<String> message;
     private String details;
 
-    public ExceptionResponse(Date timestamp, String message, String details) {
+    public ExceptionResponse(Date timestamp, List<String> message, String details) {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;
@@ -27,11 +28,11 @@ public class ExceptionResponse implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public String getMessage() {
+    public List<String> getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(List<String> message) {
         this.message = message;
     }
 

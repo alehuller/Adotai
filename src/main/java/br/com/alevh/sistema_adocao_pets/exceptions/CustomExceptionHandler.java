@@ -3,11 +3,16 @@ package br.com.alevh.sistema_adocao_pets.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -16,17 +21,27 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
-                ex.getMessage(),
+                List.of(ex.getMessage()),
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleNotFound(NoResourceFoundException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                List.of(ex.getMessage()),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public final ResponseEntity<ExceptionResponse> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
-                ex.getMessage(),
+                List.of(ex.getMessage()),
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
@@ -36,7 +51,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleRequiredObjectIsNull(RequiredObjectIsNullException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
-                ex.getMessage(),
+                List.of(ex.getMessage()),
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
@@ -46,7 +61,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleIllegalStateException(IllegalStateException ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
-                ex.getMessage(),
+                List.of(ex.getMessage()),
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
@@ -56,9 +71,34 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleIllegalStateException(BadCredentialsException ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
-                ex.getMessage(),
+                List.of(ex.getMessage()),
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public final ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request){
+// Extrai mensagens de erro dos campos
+        List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .toList();
+
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                errors,
+                request.getDescription(false)
+        );
+        /*
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        */
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }
