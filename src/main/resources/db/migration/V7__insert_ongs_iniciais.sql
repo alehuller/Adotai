@@ -12,7 +12,7 @@ INSERT INTO
 VALUES (
         'Ong 1',
         'ong1@example.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '53.696.807/0001-77',
         'Responsavel 1',
         '(11)98765-4321',
@@ -22,7 +22,7 @@ VALUES (
     (
         'Ong 2',
         'ong2@example.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '13.416.048/0001-27',
         'Responsavel 2',
         '(11)98765-4322',
@@ -32,7 +32,7 @@ VALUES (
     (
         'Ong 3',
         'ong3@example.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '87.051.353/0001-07',
         'Responsavel 3',
         '(11)98765-4323',
@@ -42,7 +42,7 @@ VALUES (
     (
         'Ong 4',
         'ong4@example.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '11.661.062/0001-60',
         'Responsavel 4',
         '(11)98765-4324',
@@ -52,7 +52,7 @@ VALUES (
     (
         'Ong 5',
         'ong5@example.com',
-        '$2a$10$eSfrcluqBwFzZy7KZTcWceJbPdH9RvYfNjIhGJ6rL9M5U45Zz7sOa',
+        'senha123',
         '25.188.312/0001-00',
         'Responsavel 5',
         '(11)98765-4325',
