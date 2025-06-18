@@ -56,10 +56,10 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     @NotNull(message = "O endereço da ong é obrigatório")
     private String endereco;
 
-    @NotBlank(message = "O telefone da ong é obrigatório")
-    @NotNull(message = "O telefone da ong é obrigatório")
-    @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O telefone deve estar no formato (XX) XXXXX-XXXX")
-    private String telefone;
+    @NotBlank(message = "O celular da ong é obrigatório")
+    @NotNull(message = "O celular da ong é obrigatório")
+    @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O celular deve estar no formato (XX) XXXXX-XXXX")
+    private String cell;
 
     @NotNull(message = "O cnpj da ong é obrigatório")
     @Valid
