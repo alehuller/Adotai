@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS ong (
     cell VARCHAR(15) UNIQUE NOT NULL,
     nome_usuario VARCHAR(255) UNIQUE NOT NULL,
     foto_perfil VARCHAR(255),
+    endereco VARCHAR(255),
     role SMALLINT DEFAULT 2 NOT NULL
 );

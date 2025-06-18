@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS adocao (
-    idAdocao SERIAL PRIMARY KEY,
-    data DATE NOT NULL,
-    status INT NOT NULL,
-    usuario_id INT NOT NULL REFERENCES usuario(id),
-    animal_id INT NOT NULL REFERENCES animal(id)
+    id BIGSERIAL PRIMARY KEY,
+    data_adocao DATE NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    usuario_id BIGSERIAL NOT NULL REFERENCES usuario(id),
+    animal_id BIGSERIAL NOT NULL REFERENCES animal(id)
 );
