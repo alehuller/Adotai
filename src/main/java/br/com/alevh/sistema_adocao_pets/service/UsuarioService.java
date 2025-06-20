@@ -7,7 +7,6 @@ import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
-import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
@@ -21,6 +20,8 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 
 import br.com.alevh.sistema_adocao_pets.util.Roles;
+import br.com.alevh.sistema_adocao_pets.util.validations.UsuarioValidacao;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -62,6 +63,8 @@ public class UsuarioService {
 
     private final Validator validator;
 
+    private final UsuarioValidacao usuarioValidacao;
+
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
 
         Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
@@ -76,22 +79,9 @@ public class UsuarioService {
     }
 
     public UsuarioDTO create(RegistroDTO registroDTO) {
-        if (registroDTO == null) {
-            throw new RequiredObjectIsNullException("JSON vazio");
-        }
-        // se encontrar o usuario no bd retorna badrequest
-        if (existsUsuarioWithEmail(registroDTO.getEmail().toLowerCase())) {
-            throw new IllegalStateException("E-mail já está em uso");
-        }
-        if (existsUsuarioWithCpf(registroDTO.getCpf().getCpf())) {
-            throw new IllegalStateException("CPF já está em uso");
-        }
-        if (existsUsuarioWithCell(registroDTO.getCell())) {
-            throw new IllegalStateException("Cell já está em uso");
-        }
-        if (existsUsuarioWithNomeUsuario(registroDTO.getNomeUsuario())) {
-            throw new IllegalStateException("Nome de Usuário já está em uso");
-        }
+
+        usuarioValidacao.validate(registroDTO);
+
         Usuario entity = DozerMapper.parseObject(registroDTO, Usuario.class);
         entity.setCpf(registroDTO.getCpf().getCpf());
         entity.setSenha(passwordEncoder.encode(registroDTO.getPassword()));
@@ -141,6 +131,8 @@ public class UsuarioService {
         entity.setCell(usuario.getCell());
         entity.setCpf(usuario.getCpf().getCpf());
 
+        usuarioValidacao.validateUpdate(entity);
+
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
         return dto;
@@ -186,6 +178,8 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
+        usuarioValidacao.validatePartialUpdate(id, updates);
+        
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {
             Field field = ReflectionUtils.findField(Usuario.class, campo);
@@ -217,21 +211,5 @@ public class UsuarioService {
 
         usuarioRepository.save(usuario);
         return DozerMapper.parseObject(usuario, UsuarioDTO.class);
-    }
-
-    public boolean existsUsuarioWithEmail(String email) {
-        return usuarioRepository.findByEmail(email).isPresent();
-    }
-
-    public boolean existsUsuarioWithCpf(String cpf) {
-        return usuarioRepository.findByCpf(cpf).isPresent();
-    }
-
-    public boolean existsUsuarioWithCell(String cell) {
-        return usuarioRepository.findByCell(cell).isPresent();
-    }
-
-    public boolean existsUsuarioWithNomeUsuario(String nomeUsuario) {
-        return usuarioRepository.findByNomeUsuario(nomeUsuario).isPresent();
     }
 }
