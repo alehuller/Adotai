@@ -6,6 +6,8 @@ import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
 import br.com.alevh.sistema_adocao_pets.util.Roles;
+import br.com.alevh.sistema_adocao_pets.util.validations.OngValidacao;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -61,6 +63,8 @@ public class OngService {
 
     private final br.com.alevh.sistema_adocao_pets.service.auth.TokenService tokenService;
 
+    private final OngValidacao ongValidacao;
+
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
 
         Page<Ong> ongPage = ongRepository.findAll(pageable);
@@ -97,22 +101,8 @@ public class OngService {
 
     public OngDTO create(OngDTO ong) {
 
-        if (ong == null)
-            throw new RequiredObjectIsNullException("JSON vazio");
+        ongValidacao.validate(ong);
 
-        // se encontrar a ong no bd retorna badrequest
-        if (existsOngWithEmail(ong.getEmail().toLowerCase())) {
-            throw new IllegalStateException("E-mail já está em uso");
-        }
-        if (existsOngWithCnpj(ong.getCnpj().getCnpj())) {
-            throw new IllegalStateException("CNPJ já está em uso");
-        }
-        if (existsOngWithCell(ong.getCell())) {
-            throw new IllegalStateException("Celular já está em uso");
-        }
-        if (existsOngWithNomeUsuario(ong.getNomeUsuario())) {
-            throw new IllegalStateException("Nome Usuário já está em uso");
-        }
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
         Ong entity = DozerMapper.parseObject(ong, Ong.class);
         entity.setCnpj(ong.getCnpj().getCnpj());
@@ -162,6 +152,8 @@ public class OngService {
         entity.setCnpj(ong.getCnpj().getCnpj());
         entity.setResponsavel(ong.getResponsavel());
 
+        ongValidacao.validateUpdate(entity);
+
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
         return dto;
@@ -190,6 +182,8 @@ public class OngService {
     public OngDTO partialUpdate(Long id, Map<String, Object> updates) {
         Ong ong = ongRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+
+        ongValidacao.validatePartialUpdate(id, updates);
 
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {
@@ -221,21 +215,5 @@ public class OngService {
 
         ongRepository.save(ong);
         return DozerMapper.parseObject(ong, OngDTO.class);
-    }
-
-    public boolean existsOngWithEmail(String email) {
-        return ongRepository.findByEmail(email).isPresent();
-    }
-
-    public boolean existsOngWithCnpj(String cnpj) {
-        return ongRepository.findByCnpj(cnpj).isPresent();
-    }
-
-    public boolean existsOngWithNomeUsuario(String nomeUsuario) {
-        return ongRepository.findByNomeUsuario(nomeUsuario).isPresent();
-    }
-
-    public boolean existsOngWithCell(String cell) {
-        return ongRepository.findByCell(cell).isPresent();
     }
 }
