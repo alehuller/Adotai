@@ -10,7 +10,7 @@ INSERT INTO
     )
 VALUES (
         'Usuario 1',
-        'usuario1@email.com',
+        'usuario1@gmail.com',
         'senha123',
         '046.625.940-90',
         '(18)97420-5304',
@@ -19,7 +19,7 @@ VALUES (
     ),
     (
         'Usuario 2',
-        'usuario2@email.com',
+        'usuario2@gmail.com',
         'senha123',
         '367.244.700-56',
         '(13)99385-5115',

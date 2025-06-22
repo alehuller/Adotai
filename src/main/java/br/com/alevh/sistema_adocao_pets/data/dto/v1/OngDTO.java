@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.common.CnpjVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -52,9 +53,9 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
-    @NotBlank(message = "O endereço da ong é obrigatório")
+    @Valid
     @NotNull(message = "O endereço da ong é obrigatório")
-    private String endereco;
+    private EnderecoVO endereco;
 
     @NotBlank(message = "O celular da ong é obrigatório")
     @NotNull(message = "O celular da ong é obrigatório")
