@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
+import br.com.alevh.sistema_adocao_pets.serialization.converter.EnderecoConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +30,9 @@ public class Ong extends PerfilBase implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOng;
 
-    @Column(name = "endereco", nullable = false, length = 255)
-    private String endereco;
+    @Convert(converter = EnderecoConverter.class)
+    @Column(name = "endereco", nullable = false, columnDefinition = "TEXT")
+    private EnderecoVO endereco;
 
     @Column(name = "cnpj", nullable = false, unique = true, length = 18)
     private String cnpj;

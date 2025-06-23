@@ -1,5 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
@@ -117,7 +118,7 @@ public class OngService {
 
         String identifier = data.identifier();
 
-        //Se for um e-mail (tem '@'), transforma para lowercase
+        // Se for um e-mail (tem '@'), transforma para lowercase
         if (identifier.contains("@")) {
             identifier = identifier.toLowerCase();
         }
@@ -134,11 +135,8 @@ public class OngService {
     }
 
     public OngDTO update(OngDTO ong, Long id) {
-
         if (ong == null)
             throw new RequiredObjectIsNullException();
-
-        ong.setSenha(passwordEncoder.encode(ong.getSenha()));
 
         Ong entity = ongRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
@@ -146,16 +144,18 @@ public class OngService {
         entity.setNomeUsuario(ong.getNomeUsuario());
         entity.setFotoPerfil(ong.getFotoPerfil());
         entity.setEmail(ong.getEmail().toLowerCase());
-        entity.setSenha(ong.getSenha());
+        entity.setSenha(passwordEncoder.encode(ong.getSenha()));
         entity.setEndereco(ong.getEndereco());
         entity.setCell(ong.getCell());
-        entity.setCnpj(ong.getCnpj().getCnpj());
+        entity.setCnpj(ong.getCnpj().getCnpj()); 
         entity.setResponsavel(ong.getResponsavel());
 
         ongValidacao.validateUpdate(entity);
 
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
+
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
+
         return dto;
     }
 
@@ -191,20 +191,17 @@ public class OngService {
             if (field != null) {
                 field.setAccessible(true);
 
-                if(campo.equalsIgnoreCase("email") && valor instanceof String) {
+                if (campo.equalsIgnoreCase("email") && valor instanceof String) {
                     valor = ((String) valor).toLowerCase();
                 }
                 ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
             }
         });
 
-        // Mapeia a entidade para o DTO
         OngDTO ongDTO = DozerMapper.parseObject(ong, OngDTO.class);
 
-        // Faz a validação do DTO
         Set<ConstraintViolation<OngDTO>> violations = validator.validate(ongDTO);
 
-        // Se houver erros de validação, lança uma exceção
         if (!violations.isEmpty()) {
             StringBuilder errors = new StringBuilder();
             for (ConstraintViolation<OngDTO> violation : violations) {

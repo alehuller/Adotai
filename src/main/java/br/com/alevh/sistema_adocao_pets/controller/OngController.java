@@ -72,7 +72,7 @@ public class OngController implements OngControllerDocs {
         @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody OngDTO ong) {
+        public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody @Valid OngDTO ong) {
                 return ongService.update(ong, id);
         }
 

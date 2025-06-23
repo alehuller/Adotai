@@ -80,7 +80,7 @@ public class UsuarioController implements UsuarioControllerDocs {
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id,@RequestBody UsuarioDTO usuario) {
+        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id, @RequestBody @Valid UsuarioDTO usuario) {
                 return usuarioService.update(usuario, id);
         }
 

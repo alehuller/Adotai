@@ -8,7 +8,7 @@ spring:
   application: 
     name: sistema-adocao-pets
   datasource:
-    url: jdbc:postgresql://localhost:5432/ongdoacoes
+    url: jdbc:postgresql://localhost:5432/ongadocoes
     username: postgres 
     password: 1234
     driver-class-name: org.postgresql.Driver

@@ -194,13 +194,10 @@ public class UsuarioService {
             }
         });
 
-        // Mapeia a entidade para o DTO
         UsuarioDTO usuarioDTO = DozerMapper.parseObject(usuario, UsuarioDTO.class);
 
-        // Faz a validação do DTO
         Set<ConstraintViolation<UsuarioDTO>> violations = validator.validate(usuarioDTO);
 
-        // Se houver erros de validação, lança uma exceção
         if (!violations.isEmpty()) {
             StringBuilder errors = new StringBuilder();
             for (ConstraintViolation<UsuarioDTO> violation : violations) {

@@ -7,6 +7,7 @@ INSERT INTO
         responsavel,
         cell,
         nome_usuario,
+        endereco,
         role
     )
 VALUES (
@@ -17,6 +18,7 @@ VALUES (
         'Responsavel 1',
         '(11)98765-4321',
         'Nome Ong 1',
+        '{"logradouro":"Rua das Flores","numero":"100","complemento":"","bairro":"Jardim Paulista","cidade":"São Paulo","estado":"SP","cep":"01426030"}',
         2
     ),
     (
@@ -27,6 +29,7 @@ VALUES (
         'Responsavel 2',
         '(11)98765-4322',
         'Nome Ong 2',
+        '{"logradouro":"Avenida Brasil","numero":"500","complemento":"Sala 2","bairro":"Centro","cidade":"Rio de Janeiro","estado":"RJ","cep":"20000000"}',
         2
     ),
     (
@@ -37,6 +40,7 @@ VALUES (
         'Responsavel 3',
         '(11)98765-4323',
         'Nome Ong 3',
+        '{"logradouro":"Rua XV de Novembro","numero":"1234","complemento":"Fundos","bairro":"Liberdade","cidade":"Curitiba","estado":"PR","cep":"80020900"}',
         2
     ),
     (
@@ -47,6 +51,7 @@ VALUES (
         'Responsavel 4',
         '(11)98765-4324',
         'Nome Ong 4',
+        '{"logradouro":"Rua Dom Pedro II","numero":"876","complemento":"","bairro":"Boa Vista","cidade":"Recife","estado":"PE","cep":"50720000"}',
         2
     ),
     (
@@ -57,5 +62,6 @@ VALUES (
         'Responsavel 5',
         '(11)98765-4325',
         'Nome Ong 5',
+        '{"logradouro":"Rua Barão do Rio Branco","numero":"45","complemento":"Andar superior","bairro":"Centro Histórico","cidade":"Porto Alegre","estado":"RS","cep":"90020000"}',
         2
     );
