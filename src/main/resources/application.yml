@@ -26,3 +26,4 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     repair=true:
+    clean-disabled: false
