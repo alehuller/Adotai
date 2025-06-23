@@ -21,6 +21,7 @@ public class SecurityConfig {
 
     private final SecurityFilter securityFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,8 +29,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // possibilita redirecionamento de dados em cyberataques de um site logado
                                               // para outro
                 .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // trata as exceções lançadas dentro do
-                                                                               // filtro
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // trata as exceções lançadas dentro do filtro
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateful
                                                                                                               // ->
