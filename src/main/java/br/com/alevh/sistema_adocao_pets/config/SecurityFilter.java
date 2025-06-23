@@ -31,7 +31,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if(shouldNotFilter(request)){
+        if(!shouldNotFilter(request)){
             var token = this.recoverToken(request);
             // n tem token, passa mas tbm n autentica nessa porra
             if (token != null) {
@@ -66,6 +66,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("auth/");
+        return path.startsWith("/auth");
     }
 }
