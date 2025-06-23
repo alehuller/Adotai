@@ -31,23 +31,25 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        var token = this.recoverToken(request);
-        // n tem token, passa mas tbm n autentica nessa porra
-        if (token != null) {
+        if(shouldNotFilter(request)){
+            var token = this.recoverToken(request);
+            // n tem token, passa mas tbm n autentica nessa porra
+            if (token != null) {
 
-            if(tokenBlackListService.isTokenBlacklisted(token)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token inválido: usuário fez logout");
-                return;
+                if(tokenBlackListService.isTokenBlacklisted(token)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token inválido: usuário fez logout");
+                    return;
+                }
+
+                var email = tokenService.validateToken(token);// valida o token
+                UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
+
+                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                        userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            var email = tokenService.validateToken(token);// valida o token
-            UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
-
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-                    userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
     }
@@ -59,5 +61,11 @@ public class SecurityFilter extends OncePerRequestFilter {
             return null;
         }
         return authHeader.replace("Bearer ", "");
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("auth/");
     }
 }
