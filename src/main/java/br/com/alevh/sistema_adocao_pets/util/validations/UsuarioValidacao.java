@@ -58,11 +58,7 @@ public class UsuarioValidacao {
         }
 
         if (updates.containsKey("cpf")) {
-            String cpf = updates.get("cpf").toString();
-            Optional<Usuario> usuarioExistente = usuarioRepository.findByCpf(cpf);
-            if (usuarioExistente.isPresent() && !usuarioExistente.get().getIdUsuario().equals(id)) {
-                throw new IllegalStateException("CPF já está em uso por outro usuário");
-            }
+            throw new IllegalArgumentException("Não é permitido alterar o CPF.");
         }
 
         if (updates.containsKey("cell")) {
