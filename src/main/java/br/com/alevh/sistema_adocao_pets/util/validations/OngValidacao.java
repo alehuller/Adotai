@@ -40,9 +40,6 @@ public class OngValidacao {
         if (existsOngWithEmail(entity.getEmail().toLowerCase())) {
             throw new IllegalStateException("E-mail já está em uso");
         }
-        if (existsOngWithCnpj(entity.getCnpj())) {
-            throw new IllegalStateException("CNPJ já está em uso");
-        }
         if (existsOngWithCell(entity.getCell())) {
             throw new IllegalStateException("Celular já está em uso");
         }
@@ -61,11 +58,7 @@ public class OngValidacao {
         }
 
         if (updates.containsKey("cnpj")) {
-            String cnpj = updates.get("cnpj").toString();
-            Optional<Ong> ongExistente = ongRepository.findByCnpj(cnpj);
-            if (ongExistente.isPresent() && !ongExistente.get().getIdOng().equals(id)) {
-                throw new IllegalStateException("CNPJ já está em uso por outra ong");
-            }
+            throw new IllegalArgumentException("Não é permitido alterar o CNPJ.");
         }
 
         if (updates.containsKey("cell")) {

@@ -33,6 +33,7 @@ import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
@@ -133,21 +134,20 @@ public class OngService {
         return new TokenDTO(token);
     }
 
-    public OngDTO update(OngDTO ong, Long id) {
-        if (ong == null)
+    public OngDTO update(OngUpdateDTO ongUpdate, Long id) {
+        if (ongUpdate == null)
             throw new RequiredObjectIsNullException();
 
         Ong entity = ongRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
-        entity.setNome(ong.getNome());
-        entity.setNomeUsuario(ong.getNomeUsuario());
-        entity.setFotoPerfil(ong.getFotoPerfil());
-        entity.setEmail(ong.getEmail().toLowerCase());
-        entity.setSenha(passwordEncoder.encode(ong.getSenha()));
-        entity.setEndereco(ong.getEndereco());
-        entity.setCell(ong.getCell());
-        entity.setCnpj(ong.getCnpj().getCnpj()); 
-        entity.setResponsavel(ong.getResponsavel());
+        entity.setNome(ongUpdate.getNome());
+        entity.setNomeUsuario(ongUpdate.getNomeUsuario());
+        entity.setFotoPerfil(ongUpdate.getFotoPerfil());
+        entity.setEmail(ongUpdate.getEmail().toLowerCase());
+        entity.setSenha(passwordEncoder.encode(ongUpdate.getSenha()));
+        entity.setEndereco(ongUpdate.getEndereco());
+        entity.setCell(ongUpdate.getCell()); 
+        entity.setResponsavel(ongUpdate.getResponsavel());
 
         ongValidacao.validateUpdate(entity);
 

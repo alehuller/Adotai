@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.alevh.sistema_adocao_pets.controller.docs.OngControllerDocs;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.service.OngService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,7 +73,7 @@ public class OngController implements OngControllerDocs {
         @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody @Valid OngDTO ong) {
+        public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody @Valid OngUpdateDTO ong) {
                 return ongService.update(ong, id);
         }
 

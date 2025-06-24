@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +50,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    OngDTO atualizarOng(Long id, OngDTO ong);
+    OngDTO atualizarOng(Long id, OngUpdateDTO ong);
 
     @Operation(summary = "Apaga a ONG de id especificado", responses = {
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
