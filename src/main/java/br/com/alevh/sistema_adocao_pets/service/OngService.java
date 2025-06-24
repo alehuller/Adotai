@@ -1,6 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
-import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
