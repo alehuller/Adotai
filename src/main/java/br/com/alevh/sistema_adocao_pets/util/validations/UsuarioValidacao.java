@@ -40,9 +40,6 @@ public class UsuarioValidacao {
         if (existsUsuarioWithEmail(entity.getEmail().toLowerCase())) {
             throw new IllegalStateException("E-mail já está em uso");
         }
-        if (existsUsuarioWithCpf(entity.getCpf())) {
-            throw new IllegalStateException("CPF já está em uso");
-        }
         if (existsUsuarioWithCell(entity.getCell())) {
             throw new IllegalStateException("Cell já está em uso");
         }

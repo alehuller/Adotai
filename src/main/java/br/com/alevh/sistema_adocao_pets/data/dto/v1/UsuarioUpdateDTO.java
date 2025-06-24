@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
-import br.com.alevh.sistema_adocao_pets.data.dto.common.CpfVO;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,8 +21,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder({ "nome", "email", "celular" })
-public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Serializable {
+@JsonPropertyOrder({ "nome", "email", "nomeUsuario", "fotoPerfil", "celular" })
+public class UsuarioUpdateDTO extends RepresentationModel<UsuarioUpdateDTO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idUsuario")
@@ -59,8 +57,4 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> implements Seria
     @JsonProperty(value = "celular")
     @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O celular deve estar no formato (XX) XXXXX-XXXX")
     private String cell;
-
-    @Valid
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private CpfVO cpf;
 }

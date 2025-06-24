@@ -7,6 +7,7 @@ import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
@@ -118,18 +119,17 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public UsuarioDTO update(UsuarioDTO usuario, Long id) {
+    public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, Long id) {
 
         Usuario entity = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
-        entity.setNome(usuario.getNome());
-        entity.setNomeUsuario(usuario.getNomeUsuario());
-        entity.setFotoPerfil(usuario.getFotoPerfil());
-        entity.setEmail(usuario.getEmail().toLowerCase());
-        entity.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        entity.setCell(usuario.getCell());
-        entity.setCpf(usuario.getCpf().getCpf());
+        entity.setNome(usuarioUpdate.getNome());
+        entity.setNomeUsuario(usuarioUpdate.getNomeUsuario());
+        entity.setFotoPerfil(usuarioUpdate.getFotoPerfil());
+        entity.setEmail(usuarioUpdate.getEmail().toLowerCase());
+        entity.setSenha(passwordEncoder.encode(usuarioUpdate.getSenha()));
+        entity.setCell(usuarioUpdate.getCell());
 
         usuarioValidacao.validateUpdate(entity);
 

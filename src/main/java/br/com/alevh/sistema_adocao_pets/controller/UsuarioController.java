@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.alevh.sistema_adocao_pets.controller.docs.UsuarioControllerDocs;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.service.UsuarioService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -80,7 +81,7 @@ public class UsuarioController implements UsuarioControllerDocs {
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id, @RequestBody @Valid UsuarioDTO usuario) {
+        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id, @RequestBody @Valid UsuarioUpdateDTO usuario) {
                 return usuarioService.update(usuario, id);
         }
 

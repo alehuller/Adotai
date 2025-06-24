@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -60,7 +61,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO atualizarUsuario(Long id, UsuarioDTO usuario);
+    UsuarioDTO atualizarUsuario(Long id, UsuarioUpdateDTO usuario);
 
     @Operation(summary = "Atualização parcial do usuário", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
