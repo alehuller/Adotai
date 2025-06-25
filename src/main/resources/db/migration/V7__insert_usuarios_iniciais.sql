@@ -13,8 +13,8 @@ VALUES (
         'usuario1@gmail.com',
         'senha123',
         '046.625.940-90',
-        '(18)97420-5304',
-        'Nome Usuario 1',
+        '(18) 97420-5304',
+        'NomeUsuario1',
         1
     ),
     (
@@ -22,8 +22,8 @@ VALUES (
         'usuario2@gmail.com',
         'senha123',
         '367.244.700-56',
-        '(13)99385-5115',
-        'Nome Usuario 2',
+        '(13) 99385-5115',
+        'NomeUsuario2',
         1
     ),
     (
@@ -31,8 +31,8 @@ VALUES (
         'usuario3@gmail.com',
         'senha123',
         '030.706.100-05',
-        '(15)98823-4176',
-        'Nome Usuario 3',
+        '(15) 98823-4176',
+        'NomeUsuario3',
         1
     ),
     (
@@ -40,8 +40,8 @@ VALUES (
         'usuario4@gmail.com',
         'senha123',
         '913.146.750-44',
-        '(17)98637-6231',
-        'Nome Usuario 4',
+        '(17) 98637-6231',
+        'NomeUsuario4',
         1
     ),
     (
@@ -49,7 +49,7 @@ VALUES (
         'usuario5@gmail.com',
         'senha123',
         '072.296.000-06',
-        '(14)98466-3112',
-        'Nome Usuario 5',
+        '(14) 98466-3112',
+        'NomeUsuario5',
         1
     );
