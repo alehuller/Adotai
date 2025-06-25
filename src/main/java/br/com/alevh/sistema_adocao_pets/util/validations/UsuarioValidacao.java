@@ -48,11 +48,11 @@ public class UsuarioValidacao {
         }
     }
 
-    public void validatePartialUpdate(Long id, Map<String, Object> updates) {
+    public void validatePartialUpdate(String nomeUsuario, Map<String, Object> updates) {
         if (updates.containsKey("email")) {
             String email = updates.get("email").toString().toLowerCase();
             Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(email);
-            if (usuarioExistente.isPresent() && !usuarioExistente.get().getIdUsuario().equals(id)) {
+            if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("E-mail já está em uso por outro usuário");
             }
         }
@@ -64,15 +64,15 @@ public class UsuarioValidacao {
         if (updates.containsKey("cell")) {
             String cell = updates.get("cell").toString();
             Optional<Usuario> usuarioExistente = usuarioRepository.findByCell(cell);
-            if (usuarioExistente.isPresent() && !usuarioExistente.get().getIdUsuario().equals(id)) {
+            if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("Celular já está em uso por outro usuário");
             }
         }
 
         if (updates.containsKey("nomeUsuario")) {
-            String nomeUsuario = updates.get("nomeUsuario").toString();
-            Optional<Usuario> usuarioExistente = usuarioRepository.findByNomeUsuario(nomeUsuario);
-            if (usuarioExistente.isPresent() && !usuarioExistente.get().getIdUsuario().equals(id)) {
+            String nomeUsuario2 = updates.get("nomeUsuario").toString();
+            Optional<Usuario> usuarioExistente = usuarioRepository.findByNomeUsuario(nomeUsuario2);
+            if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("Nome de usuário já está em uso por outro usuário");
             }
         }

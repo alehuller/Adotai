@@ -71,33 +71,33 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.create(registroDTO);
         }
 
-        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
-                usuarioService.delete(id);
+        public ResponseEntity<?> deletarPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+                usuarioService.delete(nomeUsuario);
                 return ResponseEntity.noContent().build();
         }
 
-        @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO atualizarUsuario(@PathVariable(value = "id") Long id, @RequestBody @Valid UsuarioUpdateDTO usuario) {
-                return usuarioService.update(usuario, id);
+        public UsuarioDTO atualizarUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid UsuarioUpdateDTO usuario) {
+                return usuarioService.update(usuario, nomeUsuario);
         }
 
-        @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                 MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                 MediaType.APPLICATION_XML })
-        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "id") Long id,
+        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario,
                                                                   @RequestBody Map<String, Object> updates) {
-                UsuarioDTO usuarioAtualizado = usuarioService.partialUpdate(id, updates);
+                UsuarioDTO usuarioAtualizado = usuarioService.partialUpdate(nomeUsuario, updates);
                 return ResponseEntity.ok(usuarioAtualizado);
         }
 
-        @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                 MediaType.APPLICATION_XML })
-        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorUsuarioId(
-                @PathVariable("id") Long id,
+        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(
+                @PathVariable("nomeUsuario") String nomeUsuario,
                 @RequestParam(value = "page", defaultValue = "0") int page,
                 @RequestParam(value = "size", defaultValue = "10") int size,
                 @RequestParam(value = "direction", defaultValue = "asc") String direction) {
@@ -105,7 +105,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
                 Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
 
-                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByUsuarioId(id,
+                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByNomeUsuario(nomeUsuario,
                         pageable);
 
                 return ResponseEntity.ok(pagedModel);

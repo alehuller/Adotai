@@ -15,4 +15,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByCell(String cell);
 
     Optional<Usuario> findByNomeUsuario(String nomeUsuario);
+
+    void deleteByNomeUsuario(String nomeUsuario);
 }

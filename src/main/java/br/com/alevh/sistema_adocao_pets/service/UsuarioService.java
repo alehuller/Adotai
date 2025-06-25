@@ -35,6 +35,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -114,14 +115,15 @@ public class UsuarioService {
 
         return new TokenDTO(token);
     }
-
-    public void delete(Long id) {
-        usuarioRepository.deleteById(id);
+    
+    @Transactional
+    public void delete(String nomeUsuario) {
+        usuarioRepository.deleteByNomeUsuario(nomeUsuario);
     }
 
-    public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, Long id) {
+    public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, String nomeUsuario) {
 
-        Usuario entity = usuarioRepository.findById(id)
+        Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuarioUpdate.getNome());
@@ -158,9 +160,9 @@ public class UsuarioService {
         return dto;
     }
 
-    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByUsuarioId(Long idUsuario, Pageable pageable) {
+    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByNomeUsuario(String nomeUsuario, Pageable pageable) {
 
-        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByUsuarioId(idUsuario, pageable);
+        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByNomeUsuario(nomeUsuario, pageable);
 
         Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
 
@@ -168,17 +170,17 @@ public class UsuarioService {
                 dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
 
         Link selfLink = linkTo(methodOn(UsuarioController.class)
-                .listarAdocoesPorUsuarioId(idUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .listarAdocoesPorNomeUsuario(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
                 .withSelfRel();
 
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 
-    public UsuarioDTO partialUpdate(Long id, Map<String, Object> updates) {
-        Usuario usuario = usuarioRepository.findById(id)
+    public UsuarioDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
+        Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
-        usuarioValidacao.validatePartialUpdate(id, updates);
+        usuarioValidacao.validatePartialUpdate(nomeUsuario, updates);
         
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {

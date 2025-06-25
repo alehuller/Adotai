@@ -52,7 +52,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    ResponseEntity<?> deletarPorId(Long id);
+    ResponseEntity<?> deletarPorNomeUsuario(String nomeUsuario);
 
     @Operation(summary = "Atualiza o usuário", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
@@ -61,7 +61,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO atualizarUsuario(Long id, UsuarioUpdateDTO usuario);
+    UsuarioDTO atualizarUsuario(String nomeUsuario, UsuarioUpdateDTO usuario);
 
     @Operation(summary = "Atualização parcial do usuário", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
@@ -70,7 +70,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    ResponseEntity<UsuarioDTO> atualizarParcialUsuario(Long id, Map<String, Object> updates);
+    ResponseEntity<UsuarioDTO> atualizarParcialUsuario(String nomeUsuario, Map<String, Object> updates);
 
     @Operation(summary = "Retorna todas as adoções de um usuário específico", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdocaoDTO.class)))),
@@ -79,7 +79,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorUsuarioId(Long id, int page, int size,
+    ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(String nomeUsuario, int page, int size,
             String direction);
 
     @Operation(summary = "Retorna o usuário pelo nome de usuário pesquisado", responses = {
