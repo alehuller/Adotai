@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -69,10 +70,10 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
     private String nomeOng;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Mapping("ong.telefone")
+    @Mapping("ong.cell")
     private String telefoneOng;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Mapping("ong.endereco")
-    private String enderecoOng;
+    private EnderecoVO enderecoOng;
 }

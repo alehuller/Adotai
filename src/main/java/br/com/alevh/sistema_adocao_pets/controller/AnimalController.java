@@ -47,10 +47,16 @@ public class AnimalController implements AnimalControllerDocs{
                 return ResponseEntity.ok(animalService.findAll(pageable));
         }
 
-        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public AnimalDTO acharAnimalPorId(@PathVariable(value = "id") Long id) {
                 return animalService.findById(id);
+        }
+
+        @GetMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public AnimalDTO acharAnimalPorNome(@PathVariable(value = "nome") String nome) {
+                return animalService.findByNome(nome);
         }
 
         @PostMapping(value = "/registro", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -60,25 +66,25 @@ public class AnimalController implements AnimalControllerDocs{
                 return animalService.create(animal);
         }
 
-        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
-                animalService.delete(id);
+        public ResponseEntity<?> deletarPorNome(@PathVariable(name = "nome") String nome) {
+                animalService.delete(nome);
                 return ResponseEntity.noContent().build();
         }
 
-        @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PutMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public AnimalDTO atualizarAnimal(@PathVariable(value = "id") Long id, @RequestBody AnimalDTO animal) {
-                return animalService.update(animal, id);
+        public AnimalDTO atualizarAnimal(@PathVariable(value = "nome") String nome, @RequestBody AnimalDTO animal) {
+                return animalService.update(animal, nome);
         }
 
-        @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PatchMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public ResponseEntity<AnimalDTO> atualizarParcialAnimal(@PathVariable(value = "id") Long id, @RequestBody Map<String, Object> updates) {
-                AnimalDTO animalAtualizado = animalService.partialUpdate(id, updates);
+        public ResponseEntity<AnimalDTO> atualizarParcialAnimal(@PathVariable(value = "nome") String nome, @RequestBody Map<String, Object> updates) {
+                AnimalDTO animalAtualizado = animalService.partialUpdate(nome, updates);
                 return ResponseEntity.ok(animalAtualizado);
         }
 }
