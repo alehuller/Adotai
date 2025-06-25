@@ -45,7 +45,7 @@ public interface UsuarioControllerDocs {
     })
     UsuarioDTO registrarUsuario(RegistroDTO usuario);
 
-    @Operation(summary = "Apaga o usuário de id especificado", responses = {
+    @Operation(summary = "Apaga o usuário de nome especificado", responses = {
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),

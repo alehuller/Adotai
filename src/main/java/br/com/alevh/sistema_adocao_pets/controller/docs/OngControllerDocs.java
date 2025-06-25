@@ -52,7 +52,7 @@ public interface OngControllerDocs {
     })
     OngDTO atualizarOng(String nomeUsuario, OngUpdateDTO ong);
 
-    @Operation(summary = "Apaga a ONG de id especificado", responses = {
+    @Operation(summary = "Apaga a ONG de nome especificado", responses = {
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
