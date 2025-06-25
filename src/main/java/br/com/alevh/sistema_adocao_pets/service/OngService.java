@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -134,11 +135,11 @@ public class OngService {
         return new TokenDTO(token);
     }
 
-    public OngDTO update(OngUpdateDTO ongUpdate, Long id) {
+    public OngDTO update(OngUpdateDTO ongUpdate, String nomeUsuario) {
         if (ongUpdate == null)
             throw new RequiredObjectIsNullException();
 
-        Ong entity = ongRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         entity.setNome(ongUpdate.getNome());
         entity.setNomeUsuario(ongUpdate.getNomeUsuario());
@@ -158,8 +159,9 @@ public class OngService {
         return dto;
     }
 
-    public void delete(Long id) {
-        ongRepository.deleteById(id);
+    @Transactional
+    public void delete(String nomeUsuario) {
+        ongRepository.deleteByNomeUsuario(nomeUsuario);
     }
 
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByOngId(Long idOng, Pageable pageable) {
@@ -178,11 +180,11 @@ public class OngService {
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 
-    public OngDTO partialUpdate(Long id, Map<String, Object> updates) {
-        Ong ong = ongRepository.findById(id)
+    public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
+        Ong ong = ongRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
 
-        ongValidacao.validatePartialUpdate(id, updates);
+        ongValidacao.validatePartialUpdate(nomeUsuario, updates);
 
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {

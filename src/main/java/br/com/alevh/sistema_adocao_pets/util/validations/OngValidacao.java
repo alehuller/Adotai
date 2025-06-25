@@ -48,11 +48,11 @@ public class OngValidacao {
         }
     }
 
-    public void validatePartialUpdate(Long id, Map<String, Object> updates) {
+    public void validatePartialUpdate(String nomeUsuario, Map<String, Object> updates) {
         if (updates.containsKey("email")) {
             String email = updates.get("email").toString().toLowerCase();
             Optional<Ong> ongExistente = ongRepository.findByEmail(email);
-            if (ongExistente.isPresent() && !ongExistente.get().getIdOng().equals(id)) {
+            if (ongExistente.isPresent() && !ongExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("E-mail já está em uso por outra ong");
             }
         }
@@ -64,15 +64,15 @@ public class OngValidacao {
         if (updates.containsKey("cell")) {
             String cell = updates.get("cell").toString();
             Optional<Ong> ongExistente = ongRepository.findByCell(cell);
-            if (ongExistente.isPresent() && !ongExistente.get().getIdOng().equals(id)) {
+            if (ongExistente.isPresent() && !ongExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("Celular já está em uso por outra ong");
             }
         }
 
         if (updates.containsKey("nomeUsuario")) {
-            String nomeUsuario = updates.get("nomeUsuario").toString();
-            Optional<Ong> ongExistente = ongRepository.findByNomeUsuario(nomeUsuario);
-            if (ongExistente.isPresent() && !ongExistente.get().getIdOng().equals(id)) {
+            String nomeUsuario2 = updates.get("nomeUsuario").toString();
+            Optional<Ong> ongExistente = ongRepository.findByNomeUsuario(nomeUsuario2);
+            if (ongExistente.isPresent() && !ongExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("Nome de usuário já está em uso por outra ong");
             }
         }

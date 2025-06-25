@@ -70,17 +70,17 @@ public class OngController implements OngControllerDocs {
                 return ongService.create(ong);
         }
 
-        @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO atualizarOng(@PathVariable(value = "id") Long id, @RequestBody @Valid OngUpdateDTO ong) {
-                return ongService.update(ong, id);
+        public OngDTO atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid OngUpdateDTO ong) {
+                return ongService.update(ong, nomeUsuario);
         }
 
-        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarOngPorId(@PathVariable(name = "id") Long id) {
-                ongService.delete(id);
+        public ResponseEntity<?> deletarOngPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+                ongService.delete(nomeUsuario);
                 return ResponseEntity.noContent().build();
         }
 
@@ -101,12 +101,12 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
-        @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public ResponseEntity<OngDTO> atualizarParcialOng(@PathVariable(value = "id") Long id,
+        public ResponseEntity<OngDTO> atualizarParcialOng(@PathVariable(value = "nomeUsuario") String nomeUsuario,
                         @RequestBody Map<String, Object> updates) {
-                OngDTO ongAtualizada = ongService.partialUpdate(id, updates);
+                OngDTO ongAtualizada = ongService.partialUpdate(nomeUsuario, updates);
                 return ResponseEntity.ok(ongAtualizada);
         }
 }

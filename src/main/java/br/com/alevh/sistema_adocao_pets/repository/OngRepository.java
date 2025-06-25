@@ -18,5 +18,5 @@ public interface OngRepository extends JpaRepository<Ong, Long> {
 
     Optional<Ong> findByCell(String cell);
 
-
+    void deleteByNomeUsuario(String nomeUsuario);
 }

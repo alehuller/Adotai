@@ -50,7 +50,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    OngDTO atualizarOng(Long id, OngUpdateDTO ong);
+    OngDTO atualizarOng(String nomeUsuario, OngUpdateDTO ong);
 
     @Operation(summary = "Apaga a ONG de id especificado", responses = {
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
@@ -59,7 +59,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    ResponseEntity<?> deletarOngPorId(Long id);
+    ResponseEntity<?> deletarOngPorNomeUsuario(String nomeUsuario);
 
     @Operation(summary = "Retorna todas as adoções de uma ONG", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdocaoDTO.class)))),
@@ -78,7 +78,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    ResponseEntity<OngDTO> atualizarParcialOng(Long id, Map<String, Object> updates);
+    ResponseEntity<OngDTO> atualizarParcialOng(String nomeUsuario, Map<String, Object> updates);
 
     @Operation(summary = "Retorna a ong pelo nome de usuário pesquisado", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OngDTO.class)))),
