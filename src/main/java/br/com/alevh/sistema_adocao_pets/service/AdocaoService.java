@@ -24,8 +24,6 @@ import java.util.Set;
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Animal;
@@ -33,6 +31,7 @@ import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
+import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -49,11 +48,9 @@ public class AdocaoService {
 
     private final UsuarioRepository usuarioRepository;
 
-    private final UsuarioService usuarioService;
-
     private final AnimalService animalService;
 
-    private final OngService ongService;
+    private final OngRepository ongRepository;
 
     private final PagedResourcesAssembler<AdocaoDTO> assembler;
 
@@ -107,15 +104,15 @@ public class AdocaoService {
         if(adocao == null) throw new RequiredObjectIsNullException();
 
         Adocao entity = adocaoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
-
-        UsuarioDTO usuarioDTO = usuarioService.findById(adocao.getIdUsuario());
-        Usuario usuario = DozerMapper.parseObject(usuarioDTO, Usuario.class);
+        
+        Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
+        .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrada."));
 
         AnimalDTO animalDTO = animalService.findById(adocao.getIdAnimal());
         Animal animal = DozerMapper.parseObject(animalDTO, Animal.class);
 
-        OngDTO ongDTO = ongService.findById(animal.getOng().getIdOng());
-        Ong ong = DozerMapper.parseObject(ongDTO, Ong.class);
+        Ong ong = ongRepository.findById(animal.getOng().getIdOng())
+        .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
 
         entity.setDataAdocao(adocao.getDataAdocao());
         entity.setStatus(adocao.getStatus());
