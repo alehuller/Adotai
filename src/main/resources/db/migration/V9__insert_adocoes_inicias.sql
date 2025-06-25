@@ -7,31 +7,31 @@ INSERT INTO
     )
 VALUES (
         '2022-03-15',
-        'DISPONIVEL',
+        'APROVADA',
         1,
         2
     ),
     (
         '2022-07-22',
-        'DISPONIVEL',
+        'APROVADA',
         3,
         3
     ),
     (
         '2023-01-10',
-        'DISPONIVEL',
+        'APROVADA',
         2,
         4
     ),
     (
         '2023-09-05',
-        'DISPONIVEL',
+        'APROVADA',
         5,
         5
     ),
     (
         '2024-02-28',
-        'DISPONIVEL',
+        'APROVADA',
         4,
         1
     );
