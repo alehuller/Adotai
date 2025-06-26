@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.config;
+package br.com.alevh.sistema_adocao_pets.security;
 
 import br.com.alevh.sistema_adocao_pets.exceptions.ExceptionResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

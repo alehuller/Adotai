@@ -1,6 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
-import br.com.alevh.sistema_adocao_pets.util.Roles;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,6 +8,8 @@ import org.springframework.data.annotation.Immutable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 
 import java.util.Collection;
 import java.util.List;

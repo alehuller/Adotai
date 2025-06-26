@@ -52,7 +52,8 @@ public class AnimalService {
         Page<Animal> animalPage = animalRepository.findAll(pageable);
 
         Page<AnimalDTO> animalDtosPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
-        animalDtosPage.map(a -> a.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(a.getKey())).withSelfRel()));
+        animalDtosPage
+                .map(a -> a.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(a.getKey())).withSelfRel()));
 
         Link link = linkTo(methodOn(AnimalController.class).listarAnimais(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
@@ -80,10 +81,11 @@ public class AnimalService {
     }
 
     public AnimalDTO create(AnimalDTO animal) {
-        if(animal == null) throw new RequiredObjectIsNullException();
+        if (animal == null)
+            throw new RequiredObjectIsNullException();
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-            .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada"));
 
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
         entity.setOng(ong);
@@ -97,15 +99,16 @@ public class AnimalService {
         animalRepository.deleteByNome(nome);
     }
 
-    public AnimalDTO update(AnimalDTO animal, String nome) { 
-        
-        if(animal == null) throw new RequiredObjectIsNullException();
-        
-        Animal entity = animalRepository.findByNome(nome).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
-        
-        Ong ong = ongRepository.findById(animal.getIdOng())
-        .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+    public AnimalDTO update(AnimalDTO animal, String nome) {
 
+        if (animal == null)
+            throw new RequiredObjectIsNullException();
+
+        Animal entity = animalRepository.findByNome(nome)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+
+        Ong ong = ongRepository.findById(animal.getIdOng())
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
 
         entity.setNome(animal.getNome());
         entity.setEspecie(animal.getEspecie());
@@ -125,7 +128,7 @@ public class AnimalService {
 
     public AnimalDTO partialUpdate(String nome, Map<String, Object> updates) {
         Animal animal = animalRepository.findByNome(nome)
-            .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -136,7 +139,7 @@ public class AnimalService {
                 ReflectionUtils.setField(field, animal, mapper.convertValue(valor, field.getType()));
             }
         });
-        
+
         // Mapeia a entidade para o DTO
         AnimalDTO animalDTO = DozerMapper.parseObject(animal, AnimalDTO.class);
 
@@ -163,8 +166,8 @@ public class AnimalService {
         Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
 
         animalDtoPage = animalDtoPage.map(
-            dto -> dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel()));
-        
+                dto -> dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel()));
+
         Link selfLink = linkTo(methodOn(OngController.class)
                 .listarAnimaisDeUmaOng(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
                 .withSelfRel();

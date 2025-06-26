@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.util;
+package br.com.alevh.sistema_adocao_pets.security;
 
 public enum Roles {
     ADMIN("admin"),

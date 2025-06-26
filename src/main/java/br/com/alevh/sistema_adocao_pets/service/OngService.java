@@ -5,7 +5,6 @@ import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
-import br.com.alevh.sistema_adocao_pets.util.Roles;
 import br.com.alevh.sistema_adocao_pets.util.validations.OngValidacao;
 
 import org.springframework.data.domain.Page;
@@ -40,6 +39,7 @@ import br.com.alevh.sistema_adocao_pets.model.Adocao;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -139,7 +139,8 @@ public class OngService {
         if (ongUpdate == null)
             throw new RequiredObjectIsNullException();
 
-        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario).orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
 
         entity.setNome(ongUpdate.getNome());
         entity.setNomeUsuario(ongUpdate.getNomeUsuario());
@@ -147,7 +148,7 @@ public class OngService {
         entity.setEmail(ongUpdate.getEmail().toLowerCase());
         entity.setSenha(passwordEncoder.encode(ongUpdate.getSenha()));
         entity.setEndereco(ongUpdate.getEndereco());
-        entity.setCell(ongUpdate.getCell()); 
+        entity.setCell(ongUpdate.getCell());
         entity.setResponsavel(ongUpdate.getResponsavel());
 
         ongValidacao.validateUpdate(entity);

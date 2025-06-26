@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.config;
+package br.com.alevh.sistema_adocao_pets.security;
 
 import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
 import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;

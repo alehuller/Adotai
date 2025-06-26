@@ -1,6 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
-import br.com.alevh.sistema_adocao_pets.util.Roles;
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

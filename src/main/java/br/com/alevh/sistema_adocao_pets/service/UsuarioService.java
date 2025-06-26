@@ -15,12 +15,11 @@ import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
-
-import br.com.alevh.sistema_adocao_pets.util.Roles;
 import br.com.alevh.sistema_adocao_pets.util.validations.UsuarioValidacao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,10 +96,10 @@ public class UsuarioService {
     }
 
     public TokenDTO logar(LoginDTO data) {
-        
+
         String identifier = data.identifier();
 
-        //Se for um e-mail (tem '@'), transforma para lowercase
+        // Se for um e-mail (tem '@'), transforma para lowercase
         if (identifier.contains("@")) {
             identifier = identifier.toLowerCase();
         }
@@ -115,7 +114,7 @@ public class UsuarioService {
 
         return new TokenDTO(token);
     }
-    
+
     @Transactional
     public void delete(String nomeUsuario) {
         usuarioRepository.deleteByNomeUsuario(nomeUsuario);
@@ -181,7 +180,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         usuarioValidacao.validatePartialUpdate(nomeUsuario, updates);
-        
+
         ObjectMapper mapper = new ObjectMapper();
         updates.forEach((campo, valor) -> {
             Field field = ReflectionUtils.findField(Usuario.class, campo);
