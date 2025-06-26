@@ -8,6 +8,7 @@ INSERT INTO
         cell,
         nome_usuario,
         endereco,
+        foto_perfil,
         role
     )
 VALUES (
@@ -19,6 +20,7 @@ VALUES (
         '(11) 98765-4321',
         'NomeOng1',
         '{"logradouro":"Rua das Flores","numero":"100","complemento":"","bairro":"Jardim Paulista","cidade":"São Paulo","estado":"SP","cep":"01426030"}',
+        'https://exemplo.com/fotos/ong1.jpg',
         2
     ),
     (
@@ -30,6 +32,7 @@ VALUES (
         '(11) 98765-4322',
         'NomeOng2',
         '{"logradouro":"Avenida Brasil","numero":"500","complemento":"Sala 2","bairro":"Centro","cidade":"Rio de Janeiro","estado":"RJ","cep":"20000000"}',
+        'https://exemplo.com/fotos/ong2.jpg',
         2
     ),
     (
@@ -41,6 +44,7 @@ VALUES (
         '(11) 98765-4323',
         'NomeOng3',
         '{"logradouro":"Rua XV de Novembro","numero":"1234","complemento":"Fundos","bairro":"Liberdade","cidade":"Curitiba","estado":"PR","cep":"80020900"}',
+        'https://exemplo.com/fotos/ong3.jpg',
         2
     ),
     (
@@ -52,6 +56,7 @@ VALUES (
         '(11) 98765-4324',
         'NomeOng4',
         '{"logradouro":"Rua Dom Pedro II","numero":"876","complemento":"","bairro":"Boa Vista","cidade":"Recife","estado":"PE","cep":"50720000"}',
+        'https://exemplo.com/fotos/ong4.jpg',
         2
     ),
     (
@@ -63,5 +68,6 @@ VALUES (
         '(11) 98765-4325',
         'NomeOng5',
         '{"logradouro":"Rua Barão do Rio Branco","numero":"45","complemento":"Andar superior","bairro":"Centro Histórico","cidade":"Porto Alegre","estado":"RS","cep":"90020000"}',
+        'https://exemplo.com/fotos/ong5.jpg',
         2
     );

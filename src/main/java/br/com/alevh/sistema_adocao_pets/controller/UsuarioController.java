@@ -58,9 +58,9 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.findById(id);
         }
 
-        @GetMapping(value = "/{nome_usuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario) {
+        public UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
                 return usuarioService.findByNomeUsuario(nomeUsuario);
         }
 
