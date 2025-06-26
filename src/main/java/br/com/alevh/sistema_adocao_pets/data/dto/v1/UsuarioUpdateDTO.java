@@ -43,8 +43,6 @@ public class UsuarioUpdateDTO extends RepresentationModel<UsuarioUpdateDTO> impl
     @Pattern(regexp = "^\\S+$", message = "O nome de usuário não pode conter espaços")
     private String nomeUsuario;
 
-    @NotBlank(message = "A foto de usuário é obrigatório")
-    @NotNull(message = "A foto de usuário é obrigatório")
     private String fotoPerfil;
 
     @NotBlank(message = "A senha de usuário é obrigatório")
