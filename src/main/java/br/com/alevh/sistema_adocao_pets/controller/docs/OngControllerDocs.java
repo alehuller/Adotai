@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,6 +71,15 @@ public interface OngControllerDocs {
     })
     ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorOngId(Long id, int page, int size,
             String direction);
+
+    @Operation(summary = "Retorna todas os Animais de uma ONG", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AnimalDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+    })
+    ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisDeUmaOng(String nomeUsuario, int page, int size, String direction);
 
     @Operation(summary = "Atualização parcial da ONG", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OngDTO.class)))),

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
+import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Animal;
@@ -153,5 +154,21 @@ public class AnimalService {
 
         animalRepository.save(animal);
         return DozerMapper.parseObject(animal, AnimalDTO.class);
+    }
+
+    public PagedModel<EntityModel<AnimalDTO>> findAllByOngNome(String nomeUsuario, Pageable pageable) {
+
+        Page<Animal> animalPage = animalRepository.findByOngNomeUsuario(nomeUsuario, pageable);
+
+        Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
+
+        animalDtoPage = animalDtoPage.map(
+            dto -> dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel()));
+        
+        Link selfLink = linkTo(methodOn(OngController.class)
+                .listarAnimaisDeUmaOng(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return assembler.toModel(animalDtoPage, selfLink);
     }
 }

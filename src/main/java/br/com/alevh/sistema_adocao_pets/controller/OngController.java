@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevh.sistema_adocao_pets.controller.docs.OngControllerDocs;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
+import br.com.alevh.sistema_adocao_pets.service.AnimalService;
 import br.com.alevh.sistema_adocao_pets.service.OngService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class OngController implements OngControllerDocs {
 
         private final OngService ongService;
+
+        private final AnimalService animalService;
 
         @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<OngDTO>>> listarOngs(
@@ -98,6 +102,20 @@ public class OngController implements OngControllerDocs {
                 PagedModel<EntityModel<AdocaoDTO>> pagedModel = ongService.findAllAdocoesByOngId(id,
                                 pageable);
 
+                return ResponseEntity.ok(pagedModel);
+        }
+
+        @GetMapping(value = "/{nomeUsuario}/animais", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML})
+        public ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisDeUmaOng(
+                        @PathVariable("nomeUsuario") String nomeUsuario,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+                
+                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, "nome");
+
+                PagedModel<EntityModel<AnimalDTO>> pagedModel = animalService.findAllByOngNome(nomeUsuario, pageable);
                 return ResponseEntity.ok(pagedModel);
         }
 
