@@ -50,6 +50,9 @@ public class SecurityConfig {
                 // gerencia as rotas e os acessos com token e sem
                 .authorizeHttpRequests(authorize -> authorize
 
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**")
+                        .permitAll()
+
                         // Rotas específicas com restrição
 
                         // Rotas de usuário
@@ -66,7 +69,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ADM", "ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais").hasAnyRole("ADM", "ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais")
+                        .hasAnyRole("ADM", "ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG")
