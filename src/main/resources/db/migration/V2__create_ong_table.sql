@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS ong (
     id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    nome VARCHAR(80) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     cnpj VARCHAR(18) UNIQUE NOT NULL,
     responsavel VARCHAR(45),
     cell VARCHAR(15) UNIQUE NOT NULL,
-    nome_usuario VARCHAR(255) UNIQUE NOT NULL,
+    nome_usuario VARCHAR(80) UNIQUE NOT NULL,
     foto_perfil VARCHAR(255),
-    endereco TEXT,
+    endereco TEXT NOT NULL,
     role SMALLINT DEFAULT 2 NOT NULL
 );

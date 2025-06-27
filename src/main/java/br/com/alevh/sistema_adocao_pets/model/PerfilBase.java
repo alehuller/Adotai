@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 public abstract class PerfilBase {
 
-    @Column(name = "nome", nullable = false, length = 255)
+    @Column(name = "nome", nullable = false, length = 80)
     private String nome;
 
-    @Column(name = "nome_usuario", nullable = false, unique = true, length = 255)
+    @Column(name = "nome_usuario", nullable = false, unique = true, length = 80)
     private String nomeUsuario;
 
-    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
     @Column(name = "senha", nullable = false, length = 255)

@@ -35,22 +35,22 @@ public class Animal implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAnimal;
 
-    @Column(name = "nome", nullable = false, length = 255)
+    @Column(name = "nome", nullable = false, length = 80)
     private String nome;
 
-    @Column(name = "especie", nullable = false, length = 100)
+    @Column(name = "especie", nullable = false, length = 50)
     private String especie;
 
-    @Column(name = "raca", nullable = false, length = 100)
+    @Column(name = "raca", nullable = false, length = 50)
     private String raca;
 
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @Column(name = "foto")
+    @Column(name = "foto", length = 255)
     private String foto;
 
-    @Column(name = "descricao")
+    @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 
     @Column(name = "porte", nullable = false, length = 50)
@@ -60,7 +60,7 @@ public class Animal implements Serializable{
     private String sexo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 50)
+    @Column(name = "status", nullable = false, length = 30)
     private StatusAnimal status;
 
     //varios animais podem estar associados a uma única ong
