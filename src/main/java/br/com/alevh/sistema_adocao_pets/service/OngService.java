@@ -67,6 +67,8 @@ public class OngService {
 
     private final OngValidacao ongValidacao;
 
+    private final CepService cepService;
+
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
 
         Page<Ong> ongPage = ongRepository.findAll(pageable);
@@ -103,6 +105,10 @@ public class OngService {
 
     public OngDTO create(OngDTO ong) {
 
+        // Passo 3: Preenche o endereço com base no CEP usando a API ViaCEP
+        cepService.preencherEndereco(ong.getEndereco());
+        ongValidacao.validarEnderecoPreenchido(ong.getEndereco());
+
         ongValidacao.validate(ong);
 
         ong.setSenha(passwordEncoder.encode(ong.getSenha()));
@@ -110,10 +116,12 @@ public class OngService {
         entity.setCnpj(ong.getCnpj().getCnpj());
         entity.setEmail(ong.getEmail().toLowerCase());
         entity.setRole(Roles.ONG);
+
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
+
         return dto;
-    }
+    }   
 
     public TokenDTO logar(LoginDTO data) {
 

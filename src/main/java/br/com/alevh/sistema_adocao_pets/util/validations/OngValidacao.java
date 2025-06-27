@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
@@ -77,6 +78,21 @@ public class OngValidacao {
             }
         }
     }
+
+    public void validarEnderecoPreenchido(EnderecoVO endereco) {
+        if (isNullOrBlank(endereco.getLogradouro())) {
+            throw new IllegalArgumentException("Logradouro não encontrado para o CEP informado");
+        }
+        if (isNullOrBlank(endereco.getBairro())) {
+            throw new IllegalArgumentException("Bairro não encontrado para o CEP informado");
+        }
+        if (isNullOrBlank(endereco.getCidade())) {
+            throw new IllegalArgumentException("Cidade não encontrada para o CEP informado");
+        }
+        if (isNullOrBlank(endereco.getEstado())) {
+            throw new IllegalArgumentException("Estado não encontrado para o CEP informado");
+        }
+    }
     
     public boolean existsOngWithEmail(String email) {
         return ongRepository.findByEmail(email).isPresent();
@@ -92,5 +108,9 @@ public class OngValidacao {
 
     public boolean existsOngWithCell(String cell) {
         return ongRepository.findByCell(cell).isPresent();
+    }
+
+    private boolean isNullOrBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 }
