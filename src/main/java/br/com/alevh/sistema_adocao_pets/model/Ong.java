@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import jakarta.persistence.*;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +40,11 @@ public class Ong extends PerfilBase implements UserDetails {
 
     @Column(name = "responsavel", nullable = false, length = 255)
     private String responsavel;
+
+    @Column(name = "descricao", columnDefinition = "TEXT")
+    private String descricao;
+
+    private String site;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -2,6 +2,7 @@ package br.com.alevh.sistema_adocao_pets.data.dto.v1;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.URL;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,4 +65,11 @@ public class OngUpdateDTO extends RepresentationModel<OngUpdateDTO> implements S
     @NotBlank(message = "O responsável pela ong é obrigatório")
     @NotNull(message = "O responsável pela ong é obrigatório")
     private String responsavel;
+
+    @NotBlank(message = "O celular da ong é obrigatório")
+    @NotNull(message = "O celular da ong é obrigatório")
+    private String descricao;
+
+    @URL(message = "O site informado não é válido")
+    private String site;
 }

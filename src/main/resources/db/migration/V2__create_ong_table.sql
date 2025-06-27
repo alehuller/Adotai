@@ -9,5 +9,7 @@ CREATE TABLE IF NOT EXISTS ong (
     nome_usuario VARCHAR(80) UNIQUE NOT NULL,
     foto_perfil VARCHAR(255),
     endereco TEXT NOT NULL,
+    descricao TEXT NOT NULL,
+    site VARCHAR(255),
     role SMALLINT DEFAULT 2 NOT NULL
 );
