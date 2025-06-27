@@ -64,18 +64,28 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.findByNomeUsuario(nomeUsuario);
         }
 
+        @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                MediaType.APPLICATION_XML })
+        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(
+                @PathVariable("nomeUsuario") String nomeUsuario,
+                @RequestParam(value = "page", defaultValue = "0") int page,
+                @RequestParam(value = "size", defaultValue = "10") int size,
+                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+
+                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
+
+                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByNomeUsuario(nomeUsuario,
+                        pageable);
+
+                return ResponseEntity.ok(pagedModel);
+        }
+
         @PostMapping(value = "/signup", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
         public UsuarioDTO registrarUsuario(@RequestBody @Valid RegistroDTO registroDTO) {
                 return usuarioService.create(registroDTO);
-        }
-
-        @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
-                usuarioService.delete(nomeUsuario);
-                return ResponseEntity.noContent().build();
         }
 
         @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -94,20 +104,10 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(usuarioAtualizado);
         }
 
-        @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                MediaType.APPLICATION_XML })
-        public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(
-                @PathVariable("nomeUsuario") String nomeUsuario,
-                @RequestParam(value = "page", defaultValue = "0") int page,
-                @RequestParam(value = "size", defaultValue = "10") int size,
-                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
-
-                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
-                Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
-
-                PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByNomeUsuario(nomeUsuario,
-                        pageable);
-
-                return ResponseEntity.ok(pagedModel);
+        @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public ResponseEntity<?> deletarPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+                usuarioService.delete(nomeUsuario);
+                return ResponseEntity.noContent().build();
         }
 }

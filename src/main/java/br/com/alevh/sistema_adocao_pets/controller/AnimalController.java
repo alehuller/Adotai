@@ -66,13 +66,6 @@ public class AnimalController implements AnimalControllerDocs{
                 return animalService.create(animal);
         }
 
-        @DeleteMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarPorNome(@PathVariable(name = "nome") String nome) {
-                animalService.delete(nome);
-                return ResponseEntity.noContent().build();
-        }
-
         @PutMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -86,5 +79,12 @@ public class AnimalController implements AnimalControllerDocs{
         public ResponseEntity<AnimalDTO> atualizarParcialAnimal(@PathVariable(value = "nome") String nome, @RequestBody Map<String, Object> updates) {
                 AnimalDTO animalAtualizado = animalService.partialUpdate(nome, updates);
                 return ResponseEntity.ok(animalAtualizado);
+        }
+
+        @DeleteMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public ResponseEntity<?> deletarPorNome(@PathVariable(name = "nome") String nome) {
+                animalService.delete(nome);
+                return ResponseEntity.noContent().build();
         }
 }

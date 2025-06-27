@@ -80,6 +80,22 @@ public class AnimalService {
         return dto;
     }
 
+    public PagedModel<EntityModel<AnimalDTO>> findAllByOngNome(String nomeUsuario, Pageable pageable) {
+
+        Page<Animal> animalPage = animalRepository.findByOngNomeUsuario(nomeUsuario, pageable);
+
+        Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
+
+        animalDtoPage = animalDtoPage.map(
+                dto -> dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel()));
+
+        Link selfLink = linkTo(methodOn(OngController.class)
+                .listarAnimaisDeUmaOng(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return assembler.toModel(animalDtoPage, selfLink);
+    }
+
     public AnimalDTO create(AnimalDTO animal) {
         if (animal == null)
             throw new RequiredObjectIsNullException();
@@ -92,11 +108,6 @@ public class AnimalService {
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
         return dto;
-    }
-
-    @Transactional
-    public void delete(String nome) {
-        animalRepository.deleteByNome(nome);
     }
 
     public AnimalDTO update(AnimalDTO animal, String nome) {
@@ -159,19 +170,8 @@ public class AnimalService {
         return DozerMapper.parseObject(animal, AnimalDTO.class);
     }
 
-    public PagedModel<EntityModel<AnimalDTO>> findAllByOngNome(String nomeUsuario, Pageable pageable) {
-
-        Page<Animal> animalPage = animalRepository.findByOngNomeUsuario(nomeUsuario, pageable);
-
-        Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
-
-        animalDtoPage = animalDtoPage.map(
-                dto -> dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(OngController.class)
-                .listarAnimaisDeUmaOng(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
-                .withSelfRel();
-
-        return assembler.toModel(animalDtoPage, selfLink);
+    @Transactional
+    public void delete(String nome) {
+        animalRepository.deleteByNome(nome);
     }
 }

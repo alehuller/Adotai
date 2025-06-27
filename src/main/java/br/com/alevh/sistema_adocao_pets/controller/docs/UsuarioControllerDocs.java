@@ -37,6 +37,26 @@ public interface UsuarioControllerDocs {
     })
     UsuarioDTO acharUsuarioPorId(Long id);
 
+    @Operation(summary = "Retorna o usuário pelo nome de usuário pesquisado", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
+            @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+    })
+    UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario);
+
+    @Operation(summary = "Retorna todas as adoções de um usuário específico", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdocaoDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+    })
+    ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(String nomeUsuario, int page, int size,
+            String direction);
+
     @Operation(summary = "Registra um usuário", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
@@ -44,15 +64,6 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
     UsuarioDTO registrarUsuario(RegistroDTO usuario);
-
-    @Operation(summary = "Apaga o usuário de nome especificado", responses = {
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
-    })
-    ResponseEntity<?> deletarPorNomeUsuario(String nomeUsuario);
 
     @Operation(summary = "Atualiza o usuário", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
@@ -72,23 +83,12 @@ public interface UsuarioControllerDocs {
     })
     ResponseEntity<UsuarioDTO> atualizarParcialUsuario(String nomeUsuario, Map<String, Object> updates);
 
-    @Operation(summary = "Retorna todas as adoções de um usuário específico", responses = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdocaoDTO.class)))),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
-    })
-    ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(String nomeUsuario, int page, int size,
-            String direction);
-
-    @Operation(summary = "Retorna o usuário pelo nome de usuário pesquisado", responses = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioDTO.class)))),
+    @Operation(summary = "Apaga o usuário de nome especificado", responses = {
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario);
+    ResponseEntity<?> deletarPorNomeUsuario(String nomeUsuario);
 }

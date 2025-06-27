@@ -103,6 +103,22 @@ public class OngService {
 
     }
 
+    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByOngId(Long idOng, Pageable pageable) {
+
+        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByOngId(idOng, pageable);
+
+        Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
+
+        adocaoDtoPage = adocaoDtoPage.map(
+                dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
+
+        Link selfLink = linkTo(methodOn(OngController.class)
+                .listarAdocoesPorOngId(idOng, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
+    }
+
     public OngDTO create(OngDTO ong) {
 
         // Passo 3: Preenche o endereço com base no CEP usando a API ViaCEP
@@ -168,27 +184,6 @@ public class OngService {
         return dto;
     }
 
-    @Transactional
-    public void delete(String nomeUsuario) {
-        ongRepository.deleteByNomeUsuario(nomeUsuario);
-    }
-
-    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByOngId(Long idOng, Pageable pageable) {
-
-        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByOngId(idOng, pageable);
-
-        Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
-
-        adocaoDtoPage = adocaoDtoPage.map(
-                dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(OngController.class)
-                .listarAdocoesPorOngId(idOng, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
-                .withSelfRel();
-
-        return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
-    }
-
     public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Ong ong = ongRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
@@ -222,5 +217,10 @@ public class OngService {
 
         ongRepository.save(ong);
         return DozerMapper.parseObject(ong, OngDTO.class);
+    }
+
+    @Transactional
+    public void delete(String nomeUsuario) {
+        ongRepository.deleteByNomeUsuario(nomeUsuario);
     }
 }

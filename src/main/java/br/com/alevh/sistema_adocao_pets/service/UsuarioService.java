@@ -79,6 +79,42 @@ public class UsuarioService {
         return assembler.toModel(usuarioDtosPage, link);
     }
 
+    public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
+
+        Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
+        return dto;
+    }
+
+    public UsuarioDTO findById(Long id) {
+
+        Usuario entity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
+        return dto;
+    }
+
+    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByNomeUsuario(String nomeUsuario, Pageable pageable) {
+
+        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByNomeUsuario(nomeUsuario, pageable);
+
+        Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
+
+        adocaoDtoPage = adocaoDtoPage.map(
+                dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
+
+        Link selfLink = linkTo(methodOn(UsuarioController.class)
+                .listarAdocoesPorNomeUsuario(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
+    }
+
     public UsuarioDTO create(RegistroDTO registroDTO) {
 
         usuarioValidacao.validate(registroDTO);
@@ -115,11 +151,6 @@ public class UsuarioService {
         return new TokenDTO(token);
     }
 
-    @Transactional
-    public void delete(String nomeUsuario) {
-        usuarioRepository.deleteByNomeUsuario(nomeUsuario);
-    }
-
     public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, String nomeUsuario) {
 
         Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
@@ -137,42 +168,6 @@ public class UsuarioService {
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
         return dto;
-    }
-
-    public UsuarioDTO findById(Long id) {
-
-        Usuario entity = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-
-        UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
-        return dto;
-    }
-
-    public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
-
-        Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-
-        UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
-        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
-        return dto;
-    }
-
-    public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByNomeUsuario(String nomeUsuario, Pageable pageable) {
-
-        Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByNomeUsuario(nomeUsuario, pageable);
-
-        Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
-
-        adocaoDtoPage = adocaoDtoPage.map(
-                dto -> dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(UsuarioController.class)
-                .listarAdocoesPorNomeUsuario(nomeUsuario, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
-                .withSelfRel();
-
-        return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 
     public UsuarioDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
@@ -209,5 +204,10 @@ public class UsuarioService {
 
         usuarioRepository.save(usuario);
         return DozerMapper.parseObject(usuario, UsuarioDTO.class);
+    }
+
+    @Transactional
+    public void delete(String nomeUsuario) {
+        usuarioRepository.deleteByNomeUsuario(nomeUsuario);
     }
 }

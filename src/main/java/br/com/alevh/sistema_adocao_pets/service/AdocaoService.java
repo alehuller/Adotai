@@ -97,10 +97,6 @@ public class AdocaoService {
         return dto;
     }
 
-    public void delete(Long id) {
-        adocaoRepository.deleteById(id);
-    }
-
     public AdocaoDTO update(AdocaoDTO adocao, Long id) {
 
         if (adocao == null)
@@ -162,4 +158,7 @@ public class AdocaoService {
         return DozerMapper.parseObject(adocao, AdocaoDTO.class);
     }
 
+    public void delete(Long id) {
+        adocaoRepository.deleteById(id);
+    }
 }

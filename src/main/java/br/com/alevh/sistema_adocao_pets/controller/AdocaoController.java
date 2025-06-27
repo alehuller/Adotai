@@ -60,13 +60,6 @@ public class AdocaoController implements AdocaoControllerDocs{
                 return adocaoService.create(adocao);
         }
 
-        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
-                adocaoService.delete(id);
-                return ResponseEntity.noContent().build();
-        }
-
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -80,5 +73,12 @@ public class AdocaoController implements AdocaoControllerDocs{
         public ResponseEntity<AdocaoDTO> atualizarParcialAdocao(@PathVariable(value = "id") Long id, @RequestBody Map<String, Object> updates) {
                 AdocaoDTO adocaoAtualizado = adocaoService.partialUpdate(id, updates);
                 return ResponseEntity.ok(adocaoAtualizado);
+        }
+
+        @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
+                adocaoService.delete(id);
+                return ResponseEntity.noContent().build();
         }
 }

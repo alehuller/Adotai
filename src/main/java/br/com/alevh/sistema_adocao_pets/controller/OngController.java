@@ -67,27 +67,6 @@ public class OngController implements OngControllerDocs {
                 return ongService.findByNomeUsuario(nomeUsuario);
         }
 
-        @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                                        MediaType.APPLICATION_XML })
-        public OngDTO registrarOng(@RequestBody @Valid OngDTO ong) {
-                return ongService.create(ong);
-        }
-
-        @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                                        MediaType.APPLICATION_XML })
-        public OngDTO atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid OngUpdateDTO ong) {
-                return ongService.update(ong, nomeUsuario);
-        }
-
-        @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                        MediaType.APPLICATION_XML })
-        public ResponseEntity<?> deletarOngPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
-                ongService.delete(nomeUsuario);
-                return ResponseEntity.noContent().build();
-        }
-
         @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorOngId(
@@ -119,6 +98,20 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
+        @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                                        MediaType.APPLICATION_XML })
+        public OngDTO registrarOng(@RequestBody @Valid OngDTO ong) {
+                return ongService.create(ong);
+        }
+
+        @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                                        MediaType.APPLICATION_XML })
+        public OngDTO atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid OngUpdateDTO ong) {
+                return ongService.update(ong, nomeUsuario);
+        }
+
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -126,5 +119,12 @@ public class OngController implements OngControllerDocs {
                         @RequestBody Map<String, Object> updates) {
                 OngDTO ongAtualizada = ongService.partialUpdate(nomeUsuario, updates);
                 return ResponseEntity.ok(ongAtualizada);
+        }
+
+        @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
+        public ResponseEntity<?> deletarOngPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+                ongService.delete(nomeUsuario);
+                return ResponseEntity.noContent().build();
         }
 }
