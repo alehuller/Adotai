@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS administrador (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    nome_usuario VARCHAR(80) UNIQUE NOT NULL,
+    foto_perfil VARCHAR(255),
+    role SMALLINT DEFAULT 0 NOT NULL
+);

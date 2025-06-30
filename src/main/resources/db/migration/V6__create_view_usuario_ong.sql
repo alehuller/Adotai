@@ -3,4 +3,7 @@ SELECT id, email, senha, nome_usuario, role
 FROM usuario
 UNION
 SELECT id, email, senha, nome_usuario, role
-FROM ong;
+FROM ong
+UNION
+SELECT id, email, senha, nome_usuario, role
+from administrador;
