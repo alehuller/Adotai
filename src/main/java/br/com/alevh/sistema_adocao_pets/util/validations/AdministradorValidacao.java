@@ -61,7 +61,7 @@ public class AdministradorValidacao {
             String nomeUsuario2 = updates.get("nomeUsuario").toString();
             Optional<Administrador> usuarioExistente = administradorRepository.findByNomeUsuario(nomeUsuario2);
             if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                throw new IllegalStateException("Nome de usuário já está em uso por outro usuário");
+                throw new IllegalStateException("Nome de usuário já está em uso por outro administrador");
             }
         }
     }
