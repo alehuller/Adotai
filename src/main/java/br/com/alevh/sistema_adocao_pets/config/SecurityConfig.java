@@ -27,25 +27,7 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable()) // possibilita redirecionamento de dados em cyberataques de um site logado
                                               // para outro
-                .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // trata as exceções lançadas dentro do filtro
-                        .accessDeniedHandler(customAccessDeniedHandler)
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateful
-                                                                                                              // ->
-                                                                                                              // guarda
-                                                                                                              // no site
-                                                                                                              // as
-                                                                                                              // infos
-                                                                                                              // de
-                                                                                                              // user/senha,
-                                                                                                              // Stateless
-                                                                                                              // ->
-                                                                                                              // tokenização,
-                                                                                                              // n
-                                                                                                              // armazena
-                                                                                                              // nada no
-                                                                                                              // servidor
+
                 // gerencia as rotas e os acessos com token e sem
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/usuarios/**").hasRole("USER")
@@ -54,8 +36,13 @@ public class SecurityConfig {
 
                         // demais requisições são para usuarios autenticados
                         .anyRequest().permitAll())
-                
-                // antes de verificar as roles, vai validar o token do usuário
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // trata as exceções lançadas dentro do filtro
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateful -> guarda no site as infos de user/senha,
+                // Stateless -> tokenização n armazena nada no servidor antes de verificar as roles,
+                // vai validar o token do usuário
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // ordem dos filtros,
                                                                                              // primeiro parâmetro e dps
                                                                                              // o segundo, q é do spring

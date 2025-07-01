@@ -1,9 +1,12 @@
 package br.com.alevh.sistema_adocao_pets.exceptions;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +28,8 @@ public class CustomExceptionHandler {
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 
     @ExceptionHandler(NoResourceFoundException.class)
     public final ResponseEntity<ExceptionResponse> handleNotFound(NoResourceFoundException ex, WebRequest request) {
@@ -67,7 +72,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public final ResponseEntity<ExceptionResponse> handleIllegalStateException(BadCredentialsException ex, WebRequest request){
+    public final ResponseEntity<ExceptionResponse> handleBadCredentialsException(BadCredentialsException ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
                 List.of(ex.getMessage()),
@@ -76,15 +81,6 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException ex, WebRequest request){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                List.of(ex.getMessage()),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
-    }
 
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
     public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationException(InvalidJwtAuthenticationException ex, WebRequest request){

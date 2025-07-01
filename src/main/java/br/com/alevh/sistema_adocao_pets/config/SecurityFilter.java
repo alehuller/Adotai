@@ -1,8 +1,10 @@
 package br.com.alevh.sistema_adocao_pets.config;
 
+import br.com.alevh.sistema_adocao_pets.exceptions.TokenInvalidException;
 import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
 import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;
 import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +30,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenBlackListService tokenBlackListService;
 
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -35,23 +40,26 @@ public class SecurityFilter extends OncePerRequestFilter {
             var token = this.recoverToken(request);
             // n tem token, passa mas tbm n autentica nessa porra
             if (token != null) {
-
-                if(tokenBlackListService.isTokenBlacklisted(token)) {
+                if (tokenBlackListService.isTokenBlacklisted(token)) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("Token inválido: usuário fez logout");
                     return;
                 }
+                try {
+                    var email = tokenService.validateToken(token);// valida o token
+                    UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
+                            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
 
-                var email = tokenService.validateToken(token);// valida o token
-                UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
-                        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
-
-                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-                        userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                            userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    filterChain.doFilter(request, response);
+                } catch (JWTVerificationException ex) {
+                    jwtAuthenticationEntryPoint.commence(request, response, new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
+                }
             }
         }
-        filterChain.doFilter(request, response);
+
     }
 
     // recupera o token que está presente no header da requisição
