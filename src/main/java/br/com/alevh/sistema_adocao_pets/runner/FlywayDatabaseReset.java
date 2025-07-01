@@ -16,7 +16,7 @@ public class FlywayDatabaseReset {
 
     @PostConstruct
     public void resetDatabase() {
-        System.out.println("⚠️ Limpando e recriando o banco de dados via Flyway");
+        System.out.println("Limpando e recriando o banco de dados via Flyway");
         flyway.clean();
         flyway.migrate();
     }

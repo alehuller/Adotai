@@ -10,5 +10,9 @@ import br.com.alevh.sistema_adocao_pets.model.Administrador;
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
     Optional<Administrador> findByEmail(String email);
+
     Optional<Administrador> findByNomeUsuario(String nomeUsuario);
+    
+    void deleteByNomeUsuario(String nomeUsuario);
+    
 }

@@ -114,7 +114,7 @@ public class UsuarioService {
 
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
-
+    
     public UsuarioDTO create(RegistroDTO registroDTO) {
 
         usuarioValidacao.validate(registroDTO);

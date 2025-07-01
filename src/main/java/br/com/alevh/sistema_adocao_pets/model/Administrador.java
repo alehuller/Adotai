@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,6 +47,9 @@ public class Administrador implements UserDetails{
     @Column(name = "foto_perfil", nullable = true, length = 255)
     private String fotoPerfil;
 
+    @Column(name = "role", nullable = false, length = 255, columnDefinition = "smallint default 0")
+    private Roles role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -60,4 +64,5 @@ public class Administrador implements UserDetails{
     public String getUsername() {
         return this.getEmail();
     }
+
 }

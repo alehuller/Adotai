@@ -2,7 +2,9 @@ package br.com.alevh.sistema_adocao_pets.controller;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdministradorDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.service.AdministradorService;
 import br.com.alevh.sistema_adocao_pets.service.OngService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +29,8 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @ToString
 public class AuthController {
+
+    private final AdministradorService administradorService;
 
     private final UsuarioService usuarioService;
 
@@ -61,6 +65,18 @@ public class AuthController {
     public ResponseEntity<OngDTO> registerOng(@RequestBody @Valid OngDTO data) {
         OngDTO ongDTO = ongService.create(data);
         return ResponseEntity.ok(ongDTO);
+    }
+
+    // auth de adm
+    @PostMapping("admin/@472!@9204!/login")
+    public ResponseEntity<TokenDTO> loginAdm(@RequestBody @Valid LoginDTO data) {
+        return ResponseEntity.ok(administradorService.logar(data));
+    }
+
+    @PostMapping("admin/@472!@9204!/register")
+    public ResponseEntity<AdministradorDTO> registerAdm(@RequestBody @Valid AdministradorDTO data) {
+        AdministradorDTO administradorDTO = administradorService.create(data);
+        return ResponseEntity.ok(administradorDTO);
     }
 
     @PostMapping("/signout")

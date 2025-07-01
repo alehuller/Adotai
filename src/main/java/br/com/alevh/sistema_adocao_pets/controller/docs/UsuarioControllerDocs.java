@@ -45,7 +45,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario);
+    UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario);
 
     @Operation(summary = "Retorna todas as adoções de um usuário específico", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdocaoDTO.class)))),

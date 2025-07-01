@@ -20,7 +20,7 @@ public class OngValidacao {
 
     public void validate(OngDTO ong) {
         if (ong == null)
-            throw new RequiredObjectIsNullException("JSON vazio");
+            throw new RequiredObjectIsNullException("Não há dados");
 
         // se encontrar a ong no bd retorna badrequest
         if (existsOngWithEmail(ong.getEmail().toLowerCase())) {

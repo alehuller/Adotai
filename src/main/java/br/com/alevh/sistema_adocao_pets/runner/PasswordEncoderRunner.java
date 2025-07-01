@@ -5,8 +5,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import br.com.alevh.sistema_adocao_pets.repository.AdministradorRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import br.com.alevh.sistema_adocao_pets.model.Administrador;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 
@@ -17,11 +19,14 @@ public class PasswordEncoderRunner implements ApplicationRunner {
 
     private final OngRepository ongRepository;
     private final UsuarioRepository usuarioRepository;
+    private final AdministradorRepository administradorRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public PasswordEncoderRunner(UsuarioRepository usuarioRepository, OngRepository ongRepository, PasswordEncoder passwordEncoder) {
+    public PasswordEncoderRunner(UsuarioRepository usuarioRepository, OngRepository ongRepository,
+            AdministradorRepository administradorRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.ongRepository = ongRepository;
+        this.administradorRepository = administradorRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -29,6 +34,7 @@ public class PasswordEncoderRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         List<Usuario> usuarios = usuarioRepository.findAll();
         List<Ong> ongs = ongRepository.findAll();
+        List<Administrador> administradores = administradorRepository.findAll();
 
         for (Usuario usuario : usuarios) {
             if (!usuario.getSenha().startsWith("{bcrypt}")) {
@@ -44,6 +50,15 @@ public class PasswordEncoderRunner implements ApplicationRunner {
                 ong.setSenha(encodedPassword);
                 ongRepository.save(ong);
             }
+        }
+
+        for (Administrador administrador : administradores) {
+            if (!administrador.getSenha().startsWith("{bcrypt}")) {
+                String encodedPassword = passwordEncoder.encode(administrador.getSenha());
+                administrador.setSenha(encodedPassword);
+                administradorRepository.save(administrador);
+            }
+
         }
     }
 }

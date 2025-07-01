@@ -37,42 +37,45 @@ public class SecurityConfig {
 
                         // Rotas específicas com restrição
 
+                        // Rotas de administrador
+                        .requestMatchers("/api/v1/administradores/**").hasRole("ADMIN")
+
                         // Rotas de usuário
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").hasRole("ADM")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADM")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/id/{id}").hasAnyRole("ADM")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}/adocoes").hasAnyRole("USER", "ADM")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADM")
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADM")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADM")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/id/{id}").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}/adocoes").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
 
                         // Rotas de ong
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs").hasAnyRole("ADM", "USER", "ONG")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasAnyRole("ADM", "ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs").hasAnyRole("ADMIN", "USER", "ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasAnyRole("ADMIN", "ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais")
-                        .hasAnyRole("ADM", "ONG", "USER")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADM", "ONG")
+                        .hasAnyRole("ADMIN", "ONG", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG")
 
                         // Rotas de animal
-                        .requestMatchers(HttpMethod.GET, "/api/v1/animais").hasAnyRole("ADM", "ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/id/{id}").hasAnyRole("ADM")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/{nome}").hasAnyRole("ADM", "ONG", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/animais/registro").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/animais/{nome}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/animais/{nome}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/animais/{nome}").hasAnyRole("ADM", "ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/animais").hasAnyRole("ADMIN", "ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/id/{id}").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/{nome}").hasAnyRole("ADMIN", "ONG", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/animais/registro").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/animais/{nome}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/animais/{nome}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/animais/{nome}").hasAnyRole("ADMIN", "ONG")
 
                         // Rotas de adoção
-                        .requestMatchers(HttpMethod.GET, "/api/v1/adocoes").hasAnyRole("ADM")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/adocoes/{id}").hasAnyRole("ADM", "ONG", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/adocoes/registro").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/adocoes/{id}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/adocoes/{id}").hasAnyRole("ADM", "ONG")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/adocoes/{id}").hasAnyRole("ADM", "ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/adocoes").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/adocoes/{id}").hasAnyRole("ADMIN", "ONG", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/adocoes/registro").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/adocoes/{id}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/adocoes/{id}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/adocoes/{id}").hasAnyRole("ADMIN", "ONG")
 
                         // Qualquer outra rota com permissão não especificada fica liberada
                         .anyRequest().permitAll())

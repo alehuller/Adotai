@@ -1,5 +1,9 @@
 package br.com.alevh.sistema_adocao_pets.data.dto.v1;
 
+import java.io.Serializable;
+
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
@@ -17,9 +21,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder({})
-public class AdministradorDTO {
-    
+@JsonPropertyOrder({ "nome", "email", "nomeUsuario", "fotoPerfil" })
+public class AdministradorDTO extends RepresentationModel<AdministradorDTO> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idAdministrador")
     @Mapping("idAdministrador")
     private Long key;

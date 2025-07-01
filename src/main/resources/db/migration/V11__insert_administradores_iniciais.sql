@@ -8,7 +8,7 @@ INSERT INTO
         role
     )
 VALUES (
-        'Nome Administrador',
+        'Administrador',
         'admin@sistema.com',
         'senha123',
         'NomeAdministrador',

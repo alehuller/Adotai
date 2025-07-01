@@ -19,7 +19,7 @@ public class UsuarioValidacao {
 
     public void validate(RegistroDTO registroDTO) {
         if (registroDTO == null) {
-            throw new RequiredObjectIsNullException("JSON vazio");
+            throw new RequiredObjectIsNullException("Não há dados");
         }
         // se encontrar o usuario no bd retorna badrequest
         if (existsUsuarioWithEmail(registroDTO.getEmail().toLowerCase())) {
