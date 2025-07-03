@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

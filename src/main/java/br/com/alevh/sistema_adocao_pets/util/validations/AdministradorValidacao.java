@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdministradorDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.model.Administrador;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdministradorRepository;
 import lombok.RequiredArgsConstructor;
 
