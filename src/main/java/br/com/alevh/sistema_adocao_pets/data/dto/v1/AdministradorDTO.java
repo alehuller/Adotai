@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder({ "nome", "email", "nomeUsuario", "fotoPerfil" })
+@JsonPropertyOrder({ "nome", "email", "nomeUsuario", "fotoPerfil", "celular" })
 public class AdministradorDTO extends RepresentationModel<AdministradorDTO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,6 +48,12 @@ public class AdministradorDTO extends RepresentationModel<AdministradorDTO> impl
     @NotNull(message = "A senha de usuário é obrigatório")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
+
+    @NotBlank(message = "O celular de usuário é obrigatório")
+    @NotNull(message = "O celular de usuário é obrigatório")
+    @JsonProperty(value = "celular")
+    @Pattern(regexp = "^\\(\\d{2}\\) \\d{5}-\\d{4}$", message = "O celular deve estar no formato (XX) XXXXX-XXXX")
+    private String cell;
 
     private String fotoPerfil;
 }

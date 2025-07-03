@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS administrador (
     senha VARCHAR(255) NOT NULL,
     nome_usuario VARCHAR(80) UNIQUE NOT NULL,
     foto_perfil VARCHAR(255),
+    cell VARCHAR(15) UNIQUE NOT NULL,
     role SMALLINT DEFAULT 0 NOT NULL
 );

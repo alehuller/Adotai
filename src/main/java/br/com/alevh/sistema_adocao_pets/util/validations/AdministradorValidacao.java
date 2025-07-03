@@ -25,6 +25,10 @@ public class AdministradorValidacao {
         return administradorRepository.findByNomeUsuario(nomeUsuario).isPresent();
     }
 
+    public boolean existsAdministradorWithCell(String cell) {
+        return administradorRepository.findByCell(cell).isPresent();
+    }
+
     public void validate(AdministradorDTO admin) {
 
         if (admin == null) {
@@ -36,6 +40,9 @@ public class AdministradorValidacao {
         if (existsAdministradorWithNomeUsuario(admin.getNomeUsuario())) {
             throw new IllegalStateException("Nome de Usuário já está em uso");
         }
+        if (existsAdministradorWithCell(admin.getCell())) {
+            throw new IllegalStateException("Cell já está em uso");
+        }
     }
 
     public void validateUpdate(Administrador entity) {
@@ -44,6 +51,9 @@ public class AdministradorValidacao {
         }
         if (existsAdministradorWithNomeUsuario(entity.getNomeUsuario())) {
             throw new IllegalStateException("Nome de Usuário já está em uso");
+        }
+        if (existsAdministradorWithCell(entity.getCell())) {
+            throw new IllegalStateException("Cell já está em uso");
         }
     }
 
@@ -61,6 +71,14 @@ public class AdministradorValidacao {
             Optional<Administrador> usuarioExistente = administradorRepository.findByNomeUsuario(nomeUsuario2);
             if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
                 throw new IllegalStateException("Nome de usuário já está em uso por outro administrador");
+            }
+        }
+
+        if (updates.containsKey("cell")) {
+            String cell = updates.get("cell").toString();
+            Optional<Administrador> usuarioExistente = administradorRepository.findByCell(cell);
+            if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
+                throw new IllegalStateException("Celular já está em uso por outro administrador");
             }
         }
     }

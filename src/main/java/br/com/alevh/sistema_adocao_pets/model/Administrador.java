@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.alevh.sistema_adocao_pets.security.Roles;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,30 +24,12 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "administrador")
-public class Administrador implements UserDetails{
+public class Administrador extends PerfilBase implements UserDetails{
 
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAdministrador;
-    
-    @Column(name = "nome", nullable = false, length = 80)
-    private String nome;
-
-    @Column(name = "nome_usuario", nullable = false, unique = true, length = 80)
-    private String nomeUsuario;
-
-    @Column(name = "email", nullable = false, unique = true, length = 100)
-    private String email;
-
-    @Column(name = "senha", nullable = false, length = 255)
-    private String senha;
-
-    @Column(name = "foto_perfil", nullable = true, length = 255)
-    private String fotoPerfil;
-
-    @Column(name = "role", nullable = false, length = 255, columnDefinition = "smallint default 0")
-    private Roles role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

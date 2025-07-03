@@ -5,6 +5,7 @@ INSERT INTO
         senha,
         nome_usuario,
         foto_perfil,
+        cell,
         role
     )
 VALUES (
@@ -13,5 +14,6 @@ VALUES (
         'senha123',
         'NomeAdministrador',
         'foto',
+        '(11) 99999-9999',
         0
 );

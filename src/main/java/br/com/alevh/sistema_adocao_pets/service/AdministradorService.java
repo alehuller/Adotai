@@ -110,6 +110,7 @@ public class AdministradorService {
         entity.setFotoPerfil(administradorDTO.getFotoPerfil());
         entity.setEmail(administradorDTO.getEmail().toLowerCase());
         entity.setSenha(passwordEncoder.encode(administradorDTO.getSenha()));
+        entity.setCell(administradorDTO.getCell());
 
         administradorValidacao.validateUpdate(entity);
 
