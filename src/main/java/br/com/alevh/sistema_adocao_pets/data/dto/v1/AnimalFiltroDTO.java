@@ -1,6 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.data.dto.v1;
 
-import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +10,6 @@ public class AnimalFiltroDTO {
     private String raca;
     private String porte;
     private String sexo;
-    private StatusAnimal status;
+    private String status;
     private String cidadeOng;
 }

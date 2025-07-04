@@ -98,7 +98,7 @@ public class AnimalService {
     }
 
     public Page<AnimalDTO> filtrarAnimais(AnimalFiltroDTO filtro, Pageable pageable) {
-        Page<Animal> animais = animalRepository.filtrarAnimal(filtro, pageable);
+        Page<Animal> animais = animalRepository.filtrarAnimaisNativo(filtro, pageable);
         return animais.map(animal -> DozerMapper.parseObject(animal, AnimalDTO.class));
     }
 
