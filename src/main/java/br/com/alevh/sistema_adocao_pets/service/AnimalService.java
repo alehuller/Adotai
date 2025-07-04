@@ -25,6 +25,7 @@ import java.util.Set;
 import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalFiltroDTO;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Animal;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
@@ -94,6 +95,11 @@ public class AnimalService {
                 .withSelfRel();
 
         return assembler.toModel(animalDtoPage, selfLink);
+    }
+
+    public Page<AnimalDTO> filtrarAnimais(AnimalFiltroDTO filtro, Pageable pageable) {
+        Page<Animal> animais = animalRepository.filtrarAnimal(filtro, pageable);
+        return animais.map(animal -> DozerMapper.parseObject(animal, AnimalDTO.class));
     }
 
     public AnimalDTO create(AnimalDTO animal) {
