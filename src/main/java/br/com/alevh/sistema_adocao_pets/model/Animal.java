@@ -3,9 +3,12 @@ package br.com.alevh.sistema_adocao_pets.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.DescricaoVO;
 import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
+import br.com.alevh.sistema_adocao_pets.serialization.converter.DescricaoConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -50,8 +53,9 @@ public class Animal implements Serializable{
     @Column(name = "foto", length = 255)
     private String foto;
 
+    @Convert(converter = DescricaoConverter.class)
     @Column(name = "descricao", columnDefinition = "TEXT")
-    private String descricao;
+    private DescricaoVO descricao;
 
     @Column(name = "porte", nullable = false, length = 50)
     private String porte;
