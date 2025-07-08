@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.alevh.sistema_adocao_pets.model.Ong;
+import br.com.alevh.sistema_adocao_pets.repository.custom.OngRepositoryCustom;
 
 @Repository
-public interface OngRepository extends JpaRepository<Ong, Long> {
+public interface OngRepository extends JpaRepository<Ong, Long>, OngRepositoryCustom {
 
     Optional<Ong> findByEmail(String email);
 

@@ -33,6 +33,7 @@ import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngFiltroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
@@ -117,6 +118,11 @@ public class OngService {
                 .withSelfRel();
 
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
+    }
+
+    public Page<OngDTO> filtrarOngs(OngFiltroDTO filtro, Pageable pageable) {
+        Page<Ong> ongs = ongRepository.filtrarOngsNativo(filtro, pageable);
+        return ongs.map(ong -> DozerMapper.parseObject(ong, OngDTO.class));
     }
 
     public OngDTO create(OngDTO ong) {
