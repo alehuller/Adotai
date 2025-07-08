@@ -53,13 +53,14 @@ public class SecurityFilter extends OncePerRequestFilter {
                     var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
                             userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    filterChain.doFilter(request, response);
+
                 } catch (JWTVerificationException ex) {
                     jwtAuthenticationEntryPoint.commence(request, response, new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
+                    return;
                 }
             }
         }
-
+        filterChain.doFilter(request, response);
     }
 
     // recupera o token que está presente no header da requisição
