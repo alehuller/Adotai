@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.DescricaoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import br.com.alevh.sistema_adocao_pets.enums.StatusAnimal;
 import jakarta.validation.constraints.NotBlank;
@@ -49,7 +50,7 @@ public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Seriali
 
     private String foto;
 
-    private String descricao;
+    private DescricaoVO descricao;
 
     @NotBlank(message = "O porte do animal é obrigatório")
     @NotNull(message = "O porte do animal é obrigatório")
