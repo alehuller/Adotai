@@ -2,6 +2,7 @@ package br.com.alevh.sistema_adocao_pets.controller;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevh.sistema_adocao_pets.controller.docs.AnimalControllerDocs;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalFiltroDTO;
 import br.com.alevh.sistema_adocao_pets.service.AnimalService;
 import br.com.alevh.sistema_adocao_pets.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,6 +59,20 @@ public class AnimalController implements AnimalControllerDocs{
                         MediaType.APPLICATION_XML })
         public AnimalDTO acharAnimalPorNome(@PathVariable(value = "nome") String nome) {
                 return animalService.findByNome(nome);
+        }
+
+        @PostMapping(value = "/filtro", produces = MediaType.APPLICATION_JSON)
+        public ResponseEntity<Page<AnimalDTO>> filtrarAnimais(
+                @RequestBody AnimalFiltroDTO filtro,
+                @RequestParam(value = "page", defaultValue = "0") int page,
+                @RequestParam(value = "size", defaultValue = "10") int size,
+                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+                
+                Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, "nome");
+
+                Page<AnimalDTO> resultados = animalService.filtrarAnimais(filtro, pageable);
+                return ResponseEntity.ok(resultados);
         }
 
         @PostMapping(value = "/registro", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
