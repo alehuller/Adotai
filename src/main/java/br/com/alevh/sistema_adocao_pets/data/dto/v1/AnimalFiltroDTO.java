@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AnimalFiltroDTO {
+    private String nome;
     private String especie;
     private String raca;
     private String porte;

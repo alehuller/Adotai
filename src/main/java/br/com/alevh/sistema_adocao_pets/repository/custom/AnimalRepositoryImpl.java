@@ -37,6 +37,12 @@ public class AnimalRepositoryImpl implements AnimalRepositoryCustom {
 
         Map<String, Object> params = new HashMap<>();
 
+        if (filtro.getNome() != null) {
+            sql.append(" AND a.nome = :nome");
+            countSql.append(" AND a.nome = :nome");
+            params.put("nome", filtro.getNome());
+        }
+
         if (filtro.getEspecie() != null) {
             sql.append(" AND a.especie = :especie");
             countSql.append(" AND a.especie = :especie");
