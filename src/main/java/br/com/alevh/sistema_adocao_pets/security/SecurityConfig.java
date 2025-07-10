@@ -42,7 +42,7 @@ public class SecurityConfig {
 
                         // Rotas de usuário
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN", "ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/id/{id}").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}/adocoes").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
@@ -52,10 +52,9 @@ public class SecurityConfig {
                         // Rotas de ong
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs").hasAnyRole("ADMIN", "USER", "ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ADMIN", "ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasAnyRole("ADMIN", "ONG")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais")
-                        .hasAnyRole("ADMIN", "ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais").hasAnyRole("ADMIN", "ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ADMIN", "ONG")
