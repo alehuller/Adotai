@@ -38,7 +38,7 @@ public class SecurityConfig {
                         // Rotas específicas com restrição
 
                         // Rotas de administrador
-                        .requestMatchers("/api/v1/administradores/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/@472!@9204!/administradores/**").hasRole("ADMIN")
 
                         // Rotas de usuário
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").hasRole("ADMIN")

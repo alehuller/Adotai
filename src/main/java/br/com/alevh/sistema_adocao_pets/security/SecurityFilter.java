@@ -18,51 +18,73 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-// filtro que acontece uma vez em todas as requisições
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-
     private final LoginIdentityViewRepository loginIdentityViewRepository;
-
     private final TokenBlackListService tokenBlackListService;
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    private static final List<String> ROTAS_PUBLICAS = List.of(
+            "/v3/api-docs",
+            "/v3/api-docs/",
+            "/v3/api-docs/swagger-config",
+            "/swagger-ui",
+            "/swagger-ui/",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/swagger-resources",
+            "/swagger-resources/",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/",
+            "/webjars/**"
+    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if(!shouldNotFilter(request)){
-            var token = this.recoverToken(request);
-            // n tem token, passa mas tbm n autentica nessa porra
-            if (token != null) {
-                if (tokenBlackListService.isTokenBlacklisted(token)) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Token inválido: usuário fez logout");
-                    return;
-                }
-                try {
-                    var email = tokenService.validateToken(token);// valida o token
-                    UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
-                            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email)); //
 
-                    var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-                            userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    filterChain.doFilter(request, response);
-                } catch (JWTVerificationException ex) {
-                    jwtAuthenticationEntryPoint.commence(request, response, new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
-                }
+        String path = request.getServletPath();
+
+        // Ignora rotas públicas (Swagger, webjars, auth, etc.)
+        if (ROTAS_PUBLICAS.stream().anyMatch(path::startsWith)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        var token = this.recoverToken(request);
+        if (token != null) {
+            if (tokenBlackListService.isTokenBlacklisted(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido: usuário fez logout");
+                return;
+            }
+            try {
+                var email = tokenService.validateToken(token);
+                UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
+
+                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                        userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (JWTVerificationException ex) {
+                jwtAuthenticationEntryPoint.commence(
+                        request, response,
+                        new TokenInvalidException("Token JWT inválido ou expirado", ex)
+                );
+                return;
             }
         }
 
+        filterChain.doFilter(request, response);
     }
 
-    // recupera o token que está presente no header da requisição
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.equals("Bearer null")) {
@@ -73,7 +95,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.startsWith("/auth");
+        return false; // usando ROTAS_PUBLICAS, então esse método pode sempre retornar false
     }
 }
