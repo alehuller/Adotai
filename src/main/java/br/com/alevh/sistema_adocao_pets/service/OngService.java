@@ -1,5 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
@@ -205,7 +206,27 @@ public class OngService {
                 if (campo.equalsIgnoreCase("email") && valor instanceof String) {
                     valor = ((String) valor).toLowerCase();
                 }
-                ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
+                if (campo.equals("endereco") && valor instanceof Map<?, ?> valorMap) {
+                    EnderecoVO enderecoOriginal = ong.getEndereco();
+                    EnderecoVO enderecoAtualizado = mapper.convertValue(valor, EnderecoVO.class);
+
+                    if (enderecoOriginal == null) {
+                        ong.setEndereco(enderecoAtualizado);
+                    } else {
+                        // merge campo a campo
+                        if (enderecoAtualizado.getLogradouro() != null) enderecoOriginal.setLogradouro(enderecoAtualizado.getLogradouro());
+                        if (enderecoAtualizado.getNumero() != null) enderecoOriginal.setNumero(enderecoAtualizado.getNumero());
+                        if (enderecoAtualizado.getComplemento() != null) enderecoOriginal.setComplemento(enderecoAtualizado.getComplemento());
+                        if (enderecoAtualizado.getBairro() != null) enderecoOriginal.setBairro(enderecoAtualizado.getBairro());
+                        if (enderecoAtualizado.getCidade() != null) enderecoOriginal.setCidade(enderecoAtualizado.getCidade());
+                        if (enderecoAtualizado.getEstado() != null) enderecoOriginal.setEstado(enderecoAtualizado.getEstado());
+                        if (enderecoAtualizado.getCep() != null) enderecoOriginal.setCep(enderecoAtualizado.getCep());
+                    }
+
+                } else {
+                    ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
+                }
+
             }
         });
 
