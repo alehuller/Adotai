@@ -24,6 +24,7 @@ import java.util.Set;
 
 import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.DescricaoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalFiltroDTO;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
@@ -153,7 +154,21 @@ public class AnimalService {
             Field field = ReflectionUtils.findField(Animal.class, campo);
             if (field != null) {
                 field.setAccessible(true);
-                ReflectionUtils.setField(field, animal, mapper.convertValue(valor, field.getType()));
+                
+                if (campo.equals("descricao") && valor instanceof Map<?, ?> valorMap) {
+                    DescricaoVO descricaoOriginal = animal.getDescricao();
+                    DescricaoVO descricaoAtualizado = mapper.convertValue(valor, DescricaoVO.class);
+
+                    if (descricaoOriginal == null) {
+                        animal.setDescricao(descricaoAtualizado);
+                    } else {
+                        if (descricaoAtualizado.getGeral() != null) descricaoOriginal.setGeral(descricaoAtualizado.getGeral());
+                        if (descricaoAtualizado.getHistoricoSaude() != null) descricaoOriginal.setHistoricoSaude(descricaoAtualizado.getHistoricoSaude());
+                        if (descricaoAtualizado.getVacinacao() != null) descricaoOriginal.setVacinacao(descricaoAtualizado.getVacinacao());
+                    }
+                } else {
+                    ReflectionUtils.setField(field, animal, mapper.convertValue(valor, field.getType()));
+                }
             }
         });
 
