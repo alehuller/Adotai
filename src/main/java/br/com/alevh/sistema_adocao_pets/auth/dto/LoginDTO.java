@@ -1,0 +1,4 @@
+package br.com.alevh.sistema_adocao_pets.auth.dto;
+
+public record LoginDTO(String identifier, String password){
+}
