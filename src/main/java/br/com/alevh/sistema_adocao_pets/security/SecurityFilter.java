@@ -28,7 +28,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final LoginIdentityViewRepository loginIdentityViewRepository;
     private final TokenBlackListService tokenBlackListService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     private static final List<String> ROTAS_PUBLICAS = List.of(
             "/auth",
             "/v3/api-docs",
@@ -54,22 +53,22 @@ public class SecurityFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         // Ignora rotas públicas (Swagger, webjars, auth, etc.)
-        if (ROTAS_PUBLICAS.stream().anyMatch(path::startsWith)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        var token = this.recoverToken(request);
-        if (token != null) {
-            if (tokenBlackListService.isTokenBlacklisted(token)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token inválido: usuário fez logout");
-                return;
-            }
-            try {
-                var email = tokenService.validateToken(token);
-                UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
-                        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
+//        if (ROTAS_PUBLICAS.stream().anyMatch(path::startsWith)) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+        if(!shouldNotFilter(request)) {
+            var token = this.recoverToken(request);
+            if (token != null) {
+                if (tokenBlackListService.isTokenBlacklisted(token)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token inválido: usuário fez logout");
+                    return;
+                }
+                try {
+                    var email = tokenService.validateToken(token);
+                    UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
+                            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
                     var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
                             userDetails.getAuthorities());
@@ -80,8 +79,9 @@ public class SecurityFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-            filterChain.doFilter(request, response);
         }
+            filterChain.doFilter(request, response);
+    }
 
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -93,6 +93,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return false; // usando ROTAS_PUBLICAS, então esse método pode sempre retornar false
+        String path = request.getServletPath();
+        return ROTAS_PUBLICAS.stream().anyMatch(path::startsWith);
     }
 }
