@@ -43,7 +43,7 @@ public class SecurityConfig {
 
                         // Rotas de usuário
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/id/{id}").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}/adocoes").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("USER")
@@ -53,7 +53,7 @@ public class SecurityConfig {
                         // Rotas de ong
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs").hasAnyRole("USER", "ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ONG")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasAnyRole("ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ONG")
