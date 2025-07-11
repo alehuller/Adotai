@@ -30,6 +30,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private static final List<String> ROTAS_PUBLICAS = List.of(
+            "/auth",
             "/v3/api-docs",
             "/v3/api-docs/",
             "/v3/api-docs/swagger-config",
@@ -70,20 +71,17 @@ public class SecurityFilter extends OncePerRequestFilter {
                 UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
                         .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
-                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-                        userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (JWTVerificationException ex) {
-                jwtAuthenticationEntryPoint.commence(
-                        request, response,
-                        new TokenInvalidException("Token JWT inválido ou expirado", ex)
-                );
-                return;
-            }
-        }
+                    var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                            userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        filterChain.doFilter(request, response);
-    }
+                } catch (JWTVerificationException ex) {
+                    jwtAuthenticationEntryPoint.commence(request, response, new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
+                    return;
+                }
+            }
+            filterChain.doFilter(request, response);
+        }
 
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");

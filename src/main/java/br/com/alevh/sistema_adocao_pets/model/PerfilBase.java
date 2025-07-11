@@ -29,6 +29,7 @@ public abstract class PerfilBase {
     @Column(name = "cell", nullable = false, unique = true, length = 15)
     private String cell;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 255, columnDefinition = "smallint default 0")
     private Roles role;
 }

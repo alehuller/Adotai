@@ -73,10 +73,6 @@ public class AdministradorService {
 
     public AdministradorDTO create(AdministradorDTO administradorDTO) {
 
-        if (administradorDTO == null) {
-            throw new RequiredObjectIsNullException("Não há dados!");
-        }
-
         administradorValidacao.validate(administradorDTO);
 
         Administrador entity = DozerMapper.parseObject(administradorDTO, Administrador.class);

@@ -68,12 +68,12 @@ public class AuthController {
     }
 
     // auth de adm
-    @PostMapping("admin/@472!@9204!/login")
+    @PostMapping("/admin/login")
     public ResponseEntity<TokenDTO> loginAdm(@RequestBody @Valid LoginDTO data) {
         return ResponseEntity.ok(administradorService.logar(data));
     }
 
-    @PostMapping("admin/@472!@9204!/register")
+    @PostMapping("/adminmaster/register")
     public ResponseEntity<AdministradorDTO> registerAdm(@RequestBody @Valid AdministradorDTO data) {
         AdministradorDTO administradorDTO = administradorService.create(data);
         return ResponseEntity.ok(administradorDTO);

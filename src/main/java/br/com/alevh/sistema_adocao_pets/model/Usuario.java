@@ -18,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "usuario")
-public class Usuario extends PerfilBase implements UserDetails {
+public class Usuario extends PerfilBase {
 
     @Id
     @Column(name = "id", nullable = false, unique = true)
@@ -27,20 +27,4 @@ public class Usuario extends PerfilBase implements UserDetails {
 
     @Column(name = "cpf", nullable = false, unique = true, length = 14)
     private String cpf;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    @Override
-    public String getPassword() {
-        return getSenha();
-    }
-
-    //
-    @Override
-    public String getUsername() {
-        return getEmail();
-    }
 }
