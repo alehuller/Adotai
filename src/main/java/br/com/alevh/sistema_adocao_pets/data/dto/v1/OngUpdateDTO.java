@@ -2,7 +2,6 @@ package br.com.alevh.sistema_adocao_pets.data.dto.v1;
 
 import java.io.Serializable;
 
-import org.hibernate.validator.constraints.URL;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.SiteVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder ({ "nome", "nomeUsuario", "email", "endereco", "telefone", "responsavel", "fotoPerfil" })
+@JsonPropertyOrder ({ "nome", "nomeUsuario", "email", "endereco", "cell", "descricao", "responsavel", "site", "fotoPerfil" })
 public class OngUpdateDTO extends RepresentationModel<OngUpdateDTO> implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -70,6 +70,6 @@ public class OngUpdateDTO extends RepresentationModel<OngUpdateDTO> implements S
     @NotNull(message = "O celular da ong é obrigatório")
     private String descricao;
 
-    @URL(message = "O site informado não é válido")
-    private String site;
+    @Valid
+    private SiteVO site;
 }

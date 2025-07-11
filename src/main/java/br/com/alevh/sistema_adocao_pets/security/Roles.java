@@ -1,16 +1,27 @@
 package br.com.alevh.sistema_adocao_pets.security;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum Roles {
-    ADMIN("admin"),
-    USER("usuario"),
-    ONG("ong");
+    USER(List.of("USER")),
+    ONG(List.of("ONG")),
+    ADMIN(List.of("ADMIN", "USER", "ONG")),
+    ADMINMASTER(List.of("ADMINMASTER", "ADMIN", "USER", "ONG"));
 
-    private String role;
+    private final List<String> authorities;
 
-    Roles(String role){
-        this.role = role;
+    Roles(List<String> authorities) {
+        this.authorities = authorities;
     }
-    public String getRole(){
-        return role;
+
+    public Collection<GrantedAuthority> getAuthorities() {
+        return authorities.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }

@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS ong (
     endereco TEXT NOT NULL,
     descricao TEXT NOT NULL,
     site VARCHAR(255),
-    role SMALLINT DEFAULT 2 NOT NULL
+    role VARCHAR DEFAULT 0 NOT NULL
 );

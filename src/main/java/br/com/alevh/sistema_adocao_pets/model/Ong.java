@@ -10,7 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.SiteVO;
 import br.com.alevh.sistema_adocao_pets.serialization.converter.EnderecoConverter;
+import br.com.alevh.sistema_adocao_pets.serialization.converter.SiteConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +25,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "ong")
 
-public class Ong extends PerfilBase implements UserDetails {
+public class Ong extends PerfilBase{
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -44,20 +46,8 @@ public class Ong extends PerfilBase implements UserDetails {
     @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 
-    private String site;
+    @Convert(converter = SiteConverter.class)
+    @Column(name = "site", nullable = true, columnDefinition = "TEXT")
+    private SiteVO site;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_ONG"));
-    }
-
-    @Override
-    public String getPassword() {
-        return this.getSenha();
-    }
-
-    @Override
-    public String getUsername() {
-        return this.getEmail();
-    }
 }

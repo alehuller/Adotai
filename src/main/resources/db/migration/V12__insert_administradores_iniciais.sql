@@ -7,12 +7,22 @@ INSERT INTO administrador (
         cell,
         role
     )
-VALUES (
-        'Administrador',
-        'admin@sistema.com',
+VALUES
+    (
+        'Administrador Mestre',
+        'adminmaster@sistema.com',
         'senha123',
-        'NomeAdministrador',
+        'NomeAdministradorMestre',
         'foto',
         '(11) 99999-9999',
-        0
+        'ADMINMASTER'
+    ),
+    (
+        'Administrador 1',
+        'admin@sistema.com',
+        'senha123',
+        'NomeAdministrador1',
+        'foto',
+        '(11) 91234-6789',
+        'ADMIN'
     );

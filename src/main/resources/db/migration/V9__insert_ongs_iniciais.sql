@@ -23,8 +23,8 @@ VALUES (
         '{"logradouro":"Rua das Flores","numero":"100","complemento":"","bairro":"Jardim Paulista","cidade":"São Paulo","estado":"SP","cep":"01426030"}',
         'https://exemplo.com/fotos/ong1.jpg',
         'ONG focada em resgate de cães abandonados.',
-        'https://ong1.org',
-        2
+        '{"site": "", "instagram": "", "facebook": "", "tiktok": "", "youtube": "", "whatsapp": "", "x": "", "linkedin": ""}',
+        'ONG'
     ),
     (
         'Ong 2',
@@ -37,8 +37,8 @@ VALUES (
         '{"logradouro":"Avenida Brasil","numero":"500","complemento":"Sala 2","bairro":"Centro","cidade":"Rio de Janeiro","estado":"RJ","cep":"20000000"}',
         'https://exemplo.com/fotos/ong2.jpg',
         'ONG voltada à adoção de gatos e campanhas educativas.',
-        'https://ong2.org',
-        2
+        '{"site": "", "instagram": "", "facebook": "", "tiktok": "", "youtube": "", "whatsapp": "", "x": "", "linkedin": ""}',
+        'ONG'
     ),
     (
         'Ong 3',
@@ -51,8 +51,8 @@ VALUES (
         '{"logradouro":"Rua XV de Novembro","numero":"1234","complemento":"Fundos","bairro":"Liberdade","cidade":"Curitiba","estado":"PR","cep":"80020900"}',
         'https://exemplo.com/fotos/ong3.jpg',
         'Trabalha com reabilitação de animais vítimas de maus-tratos.',
-        'https://ong3.org',
-        2
+        '{"site": "", "instagram": "", "facebook": "", "tiktok": "", "youtube": "", "whatsapp": "", "x": "", "linkedin": ""}',
+        'ONG'
     ),
     (
         'Ong 4',
@@ -65,8 +65,8 @@ VALUES (
         '{"logradouro":"Rua Dom Pedro II","numero":"876","complemento":"","bairro":"Boa Vista","cidade":"Recife","estado":"PE","cep":"50720000"}',
         'https://exemplo.com/fotos/ong4.jpg',
         'ONG localizada no Nordeste com foco em educação ambiental.',
-        'https://ong4.org',
-        2
+        '{"site": "", "instagram": "", "facebook": "", "tiktok": "", "youtube": "", "whatsapp": "", "x": "", "linkedin": ""}',
+        'ONG'
     ),
     (
         'Ong 5',
@@ -79,6 +79,6 @@ VALUES (
         '{"logradouro":"Rua Barão do Rio Branco","numero":"45","complemento":"Andar superior","bairro":"Centro Histórico","cidade":"Porto Alegre","estado":"RS","cep":"90020000"}',
         'https://exemplo.com/fotos/ong5.jpg',
         'Foco em castração e vacinação de animais comunitários.',
-        'https://ong5.org',
-        2
+        '{"site": "", "instagram": "", "facebook": "", "tiktok": "", "youtube": "", "whatsapp": "", "x": "", "linkedin": ""}',
+        'ONG'
     );

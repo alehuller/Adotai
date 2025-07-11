@@ -1,8 +1,10 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +35,15 @@ public class Administrador extends PerfilBase implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        Collection<SimpleGrantedAuthority> grants = new ArrayList<>(List.of(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ONG"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        ));
+        if(getRole() == Roles.ADMINMASTER){
+            grants.add(new SimpleGrantedAuthority("ROLE_ADMINMASTER"));
+        }
+        return grants;
     }
 
     @Override

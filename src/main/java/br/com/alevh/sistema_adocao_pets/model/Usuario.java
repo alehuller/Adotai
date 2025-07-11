@@ -20,7 +20,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "usuario")
-public class Usuario extends PerfilBase implements UserDetails {
+public class Usuario extends PerfilBase {
 
     @Id
     @Column(name = "id", nullable = false, unique = true)
@@ -37,20 +37,4 @@ public class Usuario extends PerfilBase implements UserDetails {
         inverseJoinColumns = @JoinColumn(name = "animal_id") 
     )
     private Set<Animal> animaisFavoritos = new HashSet<>();
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    @Override
-    public String getPassword() {
-        return getSenha();
-    }
-
-    //
-    @Override
-    public String getUsername() {
-        return getEmail();
-    }
 }
