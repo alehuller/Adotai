@@ -3,7 +3,9 @@ package br.com.alevh.sistema_adocao_pets.controller;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import org.springframework.data.domain.Pageable;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevh.sistema_adocao_pets.controller.docs.UsuarioControllerDocs;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.service.UsuarioService;
@@ -64,19 +67,20 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.findByNomeUsuario(nomeUsuario);
         }
 
-        @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                MediaType.APPLICATION_XML })
+        @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorNomeUsuario(
-                @PathVariable("nomeUsuario") String nomeUsuario,
-                @RequestParam(value = "page", defaultValue = "0") int page,
-                @RequestParam(value = "size", defaultValue = "10") int size,
-                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+                        @PathVariable("nomeUsuario") String nomeUsuario,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
                 var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
                 Pageable pageable = PageRequest.of(page, size, sortDirection, "idAdocao");
 
                 PagedModel<EntityModel<AdocaoDTO>> pagedModel = usuarioService.findAllAdocoesByNomeUsuario(nomeUsuario,
-                        pageable);
+                                pageable);
 
                 return ResponseEntity.ok(pagedModel);
         }
@@ -91,15 +95,17 @@ public class UsuarioController implements UsuarioControllerDocs {
         @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO atualizarUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid UsuarioUpdateDTO usuario) {
+        public UsuarioDTO atualizarUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario,
+                        @RequestBody @Valid UsuarioUpdateDTO usuario) {
                 return usuarioService.update(usuario, nomeUsuario);
         }
 
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                MediaType.APPLICATION_XML })
-        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario,
-                                                                  @RequestBody Map<String, Object> updates) {
+                        MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                                        MediaType.APPLICATION_XML })
+        public ResponseEntity<UsuarioDTO> atualizarParcialUsuario(
+                        @PathVariable(value = "nomeUsuario") String nomeUsuario,
+                        @RequestBody Map<String, Object> updates) {
                 UsuarioDTO usuarioAtualizado = usuarioService.partialUpdate(nomeUsuario, updates);
                 return ResponseEntity.ok(usuarioAtualizado);
         }
@@ -109,5 +115,42 @@ public class UsuarioController implements UsuarioControllerDocs {
         public ResponseEntity<?> deletarPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
                 usuarioService.delete(nomeUsuario);
                 return ResponseEntity.noContent().build();
+        }
+
+        @PostMapping("/favoritar/{nomeUsuario}/{animalId}")
+        public ResponseEntity<Map<String, Object>> toggleFavorito(
+                        @PathVariable String nomeUsuario,
+                        @PathVariable Long animalId) {
+
+                boolean novoEstado = usuarioService.toggleAnimalFavorito(nomeUsuario, animalId);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("animalId", animalId);
+                response.put("favorito", novoEstado);
+                response.put("mensagem",
+                                novoEstado ? "Animal favoritado com sucesso" : "Animal removido dos favoritos");
+
+                return ResponseEntity.ok(response);
+        }
+
+        @GetMapping(value = "/{nomeUsuario}/favoritos", produces = {
+                        MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_YML,
+                        MediaType.APPLICATION_XML
+        })
+        public ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisFavoritos(
+                        @PathVariable("nomeUsuario") String nomeUsuario,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction,
+                        @RequestParam(value = "sort", defaultValue = "nome") String sort) {
+
+                var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, sort);
+
+                PagedModel<EntityModel<AnimalDTO>> pagedModel = usuarioService
+                                .findAnimaisFavoritosByNomeUsuario(nomeUsuario, pageable);
+
+                return ResponseEntity.ok(pagedModel);
         }
 }

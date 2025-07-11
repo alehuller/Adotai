@@ -1,5 +1,4 @@
-INSERT INTO
-    administrador (
+INSERT INTO administrador (
         nome,
         email,
         senha,
@@ -16,4 +15,4 @@ VALUES (
         'foto',
         '(11) 99999-9999',
         0
-);
+    );

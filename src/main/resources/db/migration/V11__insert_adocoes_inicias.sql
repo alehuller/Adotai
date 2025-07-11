@@ -1,5 +1,4 @@
-INSERT INTO
-    public.adocao (
+INSERT INTO public.adocao (
         data_adocao,
         status,
         usuario_id,

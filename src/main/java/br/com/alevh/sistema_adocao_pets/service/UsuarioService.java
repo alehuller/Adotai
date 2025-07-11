@@ -1,22 +1,27 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
+import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
 import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
+import br.com.alevh.sistema_adocao_pets.model.Animal;
 import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
+import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
 import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import br.com.alevh.sistema_adocao_pets.security.Roles;
 import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -24,6 +29,8 @@ import br.com.alevh.sistema_adocao_pets.util.validations.UsuarioValidacao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -38,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +60,8 @@ public class UsuarioService {
 
     private final AdocaoRepository adocaoRepository;
 
+    private final AnimalRepository animalRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final PagedResourcesAssembler<UsuarioDTO> assembler;
@@ -61,6 +71,8 @@ public class UsuarioService {
     private final TokenService tokenService;
 
     private final PagedResourcesAssembler<AdocaoDTO> adocaoDtoAssembler;
+
+    private final PagedResourcesAssembler<AnimalDTO> animalDtoAssembler;
 
     private final Validator validator;
 
@@ -114,7 +126,7 @@ public class UsuarioService {
 
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
-    
+
     public UsuarioDTO create(RegistroDTO registroDTO) {
 
         usuarioValidacao.validate(registroDTO);
@@ -135,15 +147,16 @@ public class UsuarioService {
 
         String identifier = data.identifier();
 
-        // Se for um e-mail (tem '@'), transforma para lowercase
+        // Se for um e-mail a string terá '@', isso será identificado e os dígitos da
+        // string serão convertidos para lowercase
         if (identifier.contains("@")) {
             identifier = identifier.toLowerCase();
         }
 
-        // credenciais do spring security
+        // Credenciais do spring security
         var usernamePassword = new UsernamePasswordAuthenticationToken(identifier, data.password());
 
-        // autentica de forma milagrosa as credenciais
+        // Autenticação das credenciais
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
         var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
@@ -209,5 +222,66 @@ public class UsuarioService {
     @Transactional
     public void delete(String nomeUsuario) {
         usuarioRepository.deleteByNomeUsuario(nomeUsuario);
+    }
+
+    public PagedModel<EntityModel<AnimalDTO>> findAnimaisFavoritosByNomeUsuario(String nomeUsuario, Pageable pageable) {
+        Page<Animal> animalPage = usuarioRepository.findAnimaisFavoritosByNomeUsuario(nomeUsuario, pageable);
+        Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
+
+        animalDtoPage = animalDtoPage.map(dto -> {
+            dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
+            return dto;
+        });
+
+        Link selfLink = linkTo(methodOn(UsuarioController.class)
+                .listarAnimaisFavoritos(
+                        nomeUsuario,
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        "asc",
+                        "nome"))
+                .withSelfRel();
+
+        return animalDtoAssembler.toModel(animalDtoPage, selfLink);
+    }
+
+    public boolean isAnimalFavorito(String nomeUsuario, Long animalId) {
+        return usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal(nomeUsuario, animalId);
+    }
+
+    @Transactional
+    @CacheEvict(value = "favoritos", key = "#nomeUsuario")
+    public boolean toggleAnimalFavorito(String nomeUsuario, Long animalId) {
+        boolean isFavorito = usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal(nomeUsuario, animalId);
+
+        if (isFavorito) {
+            usuarioRepository.removerFavoritoNativo(nomeUsuario, animalId);
+        } else {
+            usuarioRepository.adicionarFavoritoNativo(nomeUsuario, animalId);
+        }
+
+        return !isFavorito;
+    }
+
+    // Métodos auxiliares mantidos porém não chamados diretamente
+    @Transactional
+    public void adicionarAnimalFavorito(String nomeUsuario, Long animalId) {
+        Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
+
+        usuario.getAnimaisFavoritos().add(animal);
+        usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void removerAnimalFavorito(String nomeUsuario, Long animalId) {
+        Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        usuario.getAnimaisFavoritos().removeIf(animal -> animal.getIdAnimal().equals(animalId));
+        usuarioRepository.save(usuario);
     }
 }
