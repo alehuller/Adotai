@@ -1,4 +1,5 @@
-INSERT INTO usuario (
+INSERT INTO
+    usuario (
         nome,
         email,
         senha,
@@ -7,7 +8,8 @@ INSERT INTO usuario (
         nome_usuario,
         role
     )
-VALUES (
+VALUES
+    (
         'Usuario 1',
         'usuario1@gmail.com',
         'senha123',

@@ -1,21 +1,28 @@
-CREATE OR REPLACE VIEW v_login_identity AS
-SELECT id,
+CREATE
+OR REPLACE VIEW v_login_identity AS
+SELECT
+    id,
     email,
     senha,
     nome_usuario,
     role
-FROM usuario
+FROM
+    usuario
 UNION
-SELECT id,
+SELECT
+    id,
     email,
     senha,
     nome_usuario,
     role
-FROM ong
+FROM
+    ong
 UNION
-SELECT id,
+SELECT
+    id,
     email,
     senha,
     nome_usuario,
     role
-from administrador;
+from
+    administrador;

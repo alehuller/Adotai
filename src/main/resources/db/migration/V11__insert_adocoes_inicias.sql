@@ -1,10 +1,12 @@
-INSERT INTO public.adocao (
+INSERT INTO
+    public.adocao (
         data_adocao,
         status,
         usuario_id,
         animal_id
     )
-VALUES (
+VALUES
+    (
         '2022-03-15',
         'APROVADA',
         1,

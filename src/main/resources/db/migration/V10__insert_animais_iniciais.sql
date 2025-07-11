@@ -1,4 +1,5 @@
-INSERT INTO animal (
+INSERT INTO
+    animal (
         nome,
         especie,
         raca,
@@ -10,7 +11,8 @@ INSERT INTO animal (
         status,
         ong_id
     )
-VALUES (
+VALUES
+    (
         'Rex',
         'Cachorro',
         'Labrador',
