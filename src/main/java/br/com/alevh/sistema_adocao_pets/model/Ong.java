@@ -23,7 +23,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "ong")
 
-public class Ong extends PerfilBase implements UserDetails {
+public class Ong extends PerfilBase{
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -46,18 +46,4 @@ public class Ong extends PerfilBase implements UserDetails {
 
     private String site;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_ONG"));
-    }
-
-    @Override
-    public String getPassword() {
-        return this.getSenha();
-    }
-
-    @Override
-    public String getUsername() {
-        return this.getEmail();
-    }
 }

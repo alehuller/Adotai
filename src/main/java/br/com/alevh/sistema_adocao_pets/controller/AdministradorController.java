@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/@472!@9204!/administradores")
+@RequestMapping("api/v1/administradores")
 @Tag(name = "Administradores", description = "Endpoints para manipulação do registro de Administradores.")
 public class AdministradorController {
 
@@ -48,13 +49,6 @@ public class AdministradorController {
         return ResponseEntity.ok(administradorService.findAll(pageable));
     }
 
-    @PostMapping(value = "/registro", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-                    MediaType.APPLICATION_XML })
-    public AdministradorDTO registrarAdministrador(@RequestBody AdministradorDTO admin) {
-        return administradorService.create(admin);
-    }
-
     @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public AdministradorDTO acharAdministradorPorId(@PathVariable(value = "id") Long id) {
@@ -65,6 +59,13 @@ public class AdministradorController {
             MediaType.APPLICATION_XML })
     public AdministradorDTO acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
         return administradorService.findByNomeUsuario(nomeUsuario);
+    }
+
+    @PostMapping(value = "/register", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+            MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+            MediaType.APPLICATION_XML })
+    public AdministradorDTO registrarAdministrador(@RequestBody @Valid AdministradorDTO admin) {
+        return administradorService.create(admin);
     }
 
     @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
