@@ -12,9 +12,9 @@ public interface AdministradorRepository extends JpaRepository<Administrador, Lo
     Optional<Administrador> findByEmail(String email);
 
     Optional<Administrador> findByNomeUsuario(String nomeUsuario);
-    
+
     void deleteByNomeUsuario(String nomeUsuario);
 
     Optional<Administrador> findByCell(String cell);
-    
+
 }

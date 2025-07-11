@@ -37,7 +37,7 @@ public class EnderecoVO extends RepresentationModel<EnderecoVO> implements Seria
     private String cep;
 
     public EnderecoVO(String logradouro, String numero, String complemento, String bairro,
-                      String cidade, String estado, String cep) {
+            String cidade, String estado, String cep) {
         this.logradouro = logradouro;
         this.numero = numero;
         this.complemento = complemento;

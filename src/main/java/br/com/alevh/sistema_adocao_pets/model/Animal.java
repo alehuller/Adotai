@@ -30,7 +30,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Entity
 @Table(name = "animal")
-public class Animal implements Serializable{
+public class Animal implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -67,7 +67,7 @@ public class Animal implements Serializable{
     @Column(name = "status", nullable = false, length = 30)
     private StatusAnimal status;
 
-    //varios animais podem estar associados a uma única ong
+    // varios animais podem estar associados a uma única ong
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ong_id", nullable = false)
     private Ong ong;

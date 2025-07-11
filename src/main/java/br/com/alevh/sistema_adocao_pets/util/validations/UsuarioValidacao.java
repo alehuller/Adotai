@@ -77,7 +77,7 @@ public class UsuarioValidacao {
             }
         }
     }
-    
+
     public boolean existsUsuarioWithEmail(String email) {
         return usuarioRepository.findByEmail(email).isPresent();
     }

@@ -1,13 +1,14 @@
 package br.com.alevh.sistema_adocao_pets.service.auth;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 
 @Service
 public class TokenService {
@@ -21,7 +22,7 @@ public class TokenService {
     private long expireLength;
 
     // gere tokens de Ong
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails) {
 
         try {
             // algoritmo de geração de token, vem dentro da biblioteca do jwt
@@ -42,18 +43,17 @@ public class TokenService {
 
     // gere tokens de Usuario
 
-
     public String validateToken(String token) {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
-                    .withIssuer("auth-api") // Define o emissor esperado do token
-                    .build() // Constrói o verificador JWT
-                    .verify(token) // Verifica e decodifica o token JWT fornecido
-                    .getSubject(); // Retorna o "subject" do token -> identificador do usuário
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return JWT.require(algorithm)
+                .withIssuer("auth-api") // Define o emissor esperado do token
+                .build() // Constrói o verificador JWT
+                .verify(token) // Verifica e decodifica o token JWT fornecido
+                .getSubject(); // Retorna o "subject" do token -> identificador do usuário
     }
 
     // tempo de expiração pro token
-    private Instant genExpirationDate(){
+    private Instant genExpirationDate() {
         return Instant.now().plusMillis(expireLength);
     }
 }

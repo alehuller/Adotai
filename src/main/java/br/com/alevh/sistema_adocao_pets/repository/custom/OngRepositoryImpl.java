@@ -13,7 +13,6 @@ import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngFiltroDTO;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
 import jakarta.persistence.Query;
 
 @Repository
@@ -25,14 +24,14 @@ public class OngRepositoryImpl implements OngRepositoryCustom {
     @Override
     public Page<Ong> filtrarOngsNativo(OngFiltroDTO filtro, Pageable pageable) {
         StringBuilder sql = new StringBuilder("""
-            SELECT o.* FROM ong o
-            WHERE 1=1
-        """);
+                    SELECT o.* FROM ong o
+                    WHERE 1=1
+                """);
 
         StringBuilder countSql = new StringBuilder("""
-            SELECT COUNT(*) FROM ong o
-            WHERE 1=1
-        """);
+                    SELECT COUNT(*) FROM ong o
+                    WHERE 1=1
+                """);
 
         Map<String, Object> params = new HashMap<>();
 

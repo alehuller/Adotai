@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class DescricaoVO extends RepresentationModel<DescricaoVO> implements Serializable{
+public class DescricaoVO extends RepresentationModel<DescricaoVO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String geral;

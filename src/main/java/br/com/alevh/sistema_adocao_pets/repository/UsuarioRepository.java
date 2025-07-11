@@ -1,8 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.repository;
 
-import br.com.alevh.sistema_adocao_pets.model.Animal;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
-import jakarta.transaction.Transactional;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import br.com.alevh.sistema_adocao_pets.model.Animal;
+import br.com.alevh.sistema_adocao_pets.model.Usuario;
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {

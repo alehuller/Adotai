@@ -22,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonPropertyOrder({ "nome", "email", "nomeUsuario", "fotoPerfil", "celular" })
-public class UsuarioUpdateDTO extends RepresentationModel<UsuarioUpdateDTO> implements Serializable{
+public class UsuarioUpdateDTO extends RepresentationModel<UsuarioUpdateDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idUsuario")

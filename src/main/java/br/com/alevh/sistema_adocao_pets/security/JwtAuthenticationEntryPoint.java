@@ -25,13 +25,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                         HttpServletResponse response,
                         AuthenticationException authException) throws IOException {
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
                 String json = new ObjectMapper().writeValueAsString(
                                 new ExceptionResponse(
                                                 new Date(),
-                                        List.of("Acesso negado: " + authException.getMessage()),
+                                                List.of("Acesso negado: " + authException.getMessage()),
                                                 request.getRequestURI()));
 
                 response.getWriter().write(json);

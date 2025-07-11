@@ -93,7 +93,7 @@ public class OngValidacao {
             throw new IllegalArgumentException("Estado não encontrado para o CEP informado");
         }
     }
-    
+
     public boolean existsOngWithEmail(String email) {
         return ongRepository.findByEmail(email).isPresent();
     }

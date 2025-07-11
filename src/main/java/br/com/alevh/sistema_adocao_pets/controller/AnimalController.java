@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/animais")
 @Tag(name = "Animais", description = "Endpoints para manipulação do registro dos animais.")
-public class AnimalController implements AnimalControllerDocs{
+public class AnimalController implements AnimalControllerDocs {
 
         private final AnimalService animalService;
 
@@ -63,12 +63,13 @@ public class AnimalController implements AnimalControllerDocs{
 
         @PostMapping(value = "/filtro", produces = MediaType.APPLICATION_JSON)
         public ResponseEntity<Page<AnimalDTO>> filtrarAnimais(
-                @RequestBody AnimalFiltroDTO filtro,
-                @RequestParam(value = "page", defaultValue = "0") int page,
-                @RequestParam(value = "size", defaultValue = "10") int size,
-                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
-                
-                Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+                        @RequestBody AnimalFiltroDTO filtro,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+
+                Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC
+                                : Sort.Direction.ASC;
                 Pageable pageable = PageRequest.of(page, size, sortDirection, "nome");
 
                 Page<AnimalDTO> resultados = animalService.filtrarAnimais(filtro, pageable);
@@ -92,7 +93,8 @@ public class AnimalController implements AnimalControllerDocs{
         @PatchMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public ResponseEntity<AnimalDTO> atualizarParcialAnimal(@PathVariable(value = "nome") String nome, @RequestBody Map<String, Object> updates) {
+        public ResponseEntity<AnimalDTO> atualizarParcialAnimal(@PathVariable(value = "nome") String nome,
+                        @RequestBody Map<String, Object> updates) {
                 AnimalDTO animalAtualizado = animalService.partialUpdate(nome, updates);
                 return ResponseEntity.ok(animalAtualizado);
         }

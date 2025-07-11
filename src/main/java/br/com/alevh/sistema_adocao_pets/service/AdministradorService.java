@@ -1,5 +1,12 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -15,18 +22,10 @@ import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Set;
-
 import br.com.alevh.sistema_adocao_pets.controller.AdministradorController;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
 import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Administrador;
@@ -62,9 +61,11 @@ public class AdministradorService {
 
         Page<Administrador> administradorPage = administradorRepository.findAll(pageable);
 
-        Page<AdministradorDTO> administradorDtosPage = administradorPage.map(a -> DozerMapper.parseObject(a, AdministradorDTO.class));
+        Page<AdministradorDTO> administradorDtosPage = administradorPage
+                .map(a -> DozerMapper.parseObject(a, AdministradorDTO.class));
         administradorDtosPage
-                .map(u -> u.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(u.getKey())).withSelfRel()));
+                .map(u -> u.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(u.getKey()))
+                        .withSelfRel()));
 
         Link link = linkTo(methodOn(AdministradorController.class).listarAdministradores(pageable.getPageNumber(),
                 pageable.getPageSize(), "asc")).withSelfRel();
@@ -125,7 +126,7 @@ public class AdministradorService {
                 .withSelfRel());
         return dto;
     }
-    
+
     public AdministradorDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Administrador administrador = administradorRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));

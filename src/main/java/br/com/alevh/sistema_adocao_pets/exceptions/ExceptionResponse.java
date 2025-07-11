@@ -1,10 +1,10 @@
 package br.com.alevh.sistema_adocao_pets.exceptions;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ExceptionResponse implements Serializable {
     private static final long serialVersionUID = 1L;

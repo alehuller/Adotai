@@ -1,12 +1,12 @@
 package br.com.alevh.sistema_adocao_pets.runner;
 
-import jakarta.annotation.PostConstruct;
 import org.flywaydb.core.Flyway;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
+
 @Component
 public class FlywayDatabaseReset {
-
 
     private final Flyway flyway;
 

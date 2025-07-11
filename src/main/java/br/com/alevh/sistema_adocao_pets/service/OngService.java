@@ -1,13 +1,11 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
-import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.data.dto.common.SiteVO;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
-import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
-import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
-import br.com.alevh.sistema_adocao_pets.util.validations.OngValidacao;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,25 +22,26 @@ import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Set;
-
 import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.SiteVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngFiltroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
+import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
+import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Adocao;
+import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
 import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
 import br.com.alevh.sistema_adocao_pets.security.Roles;
+import br.com.alevh.sistema_adocao_pets.util.validations.OngValidacao;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -145,7 +144,7 @@ public class OngService {
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
 
         return dto;
-    }   
+    }
 
     public TokenDTO logar(LoginDTO data) {
 
@@ -217,33 +216,47 @@ public class OngService {
                         ong.setEndereco(enderecoAtualizado);
                     } else {
                         // merge campo a campo
-                        if (enderecoAtualizado.getLogradouro() != null) enderecoOriginal.setLogradouro(enderecoAtualizado.getLogradouro());
-                        if (enderecoAtualizado.getNumero() != null) enderecoOriginal.setNumero(enderecoAtualizado.getNumero());
-                        if (enderecoAtualizado.getComplemento() != null) enderecoOriginal.setComplemento(enderecoAtualizado.getComplemento());
-                        if (enderecoAtualizado.getBairro() != null) enderecoOriginal.setBairro(enderecoAtualizado.getBairro());
-                        if (enderecoAtualizado.getCidade() != null) enderecoOriginal.setCidade(enderecoAtualizado.getCidade());
-                        if (enderecoAtualizado.getEstado() != null) enderecoOriginal.setEstado(enderecoAtualizado.getEstado());
-                        if (enderecoAtualizado.getCep() != null) enderecoOriginal.setCep(enderecoAtualizado.getCep());
+                        if (enderecoAtualizado.getLogradouro() != null)
+                            enderecoOriginal.setLogradouro(enderecoAtualizado.getLogradouro());
+                        if (enderecoAtualizado.getNumero() != null)
+                            enderecoOriginal.setNumero(enderecoAtualizado.getNumero());
+                        if (enderecoAtualizado.getComplemento() != null)
+                            enderecoOriginal.setComplemento(enderecoAtualizado.getComplemento());
+                        if (enderecoAtualizado.getBairro() != null)
+                            enderecoOriginal.setBairro(enderecoAtualizado.getBairro());
+                        if (enderecoAtualizado.getCidade() != null)
+                            enderecoOriginal.setCidade(enderecoAtualizado.getCidade());
+                        if (enderecoAtualizado.getEstado() != null)
+                            enderecoOriginal.setEstado(enderecoAtualizado.getEstado());
+                        if (enderecoAtualizado.getCep() != null)
+                            enderecoOriginal.setCep(enderecoAtualizado.getCep());
                     }
 
-                }   else if (campo.equals("site") && valor instanceof Map<?, ?> valorMapSite) {
-                        SiteVO siteOriginal = ong.getSite();
-                        SiteVO siteAtualizado = mapper.convertValue(valor, SiteVO.class);
+                } else if (campo.equals("site") && valor instanceof Map<?, ?> valorMapSite) {
+                    SiteVO siteOriginal = ong.getSite();
+                    SiteVO siteAtualizado = mapper.convertValue(valor, SiteVO.class);
 
-                        if (siteOriginal == null) {
-                            ong.setSite(siteAtualizado);
-                        } else {
-                            if (siteAtualizado.getSite() != null) siteOriginal.setSite(siteAtualizado.getSite());
-                            if (siteAtualizado.getInstagram() != null) siteOriginal.setInstagram(siteAtualizado.getInstagram());
-                            if (siteAtualizado.getFacebook() != null) siteOriginal.setFacebook(siteAtualizado.getFacebook());
-                            if (siteAtualizado.getTiktok() != null) siteOriginal.setTiktok(siteAtualizado.getTiktok());
-                            if (siteAtualizado.getYoutube() != null) siteOriginal.setYoutube(siteAtualizado.getYoutube());
-                            if (siteAtualizado.getWhatsapp() != null) siteOriginal.setWhatsapp(siteAtualizado.getWhatsapp());
-                            if (siteAtualizado.getX() != null) siteOriginal.setX(siteAtualizado.getX());
-                            if (siteAtualizado.getLinkedin() != null) siteOriginal.setLinkedin(siteAtualizado.getLinkedin());
-                        }
-                }
-                else {
+                    if (siteOriginal == null) {
+                        ong.setSite(siteAtualizado);
+                    } else {
+                        if (siteAtualizado.getSite() != null)
+                            siteOriginal.setSite(siteAtualizado.getSite());
+                        if (siteAtualizado.getInstagram() != null)
+                            siteOriginal.setInstagram(siteAtualizado.getInstagram());
+                        if (siteAtualizado.getFacebook() != null)
+                            siteOriginal.setFacebook(siteAtualizado.getFacebook());
+                        if (siteAtualizado.getTiktok() != null)
+                            siteOriginal.setTiktok(siteAtualizado.getTiktok());
+                        if (siteAtualizado.getYoutube() != null)
+                            siteOriginal.setYoutube(siteAtualizado.getYoutube());
+                        if (siteAtualizado.getWhatsapp() != null)
+                            siteOriginal.setWhatsapp(siteAtualizado.getWhatsapp());
+                        if (siteAtualizado.getX() != null)
+                            siteOriginal.setX(siteAtualizado.getX());
+                        if (siteAtualizado.getLinkedin() != null)
+                            siteOriginal.setLinkedin(siteAtualizado.getLinkedin());
+                    }
+                } else {
                     ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
                 }
 

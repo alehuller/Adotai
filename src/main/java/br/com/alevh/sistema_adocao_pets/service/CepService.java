@@ -10,7 +10,7 @@ import br.com.alevh.sistema_adocao_pets.integration.ViaCepResponse;
 
 @Service
 public class CepService {
-    
+
     private final RestTemplate restTemplate;
 
     public CepService() {
@@ -21,7 +21,8 @@ public class CepService {
         String url = "https://viacep.com.br/ws/" + cep.replaceAll("[^\\d]", "") + "/json/";
         ResponseEntity<ViaCepResponse> response = restTemplate.getForEntity(url, ViaCepResponse.class);
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().getCep() != null) {
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null
+                && response.getBody().getCep() != null) {
             return response.getBody();
         } else {
             throw new IllegalArgumentException("CEP inválido ou não encontrado");
@@ -29,7 +30,8 @@ public class CepService {
     }
 
     public void preencherEndereco(EnderecoVO enderecoVO) {
-        if(enderecoVO == null || enderecoVO.getCep() == null) return;
+        if (enderecoVO == null || enderecoVO.getCep() == null)
+            return;
 
         ViaCepResponse resposta = buscarEnderecoPorCep(enderecoVO.getCep());
 

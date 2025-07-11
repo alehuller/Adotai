@@ -17,8 +17,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, AnimalRep
 
     void deleteByNome(String nome);
 
-    //@Query("SELECT a FROM Animal a WHERE a.ong.nomeUsuario = :nomeUsuario")
+    // @Query("SELECT a FROM Animal a WHERE a.ong.nomeUsuario = :nomeUsuario")
     Page<Animal> findByOngNomeUsuario(String nomeUsuario, Pageable pageable);
-
 
 }

@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
  */
 public class InvalidJwtAuthenticationException extends AuthenticationCredentialsNotFoundException {
     private static final long serialVersionUID = 1L;
-   
+
     public InvalidJwtAuthenticationException(String ex) {
         super(ex);
     }

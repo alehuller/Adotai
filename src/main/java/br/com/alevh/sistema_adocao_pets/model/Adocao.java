@@ -27,7 +27,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Entity
 @Table(name = "adocao")
-public class Adocao implements Serializable{
+public class Adocao implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -42,12 +42,15 @@ public class Adocao implements Serializable{
     @Column(name = "status", nullable = false, length = 50)
     private StatusAdocao status;
 
-    //do ponto de vista da adoção, cada registro está ligado a um único usuário, mas o mesmo usuário pode aparecer em várias adoções.
+    // do ponto de vista da adoção, cada registro está ligado a um único usuário,
+    // mas o mesmo usuário pode aparecer em várias adoções.
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    //muitas adoções podem estar associadas a um mesmo animal (por exemplo, em um sistema que mantém histórico de tentativas de adoção, ou onde um animal é devolvido e adotado novamente).
+    // muitas adoções podem estar associadas a um mesmo animal (por exemplo, em um
+    // sistema que mantém histórico de tentativas de adoção, ou onde um animal é
+    // devolvido e adotado novamente).
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "animal_id", nullable = false)
     private Animal animal;

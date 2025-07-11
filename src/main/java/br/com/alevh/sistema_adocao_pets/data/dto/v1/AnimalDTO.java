@@ -24,14 +24,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder ({ "nome", "especie", "raca", "dataNascimento", "foto", "descricao", "porte", "sexo", "status", "nomeOng", "telefoneOng", "enderecoOng"})
+@JsonPropertyOrder({ "nome", "especie", "raca", "dataNascimento", "foto", "descricao", "porte", "sexo", "status",
+        "nomeOng", "telefoneOng", "enderecoOng" })
 public class AnimalDTO extends RepresentationModel<AnimalDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "idAnimal")
     @Mapping("idAnimal")
     private Long key;
-    
+
     @NotBlank(message = "O nome do animal é obrigatório")
     @NotNull(message = "O nome do animal é obrigatório")
     private String nome;

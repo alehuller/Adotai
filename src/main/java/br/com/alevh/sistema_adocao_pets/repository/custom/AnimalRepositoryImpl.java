@@ -24,16 +24,16 @@ public class AnimalRepositoryImpl implements AnimalRepositoryCustom {
     @Override
     public Page<Animal> filtrarAnimaisNativo(AnimalFiltroDTO filtro, Pageable pageable) {
         StringBuilder sql = new StringBuilder("""
-            SELECT a.* FROM animal a
-            JOIN ong o ON a.ong_id = o.id
-            WHERE 1=1
-        """);
+                    SELECT a.* FROM animal a
+                    JOIN ong o ON a.ong_id = o.id
+                    WHERE 1=1
+                """);
 
         StringBuilder countSql = new StringBuilder("""
-            SELECT COUNT(*) FROM animal a
-            JOIN ong o ON a.ong_id = o.id
-            WHERE 1=1
-        """);
+                    SELECT COUNT(*) FROM animal a
+                    JOIN ong o ON a.ong_id = o.id
+                    WHERE 1=1
+                """);
 
         Map<String, Object> params = new HashMap<>();
 
@@ -99,4 +99,3 @@ public class AnimalRepositoryImpl implements AnimalRepositoryCustom {
         return new PageImpl<>(resultList, pageable, total);
     }
 }
-

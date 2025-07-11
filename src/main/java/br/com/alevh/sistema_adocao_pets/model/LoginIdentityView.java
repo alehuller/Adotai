@@ -1,17 +1,19 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
+import java.util.Collection;
+
 import org.springframework.data.annotation.Immutable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.alevh.sistema_adocao_pets.security.Roles;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
 @Table(name = "v_login_identity")

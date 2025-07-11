@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import br.com.alevh.sistema_adocao_pets.security.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.com.alevh.sistema_adocao_pets.security.Roles;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +26,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "administrador")
-public class Administrador extends PerfilBase implements UserDetails{
+public class Administrador extends PerfilBase implements UserDetails {
 
     @Id
     @Column(name = "id", nullable = false, unique = true)
@@ -38,9 +38,8 @@ public class Administrador extends PerfilBase implements UserDetails{
         Collection<SimpleGrantedAuthority> grants = new ArrayList<>(List.of(
                 new SimpleGrantedAuthority("ROLE_USER"),
                 new SimpleGrantedAuthority("ROLE_ONG"),
-                new SimpleGrantedAuthority("ROLE_ADMIN")
-        ));
-        if(getRole() == Roles.ADMINMASTER){
+                new SimpleGrantedAuthority("ROLE_ADMIN")));
+        if (getRole() == Roles.ADMINMASTER) {
             grants.add(new SimpleGrantedAuthority("ROLE_ADMINMASTER"));
         }
         return grants;

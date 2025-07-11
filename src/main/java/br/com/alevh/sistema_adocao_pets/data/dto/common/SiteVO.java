@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class SiteVO extends RepresentationModel<SiteVO> implements Serializable{
+public class SiteVO extends RepresentationModel<SiteVO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @URL(message = "O site informado não é válido")

@@ -1,7 +1,12 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
-import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -15,18 +20,13 @@ import org.springframework.util.ReflectionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Set;
-
 import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
 import br.com.alevh.sistema_adocao_pets.controller.OngController;
 import br.com.alevh.sistema_adocao_pets.data.dto.common.DescricaoVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalFiltroDTO;
+import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
+import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
 import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
 import br.com.alevh.sistema_adocao_pets.model.Animal;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
@@ -154,7 +154,7 @@ public class AnimalService {
             Field field = ReflectionUtils.findField(Animal.class, campo);
             if (field != null) {
                 field.setAccessible(true);
-                
+
                 if (campo.equals("descricao") && valor instanceof Map<?, ?> valorMap) {
                     DescricaoVO descricaoOriginal = animal.getDescricao();
                     DescricaoVO descricaoAtualizado = mapper.convertValue(valor, DescricaoVO.class);
@@ -162,9 +162,12 @@ public class AnimalService {
                     if (descricaoOriginal == null) {
                         animal.setDescricao(descricaoAtualizado);
                     } else {
-                        if (descricaoAtualizado.getGeral() != null) descricaoOriginal.setGeral(descricaoAtualizado.getGeral());
-                        if (descricaoAtualizado.getHistoricoSaude() != null) descricaoOriginal.setHistoricoSaude(descricaoAtualizado.getHistoricoSaude());
-                        if (descricaoAtualizado.getVacinacao() != null) descricaoOriginal.setVacinacao(descricaoAtualizado.getVacinacao());
+                        if (descricaoAtualizado.getGeral() != null)
+                            descricaoOriginal.setGeral(descricaoAtualizado.getGeral());
+                        if (descricaoAtualizado.getHistoricoSaude() != null)
+                            descricaoOriginal.setHistoricoSaude(descricaoAtualizado.getHistoricoSaude());
+                        if (descricaoAtualizado.getVacinacao() != null)
+                            descricaoOriginal.setVacinacao(descricaoAtualizado.getVacinacao());
                     }
                 } else {
                     ReflectionUtils.setField(field, animal, mapper.convertValue(valor, field.getType()));

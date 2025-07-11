@@ -2,12 +2,12 @@ package br.com.alevh.sistema_adocao_pets.controller.docs;
 
 import java.util.Map;
 
-import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;

@@ -1,17 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.service.AdministradorService;
-import br.com.alevh.sistema_adocao_pets.util.MediaType;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
@@ -26,8 +14,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdministradorDTO;
+import br.com.alevh.sistema_adocao_pets.service.AdministradorService;
+import br.com.alevh.sistema_adocao_pets.util.MediaType;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,7 +61,7 @@ public class AdministradorController {
 
     @PostMapping(value = "/register", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML })
+                    MediaType.APPLICATION_XML })
     public AdministradorDTO registrarAdministrador(@RequestBody @Valid AdministradorDTO admin) {
         return administradorService.create(admin);
     }

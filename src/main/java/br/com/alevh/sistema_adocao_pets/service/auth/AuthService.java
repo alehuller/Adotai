@@ -1,11 +1,11 @@
 package br.com.alevh.sistema_adocao_pets.service.auth;
 
-import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

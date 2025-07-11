@@ -15,11 +15,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CnpjVO extends RepresentationModel<CnpjVO> implements Serializable{
+public class CnpjVO extends RepresentationModel<CnpjVO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "O CNPJ é obrigatório")
-    //@Pattern(regexp = "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}$", message = "O CNPJ deve estar no formato XX.XXX.XXX/XXXX-XX")
+    // @Pattern(regexp = "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}$", message = "O
+    // CNPJ deve estar no formato XX.XXX.XXX/XXXX-XX")
     @CNPJ
     private String cnpj;
 

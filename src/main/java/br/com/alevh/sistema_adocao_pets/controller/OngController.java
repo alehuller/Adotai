@@ -1,21 +1,5 @@
 package br.com.alevh.sistema_adocao_pets.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.com.alevh.sistema_adocao_pets.controller.docs.OngControllerDocs;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
-import br.com.alevh.sistema_adocao_pets.service.AnimalService;
-import br.com.alevh.sistema_adocao_pets.service.OngService;
-import br.com.alevh.sistema_adocao_pets.util.MediaType;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -30,10 +14,25 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.alevh.sistema_adocao_pets.controller.docs.OngControllerDocs;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngFiltroDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.OngUpdateDTO;
+import br.com.alevh.sistema_adocao_pets.service.AnimalService;
+import br.com.alevh.sistema_adocao_pets.service.OngService;
+import br.com.alevh.sistema_adocao_pets.util.MediaType;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -86,13 +85,14 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
-        @GetMapping(value = "/{nomeUsuario}/animais", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML})
+        @GetMapping(value = "/{nomeUsuario}/animais", produces = { MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisDeUmaOng(
                         @PathVariable("nomeUsuario") String nomeUsuario,
                         @RequestParam(value = "page", defaultValue = "0") int page,
                         @RequestParam(value = "size", defaultValue = "10") int size,
                         @RequestParam(value = "direction", defaultValue = "asc") String direction) {
-                
+
                 var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
                 Pageable pageable = PageRequest.of(page, size, sortDirection, "nome");
 
@@ -109,21 +109,23 @@ public class OngController implements OngControllerDocs {
 
         @PostMapping(value = "/filtro", produces = MediaType.APPLICATION_JSON)
         public ResponseEntity<Page<OngDTO>> filtrarOngs(
-                @RequestBody OngFiltroDTO filtro, 
-                @RequestParam(value = "page", defaultValue = "0") int page,
-                @RequestParam(value = "size", defaultValue = "10") int size,
-                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
-                        
-                        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-                        Pageable pageable = PageRequest.of(page, size, sortDirection, "nome");
-                        Page<OngDTO> resultados = ongService.filtrarOngs(filtro, pageable);
-                        return ResponseEntity.ok(resultados);
-                }
+                        @RequestBody OngFiltroDTO filtro,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "10") int size,
+                        @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+
+                Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC
+                                : Sort.Direction.ASC;
+                Pageable pageable = PageRequest.of(page, size, sortDirection, "nome");
+                Page<OngDTO> resultados = ongService.filtrarOngs(filtro, pageable);
+                return ResponseEntity.ok(resultados);
+        }
 
         @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid OngUpdateDTO ong) {
+        public OngDTO atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario,
+                        @RequestBody @Valid OngUpdateDTO ong) {
                 return ongService.update(ong, nomeUsuario);
         }
 

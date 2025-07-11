@@ -1,34 +1,11 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
-import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
-import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
-import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
-import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
-import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
-import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
-import br.com.alevh.sistema_adocao_pets.model.Adocao;
-import br.com.alevh.sistema_adocao_pets.model.Animal;
-import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
-import br.com.alevh.sistema_adocao_pets.model.Usuario;
-import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
-import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
-import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
-import br.com.alevh.sistema_adocao_pets.security.Roles;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
-import br.com.alevh.sistema_adocao_pets.util.validations.UsuarioValidacao;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
@@ -44,13 +21,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import br.com.alevh.sistema_adocao_pets.controller.AdocaoController;
+import br.com.alevh.sistema_adocao_pets.controller.AnimalController;
+import br.com.alevh.sistema_adocao_pets.controller.UsuarioController;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.RegistroDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AdocaoDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.AnimalDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioDTO;
+import br.com.alevh.sistema_adocao_pets.data.dto.v1.UsuarioUpdateDTO;
+import br.com.alevh.sistema_adocao_pets.exceptions.ResourceNotFoundException;
+import br.com.alevh.sistema_adocao_pets.mapper.DozerMapper;
+import br.com.alevh.sistema_adocao_pets.model.Adocao;
+import br.com.alevh.sistema_adocao_pets.model.Animal;
+import br.com.alevh.sistema_adocao_pets.model.LoginIdentityView;
+import br.com.alevh.sistema_adocao_pets.model.Usuario;
+import br.com.alevh.sistema_adocao_pets.repository.AdocaoRepository;
+import br.com.alevh.sistema_adocao_pets.repository.AnimalRepository;
+import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
+import br.com.alevh.sistema_adocao_pets.security.Roles;
+import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
+import br.com.alevh.sistema_adocao_pets.util.validations.UsuarioValidacao;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

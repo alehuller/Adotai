@@ -11,7 +11,7 @@ import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class EnderecoConverter implements AttributeConverter<EnderecoVO, String> {
-    
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

@@ -1,7 +1,10 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
 import br.com.alevh.sistema_adocao_pets.security.Roles;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 

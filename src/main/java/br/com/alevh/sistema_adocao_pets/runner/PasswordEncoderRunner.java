@@ -1,18 +1,18 @@
 package br.com.alevh.sistema_adocao_pets.runner;
 
+import java.util.List;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import br.com.alevh.sistema_adocao_pets.repository.AdministradorRepository;
-import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
-import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 import br.com.alevh.sistema_adocao_pets.model.Administrador;
 import br.com.alevh.sistema_adocao_pets.model.Ong;
 import br.com.alevh.sistema_adocao_pets.model.Usuario;
-
-import java.util.List;
+import br.com.alevh.sistema_adocao_pets.repository.AdministradorRepository;
+import br.com.alevh.sistema_adocao_pets.repository.OngRepository;
+import br.com.alevh.sistema_adocao_pets.repository.UsuarioRepository;
 
 @Component
 public class PasswordEncoderRunner implements ApplicationRunner {

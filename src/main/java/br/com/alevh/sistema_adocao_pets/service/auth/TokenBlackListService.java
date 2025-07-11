@@ -13,7 +13,7 @@ public class TokenBlackListService {
     private final Set<String> blacklist = new HashSet<>();
 
     public void addToBlacklist(HttpServletRequest request) {
-        String token = extractToken(request);  
+        String token = extractToken(request);
         blacklist.add(token);
     }
 

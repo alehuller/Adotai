@@ -31,11 +31,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/adocoes")
 @Tag(name = "Adoções", description = "Endpoints para manipulação do registro de adoções.")
-public class AdocaoController implements AdocaoControllerDocs{
+public class AdocaoController implements AdocaoControllerDocs {
 
         private final AdocaoService adocaoService;
 
-        @GetMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+        @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
         public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoes(
                         @RequestParam(value = "page", defaultValue = "0") int page,
                         @RequestParam(value = "size", defaultValue = "10") int size,
@@ -70,7 +70,8 @@ public class AdocaoController implements AdocaoControllerDocs{
         @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public ResponseEntity<AdocaoDTO> atualizarParcialAdocao(@PathVariable(value = "id") Long id, @RequestBody Map<String, Object> updates) {
+        public ResponseEntity<AdocaoDTO> atualizarParcialAdocao(@PathVariable(value = "id") Long id,
+                        @RequestBody Map<String, Object> updates) {
                 AdocaoDTO adocaoAtualizado = adocaoService.partialUpdate(id, updates);
                 return ResponseEntity.ok(adocaoAtualizado);
         }

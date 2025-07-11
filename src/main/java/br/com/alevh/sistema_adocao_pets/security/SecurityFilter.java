@@ -1,15 +1,8 @@
 package br.com.alevh.sistema_adocao_pets.security;
 
-import br.com.alevh.sistema_adocao_pets.exceptions.TokenInvalidException;
-import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +10,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.List;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
+import br.com.alevh.sistema_adocao_pets.exceptions.TokenInvalidException;
+import br.com.alevh.sistema_adocao_pets.repository.LoginIdentityViewRepository;
+import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;
+import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -43,8 +45,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             "/configuration/ui",
             "/configuration/security",
             "/webjars/",
-            "/webjars/**"
-    );
+            "/webjars/**");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -53,11 +54,11 @@ public class SecurityFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         // Ignora rotas públicas (Swagger, webjars, auth, etc.)
-//        if (ROTAS_PUBLICAS.stream().anyMatch(path::startsWith)) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-        if(!shouldNotFilter(request)) {
+        // if (ROTAS_PUBLICAS.stream().anyMatch(path::startsWith)) {
+        // filterChain.doFilter(request, response);
+        // return;
+        // }
+        if (!shouldNotFilter(request)) {
             var token = this.recoverToken(request);
             if (token != null) {
                 if (tokenBlackListService.isTokenBlacklisted(token)) {
@@ -75,12 +76,13 @@ public class SecurityFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 } catch (JWTVerificationException ex) {
-                    jwtAuthenticationEntryPoint.commence(request, response, new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
+                    jwtAuthenticationEntryPoint.commence(request, response,
+                            new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
                     return;
                 }
             }
         }
-            filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
     private String recoverToken(HttpServletRequest request) {
