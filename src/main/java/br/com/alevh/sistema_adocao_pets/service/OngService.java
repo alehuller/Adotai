@@ -1,6 +1,7 @@
 package br.com.alevh.sistema_adocao_pets.service;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.SiteVO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.LoginDTO;
 import br.com.alevh.sistema_adocao_pets.data.dto.security.TokenDTO;
 import br.com.alevh.sistema_adocao_pets.exceptions.RequiredObjectIsNullException;
@@ -181,6 +182,8 @@ public class OngService {
         entity.setEndereco(ongUpdate.getEndereco());
         entity.setCell(ongUpdate.getCell());
         entity.setResponsavel(ongUpdate.getResponsavel());
+        entity.setDescricao(ongUpdate.getDescricao());
+        entity.setSite(ongUpdate.getSite());
 
         ongValidacao.validateUpdate(entity);
 
@@ -206,7 +209,7 @@ public class OngService {
                 if (campo.equalsIgnoreCase("email") && valor instanceof String) {
                     valor = ((String) valor).toLowerCase();
                 }
-                if (campo.equals("endereco") && valor instanceof Map<?, ?> valorMap) {
+                if (campo.equals("endereco") && valor instanceof Map<?, ?> valorMapEndereco) {
                     EnderecoVO enderecoOriginal = ong.getEndereco();
                     EnderecoVO enderecoAtualizado = mapper.convertValue(valor, EnderecoVO.class);
 
@@ -223,7 +226,24 @@ public class OngService {
                         if (enderecoAtualizado.getCep() != null) enderecoOriginal.setCep(enderecoAtualizado.getCep());
                     }
 
-                } else {
+                }   else if (campo.equals("site") && valor instanceof Map<?, ?> valorMapSite) {
+                        SiteVO siteOriginal = ong.getSite();
+                        SiteVO siteAtualizado = mapper.convertValue(valor, SiteVO.class);
+
+                        if (siteOriginal == null) {
+                            ong.setSite(siteAtualizado);
+                        } else {
+                            if (siteAtualizado.getSite() != null) siteOriginal.setSite(siteAtualizado.getSite());
+                            if (siteAtualizado.getInstagram() != null) siteOriginal.setInstagram(siteAtualizado.getInstagram());
+                            if (siteAtualizado.getFacebook() != null) siteOriginal.setFacebook(siteAtualizado.getFacebook());
+                            if (siteAtualizado.getTiktok() != null) siteOriginal.setTiktok(siteAtualizado.getTiktok());
+                            if (siteAtualizado.getYoutube() != null) siteOriginal.setYoutube(siteAtualizado.getYoutube());
+                            if (siteAtualizado.getWhatsapp() != null) siteOriginal.setWhatsapp(siteAtualizado.getWhatsapp());
+                            if (siteAtualizado.getX() != null) siteOriginal.setX(siteAtualizado.getX());
+                            if (siteAtualizado.getLinkedin() != null) siteOriginal.setLinkedin(siteAtualizado.getLinkedin());
+                        }
+                }
+                else {
                     ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));
                 }
 

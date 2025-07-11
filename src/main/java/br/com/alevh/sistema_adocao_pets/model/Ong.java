@@ -10,7 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.alevh.sistema_adocao_pets.data.dto.common.EnderecoVO;
+import br.com.alevh.sistema_adocao_pets.data.dto.common.SiteVO;
 import br.com.alevh.sistema_adocao_pets.serialization.converter.EnderecoConverter;
+import br.com.alevh.sistema_adocao_pets.serialization.converter.SiteConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +46,9 @@ public class Ong extends PerfilBase implements UserDetails {
     @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 
-    private String site;
+    @Convert(converter = SiteConverter.class)
+    @Column(name = "site", nullable = true, columnDefinition = "TEXT")
+    private SiteVO site;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
