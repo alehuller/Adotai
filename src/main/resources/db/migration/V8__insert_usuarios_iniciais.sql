@@ -1,5 +1,4 @@
-INSERT INTO
-    usuario (
+INSERT INTO usuario (
         nome,
         email,
         senha,

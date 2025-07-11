@@ -1,5 +1,4 @@
-INSERT INTO
-    ong (
+INSERT INTO ong (
         nome,
         email,
         senha,
@@ -13,8 +12,7 @@ INSERT INTO
         site,
         role
     )
-VALUES
-    (
+VALUES (
         'Ong 1',
         'ong1@example.com',
         'senha123',

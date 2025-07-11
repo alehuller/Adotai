@@ -1,5 +1,4 @@
-INSERT INTO
-    animal (
+INSERT INTO animal (
         nome,
         especie,
         raca,

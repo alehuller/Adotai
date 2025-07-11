@@ -1,5 +1,4 @@
-INSERT INTO
-    administrador (
+INSERT INTO administrador (
         nome,
         email,
         senha,
