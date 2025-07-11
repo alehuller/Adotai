@@ -26,7 +26,7 @@ VALUES
         'https://exemplo.com/fotos/ong1.jpg',
         'ONG focada em resgate de cães abandonados.',
         'https://ong1.org',
-        2
+        'ONG'
     ),
     (
         'Ong 2',
@@ -40,7 +40,7 @@ VALUES
         'https://exemplo.com/fotos/ong2.jpg',
         'ONG voltada à adoção de gatos e campanhas educativas.',
         'https://ong2.org',
-        2
+        'ONG'
     ),
     (
         'Ong 3',
@@ -54,7 +54,7 @@ VALUES
         'https://exemplo.com/fotos/ong3.jpg',
         'Trabalha com reabilitação de animais vítimas de maus-tratos.',
         'https://ong3.org',
-        2
+        'ONG'
     ),
     (
         'Ong 4',
@@ -68,7 +68,7 @@ VALUES
         'https://exemplo.com/fotos/ong4.jpg',
         'ONG localizada no Nordeste com foco em educação ambiental.',
         'https://ong4.org',
-        2
+        'ONG'
     ),
     (
         'Ong 5',
@@ -82,5 +82,5 @@ VALUES
         'https://exemplo.com/fotos/ong5.jpg',
         'Foco em castração e vacinação de animais comunitários.',
         'https://ong5.org',
-        2
+        'ONG'
     );

@@ -1,8 +1,6 @@
 package br.com.alevh.sistema_adocao_pets.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.Immutable;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.alevh.sistema_adocao_pets.security.Roles;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,11 +27,14 @@ public class LoginIdentityView implements UserDetails {
 
     private String nomeUsuario;
 
+    @Enumerated(EnumType.STRING)
     private Roles role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        return role.getAuthorities().stream()
+                .map(auth -> new SimpleGrantedAuthority("ROLE_" + auth))
+                .toList();
     }
 
     @Override
