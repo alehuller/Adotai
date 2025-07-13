@@ -7,22 +7,44 @@
 
 
 
-![img_2.png](img_2.png)
-Plataforma web desenvolvida em Java com Spring Boot para facilitar a adoção responsável de animais. ONGs podem cadastrar animais disponíveis, e usuários podem buscar por localização, tipo e porte. Inclui funcionalidades extras como lares temporários e histórico de adoções.
+![img_2.png](img_2.png)<br>
+## 📌 Sobre
 
-## Backend
+Plataforma web desenvolvida em Java com Spring Boot para facilitar a adoção responsável de animais. 
+
+ONGs podem cadastrar animais disponíveis, e usuários podem buscar por localização, tipo e porte. 
+
+Inclui funcionalidades extras como lares temporários e histórico de adoções.
+
+## 🛠️ Tecnologias
+
+### ⚙️ Backend
+
+API RESTful em desenvolvimento com **Java + Spring Boot**, responsável pela lógica de negócio, persistência de dados, autenticação e segurança com JWT. Versionamento do Banco de Dados em PostgreSQL atráves do Flyway. Ainda serão aplicados teste com JUnit5.
+
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![JUnit5 Badge](https://img.shields.io/badge/Tests-JUnit5-green?style=for-the-badge&logo=junit5)
 
-## Frontend
+
+### 🎨 Frontend
+
+Desenvolvimento com React e estilizado com CSS3, o frontend consome a API RESTful do backend por meio de requisições HTTP, garantindo uma interface acessível, responsiva e funcional para ONGs e adotantes.
+
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 
-## Documentação e Versionamento
+## 🗂️ Documentação e Versionamento
+
+Documentação do Backend e suas Requisições por meio do Swagger.<br>
+Prototipação das telas utilizando o Figma.<br>
+Gerenciamento de tarefas através do Trello.<br>
+Organização do Projeto Adotai realizada no Notion.<br>
+Versionamento de Código via Git.
+
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 ![Trello](https://img.shields.io/badge/Trello-%23026AA7.svg?style=for-the-badge&logo=Trello&logoColor=white)
