@@ -10,11 +10,24 @@
 ![img_2.png](img_2.png)<br>
 ## 📌 Sobre
 
-Plataforma web desenvolvida em Java com Spring Boot para facilitar a adoção responsável de animais. 
+Este projeto é uma **plataforma web** voltada para a **adoção responsável de animais**, desenvolvida com foco em facilitar a conexão entre **ONGs, protetores independentes e adotantes**.
 
-ONGs podem cadastrar animais disponíveis, e usuários podem buscar por localização, tipo e porte. 
+Através da aplicação, ONGs e abrigos podem **cadastrar animais disponíveis para adoção**, enquanto usuários interessados podem **filtrar por localização, tipo, raça, porte e outros critérios** para encontrar um pet compatível com seu perfil.
 
-Inclui funcionalidades extras como lares temporários e histórico de adoções.
+A plataforma foi pensada para **resolver um problema real** enfrentado por diversas instituições e pessoas envolvidas com a causa animal: a **falta de centralização, visibilidade e organização no processo de adoção**.
+
+Além do básico, o sistema contará com **funcionalidades extras**, como:
+- Upload de fotos dos animais
+- Status detalhado dos pets (disponível, em adoção, adotado, lar temporário)
+- Notificações por e-mail
+- Área pública para visualização dos animais
+- Dashboard para ONGs com estatísticas
+- Histórico de adoções
+- Sistema de denúncias e avaliações
+
+O objetivo é **ampliar a visibilidade dos animais abrigados**, **agilizar o processo de adoção** e **oferecer ferramentas úteis para ONGs e lares temporários**, tudo isso promovendo o bem-estar animal.
+
+
 
 ## 🛠️ Tecnologias
 
