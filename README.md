@@ -103,7 +103,11 @@ Versionamento de Código via Git.
   </tr>
 </table>
 
+## 📝 Licença
 
+Este projeto está licenciado sob os termos da [MIT License](./LICENSE).
+
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 
 
