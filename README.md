@@ -5,9 +5,27 @@
 ![Watchers](https://img.shields.io/github/watchers/alehuller/Adotai?style=for-the-badge)
 ![Coffee](https://img.shields.io/badge/Powered_by-Coffee-ff69b4?style=for-the-badge&logo=buy-me-a-coffee)
 
-
-
 ![img_2.png](img_2.png)<br>
+
+## 📑 Tópicos
+
+- [📌 Sobre](#sobre)
+- [🧭 Organização do Projeto](#-oraganização-do-projeto)
+- [🛠️ Tecnologias](#️-tecnologias)
+  - [⚙️ Backend](#-backend)
+  - [🎨 Frontend](#-frontend)
+- [🗂️ Documentação e Versionamento](#️-documentação-e-versionamento)
+- [🧰 Pré-requisitos](#-pré-requisitos)
+  - [🔧 Backend](#-backend-1)
+  - [🌐 Frontend](#-frontend-1)
+- [🚀 Como rodar o projeto](#-como-rodar-o-projeto)
+  - [📦 1. Clone o repositório](#-1-clone-o-repositório)
+  - [🔙 2. Backend (Java + Spring Boot)](#-2-backend-java--spring-boot)
+  - [📘 3. Acesse a documentação da API (Swagger)](#-3-acesse-a-documentação-da-api-swagger)
+  - [🌐 Frontend (em desenvolvimento)](#-frontend-em-desenvolvimento)
+- [👥 Contribuidores](#-contribuidores)
+- [📝 Licença](#-licença)
+
 ## 📌 Sobre
 
 Este projeto é uma **plataforma web** voltada para a **adoção responsável de animais**, desenvolvida com foco em facilitar a conexão entre **ONGs, protetores independentes e adotantes**.
@@ -27,6 +45,11 @@ Além do básico, o sistema contará com **funcionalidades extras**, como:
 
 O objetivo é **ampliar a visibilidade dos animais abrigados**, **agilizar o processo de adoção** e **oferecer ferramentas úteis para ONGs e lares temporários**, tudo isso promovendo o bem-estar animal.
 
+## 🧭 Organização do Projeto
+
+Acesse nosso workspace no Notion para visualizar o planejamento, tarefas, protótipos e evolução do projeto:
+
+🔗 [Clique aqui para acessar o Notion do Adotaí!](https://www.notion.so/Adota-Sistema-de-Ado-o-de-Animais-Integrado-com-ONGs-1e5b6aa4de158011b031c1bb629f3878?source=copy_link)
 
 
 ## 🛠️ Tecnologias
@@ -63,6 +86,83 @@ Versionamento de Código via Git.
 ![Trello](https://img.shields.io/badge/Trello-%23026AA7.svg?style=for-the-badge&logo=Trello&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+
+## 🧰 Pré-requisitos
+
+Antes de rodar o projeto, certifique-se de que as seguintes ferramentas estão instaladas na sua máquina:
+
+### 🔧 Backend
+
+- [Java 21.0.5](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+- [Maven](https://maven.apache.org/download.cgi) (versão compatível com o Java 21)
+- [PostgreSQL 17.4](https://www.postgresql.org/download/)
+- [Postman](https://www.postman.com/downloads/) (opcional, caso queira testar a API)
+
+### 🌐 Frontend
+
+- [Node.js](https://nodejs.org/) (recomenda-se versão LTS)
+- [npm](https://www.npmjs.com/) (ou [yarn](https://yarnpkg.com/) como gerenciador de pacotes)
+
+## 🚀 Como rodar o projeto
+
+Siga os passos abaixo para rodar o projeto localmente em sua máquina.
+
+### 📦 1. Clone o repositório
+
+```bash
+git clone https://github.com/alehuller/Adotai.git
+cd Adotai
+```
+
+### 🔙 2. Backend (Java + Spring Boot)
+
+⬇️ Compile o projeto:
+
+```bash
+./mvnw clean install
+```
+
+⚙️ Configure o banco de dados PostgreSQL
+
+Certifique-se de que você tem um banco PostgreSQL rodando com as credenciais corretas. No arquivo application.yml, configure:
+
+```bash
+url: jdbc:postgresql://localhost:5432/seu_banco
+username: seu_usuario
+password: sua_senha
+```
+> 💡 O Flyway aplicará as migrações automaticamente na inicialização. <br>
+> 💾 Recomenda-se colocar o nome do banco como `ongadocoes`. <br>
+> 🧑‍💻 O PostgreSQL por padrão, coloca o nome de usuário como `postgres`. Se não modificado, coloque em username `postgres`.
+
+▶️ Inicie a API
+
+```bash
+./mvnw spring-boot:run
+```
+A API estará disponível em: http://localhost:8080
+
+### 📘 3. Acesse a documentação da API (Swagger)
+
+Após iniciar o backend, você pode acessar a documentação interativa da API através do Swagger:
+
+🔗 [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+ou
+🔗 [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+> Lá você poderá visualizar todos os endpoints e métodos HTTP.
+
+📫 É recomendado testar a API utilizando ferramentas como o [Postman](https://www.postman.com/), enviando requisições HTTP diretamente para os endpoints.
+
+🔗 [Acesse a collection pública da API do Adotaí! no Postman](https://victor-5545008.postman.co/workspace/Victor's-Workspace~547f2bc0-b948-4fb6-88fe-f4905bcca801/collection/44764863-fc5303b4-02a1-47f8-81e2-1041139034c1?action=share&creator=45034750&active-environment=45034750-e0faefc3-6481-4a36-ac70-cf12ecfe13b9)
+
+
+### 🌐 Frontend (em desenvolvimento)
+
+O frontend será desenvolvido com **React** e ficará disponível nesta mesma aplicação.
+
+> 🔧 Em breve adicionaremos instruções para rodar o frontend localmente.
+
 
 ## 👥 Contribuidores
 <table>
@@ -108,6 +208,3 @@ Versionamento de Código via Git.
 Este projeto está licenciado sob os termos da [MIT License](./LICENSE).
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-
-
-
