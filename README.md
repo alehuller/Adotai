@@ -9,15 +9,13 @@
 
 ## 📑 Tópicos
 
-- [📌 Sobre](#sobre)
-- [🧭 Organização do Projeto](#-oraganização-do-projeto)
+- [📌 Sobre](#-sobre)
+- [🧭 Organização do Projeto](#-organização-do-projeto)
 - [🛠️ Tecnologias](#️-tecnologias)
   - [⚙️ Backend](#-backend)
   - [🎨 Frontend](#-frontend)
 - [🗂️ Documentação e Versionamento](#️-documentação-e-versionamento)
 - [🧰 Pré-requisitos](#-pré-requisitos)
-  - [🔧 Backend](#-backend-1)
-  - [🌐 Frontend](#-frontend-1)
 - [🚀 Como rodar o projeto](#-como-rodar-o-projeto)
   - [📦 1. Clone o repositório](#-1-clone-o-repositório)
   - [🔙 2. Backend (Java + Spring Boot)](#-2-backend-java--spring-boot)
@@ -91,18 +89,17 @@ Versionamento de Código via Git.
 
 Antes de rodar o projeto, certifique-se de que as seguintes ferramentas estão instaladas na sua máquina:
 
-### 🔧 Backend
-
 - [Java 21.0.5](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 - [Maven](https://maven.apache.org/download.cgi) (versão compatível com o Java 21)
 - [PostgreSQL 17.4](https://www.postgresql.org/download/)
 - [Postman](https://www.postman.com/downloads/) (opcional, caso queira testar a API)
 
+<!--
 ### 🌐 Frontend
 
 - [Node.js](https://nodejs.org/) (recomenda-se versão LTS)
 - [npm](https://www.npmjs.com/) (ou [yarn](https://yarnpkg.com/) como gerenciador de pacotes)
-
+-->
 ## 🚀 Como rodar o projeto
 
 Siga os passos abaixo para rodar o projeto localmente em sua máquina.
