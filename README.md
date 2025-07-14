@@ -76,7 +76,7 @@ Desenvolvimento com React e estilizado com CSS3, o frontend consome a API RESTfu
 Documentação do Backend e suas Requisições por meio do Swagger.<br>
 Prototipação das telas utilizando o Figma.<br>
 Gerenciamento de tarefas através do Trello.<br>
-Organização do Projeto Adotai realizada no Notion.<br>
+Organização do Projeto Adotaí! realizada no Notion.<br>
 Versionamento de Código via Git.
 
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
