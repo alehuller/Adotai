@@ -12,7 +12,7 @@
 - [📌 Sobre](#-sobre)
 - [🧭 Organização do Projeto](#-organização-do-projeto)
 - [🛠️ Tecnologias](#️-tecnologias)
-  - [⚙️ Backend](#-backend)
+  - [🔧 Backend](#-backend)
   - [🎨 Frontend](#-frontend)
 - [🗂️ Documentação e Versionamento](#️-documentação-e-versionamento)
 - [🧰 Pré-requisitos](#-pré-requisitos)
@@ -52,7 +52,7 @@ Acesse nosso workspace no Notion para visualizar o planejamento, tarefas, protó
 
 ## 🛠️ Tecnologias
 
-### ⚙️ Backend
+### 🔧 Backend
 
 API RESTful em desenvolvimento com **Java + Spring Boot**, responsável pela lógica de negócio, persistência de dados, autenticação e segurança com JWT. Versionamento do Banco de Dados em PostgreSQL atráves do Flyway. Ainda serão aplicados teste com JUnit5.
 
