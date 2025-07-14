@@ -45,10 +45,13 @@ O objetivo é **ampliar a visibilidade dos animais abrigados**, **agilizar o pro
 
 ## 🧭 Organização do Projeto
 
-Acesse nosso workspace no Notion para visualizar o planejamento, tarefas, protótipos e evolução do projeto:
+Acesse nosso workspace no Notion para visualizar o planejamento, protótipos e evolução do projeto:
 
 🔗 [Clique aqui para acessar o Notion do Adotaí!](https://www.notion.so/Adota-Sistema-de-Ado-o-de-Animais-Integrado-com-ONGs-1e5b6aa4de158011b031c1bb629f3878?source=copy_link)
 
+Também é possível acessar o Trello para visualizar as tarefas atuais e funcionalidades futuras do projeto:
+
+🔗 [Clique aqui para acessar o Trello do Adotaí!](https://trello.com/b/G1UB02AT/adotai)
 
 ## 🛠️ Tecnologias
 
