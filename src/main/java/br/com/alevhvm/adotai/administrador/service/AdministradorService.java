@@ -158,7 +158,11 @@ public class AdministradorService {
         }
 
         administradorRepository.save(administrador);
-        return DozerMapper.parseObject(administrador, AdministradorDTO.class);
+        
+        AdministradorDTO dto = DozerMapper.parseObject(administrador, AdministradorDTO.class);
+        dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorNomeUsuario(nomeUsuario)).withSelfRel());
+
+        return dto;
     }
 
     public TokenDTO logar(LoginDTO data) {
