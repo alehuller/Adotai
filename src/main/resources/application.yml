@@ -1,22 +1,23 @@
 security:
   jwt:
     token:
-      secret-key: 53cr37
       expire-length: 3600000 # 1 hora em ms
     secret: ${JWT_SECRET:my-secret-key}
+
 spring:
-  application: 
+  application:
     name: sistema-adocao-pets
+
   datasource:
     url: jdbc:postgresql://localhost:5432/ongadocoes
-    username: postgres 
-    password: 1234
+    username: postgres
+    password: ${DB_PASSWORD:1234}
     driver-class-name: org.postgresql.Driver
-    sql:
-      init:
-        mode: always
-    flyway:
-      baseline-on-migrate=true:
+
+  sql:
+    init:
+      mode: always
+
   jpa:
     generate-ddl: true
     hibernate:
@@ -24,6 +25,8 @@ spring:
     show-sql: true
     properties:
       dialect: org.hibernate.dialect.PostgreSQLDialect
+
   flyway:
-    repair=true:
+    baseline-on-migrate: true
+    repair: true
     clean-disabled: false
