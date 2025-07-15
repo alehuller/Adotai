@@ -1,16 +1,16 @@
-package br.com.alevh.sistema_adocao_pets.common.docs;
+package br.com.alevhvm.adotai.common.docs;
 
 import java.util.Map;
 
-import br.com.alevh.sistema_adocao_pets.auth.dto.RegistroDTO;
+import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import br.com.alevh.sistema_adocao_pets.adocao.dto.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.dto.UsuarioDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.dto.UsuarioUpdateDTO;
+import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
+import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,6 +1,6 @@
-package br.com.alevh.sistema_adocao_pets.common.model;
+package br.com.alevhvm.adotai.common.model;
 
-import br.com.alevh.sistema_adocao_pets.auth.enums.Roles;
+import br.com.alevhvm.adotai.auth.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

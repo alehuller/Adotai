@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.auth.service;
+package br.com.alevhvm.adotai.auth.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

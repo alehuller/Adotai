@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.ong.repository;
+package br.com.alevhvm.adotai.ong.repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
+import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
+import br.com.alevhvm.adotai.ong.model.Ong;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 

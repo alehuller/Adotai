@@ -1,6 +1,6 @@
-package br.com.alevh.sistema_adocao_pets.auth.security;
+package br.com.alevhvm.adotai.auth.security;
 
-import br.com.alevh.sistema_adocao_pets.common.exceptions.ExceptionResponse;
+import br.com.alevhvm.adotai.common.exceptions.ExceptionResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

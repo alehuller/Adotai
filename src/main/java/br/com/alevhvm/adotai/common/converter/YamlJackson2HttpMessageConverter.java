@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.converter;
+package br.com.alevhvm.adotai.common.converter;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;

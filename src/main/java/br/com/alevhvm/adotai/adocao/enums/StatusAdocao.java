@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.adocao.enums;
+package br.com.alevhvm.adotai.adocao.enums;
 
 public enum StatusAdocao {
     PENDENTE,   //Requisicao de adocao feita, em analise

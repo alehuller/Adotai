@@ -1,14 +1,14 @@
-package br.com.alevh.sistema_adocao_pets.administrador.validations;
+package br.com.alevhvm.adotai.administrador.validations;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import br.com.alevh.sistema_adocao_pets.administrador.dto.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.administrador.model.Administrador;
-import br.com.alevh.sistema_adocao_pets.administrador.repository.AdministradorRepository;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
+import br.com.alevhvm.adotai.administrador.model.Administrador;
+import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component

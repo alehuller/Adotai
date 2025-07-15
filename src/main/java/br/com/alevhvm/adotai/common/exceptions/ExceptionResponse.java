@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.exceptions;
+package br.com.alevhvm.adotai.common.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

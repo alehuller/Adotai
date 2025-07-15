@@ -1,7 +1,7 @@
-package br.com.alevh.sistema_adocao_pets.usuario.model;
+package br.com.alevhvm.adotai.usuario.model;
 
-import br.com.alevh.sistema_adocao_pets.animal.model.Animal;
-import br.com.alevh.sistema_adocao_pets.common.model.PerfilBase;
+import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.common.model.PerfilBase;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

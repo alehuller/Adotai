@@ -1,11 +1,11 @@
-package br.com.alevh.sistema_adocao_pets.animal.converter;
+package br.com.alevhvm.adotai.animal.converter;
 
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.DescricaoVO;
+import br.com.alevhvm.adotai.common.vo.DescricaoVO;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

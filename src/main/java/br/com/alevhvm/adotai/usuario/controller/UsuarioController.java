@@ -1,6 +1,6 @@
-package br.com.alevh.sistema_adocao_pets.usuario.controller;
+package br.com.alevhvm.adotai.usuario.controller;
 
-import br.com.alevh.sistema_adocao_pets.auth.dto.RegistroDTO;
+import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.HashMap;
@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.alevh.sistema_adocao_pets.common.docs.UsuarioControllerDocs;
-import br.com.alevh.sistema_adocao_pets.adocao.dto.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.dto.UsuarioDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.dto.UsuarioUpdateDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.service.UsuarioService;
-import br.com.alevh.sistema_adocao_pets.common.util.MediaType;
+import br.com.alevhvm.adotai.common.docs.UsuarioControllerDocs;
+import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
+import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
+import br.com.alevhvm.adotai.usuario.service.UsuarioService;
+import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

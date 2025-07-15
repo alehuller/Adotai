@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.auth.service;
+package br.com.alevhvm.adotai.auth.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;

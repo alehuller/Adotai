@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.adocao.dto;
+package br.com.alevhvm.adotai.adocao.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
-import br.com.alevh.sistema_adocao_pets.adocao.enums.StatusAdocao;
+import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

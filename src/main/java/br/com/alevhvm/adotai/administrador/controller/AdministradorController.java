@@ -1,12 +1,12 @@
-package br.com.alevh.sistema_adocao_pets.administrador.controller;
+package br.com.alevhvm.adotai.administrador.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.alevh.sistema_adocao_pets.administrador.dto.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.administrador.service.AdministradorService;
-import br.com.alevh.sistema_adocao_pets.common.util.MediaType;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.service.AdministradorService;
+import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

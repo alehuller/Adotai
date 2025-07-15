@@ -1,8 +1,8 @@
-package br.com.alevh.sistema_adocao_pets.auth.dto;
+package br.com.alevhvm.adotai.auth.dto;
 
 
-import br.com.alevh.sistema_adocao_pets.common.vo.CpfVO;
-import br.com.alevh.sistema_adocao_pets.usuario.dto.UsuarioDTO;
+import br.com.alevhvm.adotai.common.vo.CpfVO;
+import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

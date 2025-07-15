@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.animal.repository;
+package br.com.alevhvm.adotai.animal.repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.animal.model.Animal;
+import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
+import br.com.alevhvm.adotai.animal.model.Animal;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;

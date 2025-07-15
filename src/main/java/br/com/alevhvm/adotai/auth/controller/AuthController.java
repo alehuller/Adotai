@@ -1,11 +1,11 @@
-package br.com.alevh.sistema_adocao_pets.auth.controller;
+package br.com.alevhvm.adotai.auth.controller;
 
-import br.com.alevh.sistema_adocao_pets.auth.dto.LoginDTO;
-import br.com.alevh.sistema_adocao_pets.auth.dto.TokenDTO;
-import br.com.alevh.sistema_adocao_pets.administrador.dto.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngDTO;
-import br.com.alevh.sistema_adocao_pets.administrador.service.AdministradorService;
-import br.com.alevh.sistema_adocao_pets.ong.service.OngService;
+import br.com.alevhvm.adotai.auth.dto.LoginDTO;
+import br.com.alevhvm.adotai.auth.dto.TokenDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.ong.dto.OngDTO;
+import br.com.alevhvm.adotai.administrador.service.AdministradorService;
+import br.com.alevhvm.adotai.ong.service.OngService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import br.com.alevh.sistema_adocao_pets.auth.dto.RegistroDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.dto.UsuarioDTO;
-import br.com.alevh.sistema_adocao_pets.usuario.service.UsuarioService;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
+import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
+import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
+import br.com.alevhvm.adotai.usuario.service.UsuarioService;
+import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
+import br.com.alevhvm.adotai.auth.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

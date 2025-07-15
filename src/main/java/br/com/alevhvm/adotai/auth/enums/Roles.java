@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.auth.enums;
+package br.com.alevhvm.adotai.auth.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

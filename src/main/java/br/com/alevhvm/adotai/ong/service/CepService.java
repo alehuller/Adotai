@@ -1,12 +1,12 @@
-package br.com.alevh.sistema_adocao_pets.ong.service;
+package br.com.alevhvm.adotai.ong.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.CepDTO;
+import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.ong.dto.CepDTO;
 
 @Service
 public class CepService {

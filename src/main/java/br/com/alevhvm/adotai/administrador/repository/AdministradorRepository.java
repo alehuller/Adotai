@@ -1,11 +1,11 @@
-package br.com.alevh.sistema_adocao_pets.administrador.repository;
+package br.com.alevhvm.adotai.administrador.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.alevh.sistema_adocao_pets.administrador.model.Administrador;
+import br.com.alevhvm.adotai.administrador.model.Administrador;
 
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {

@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.animal.controller;
+package br.com.alevhvm.adotai.animal.controller;
 
 import java.util.Map;
 
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.alevh.sistema_adocao_pets.common.docs.AnimalControllerDocs;
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.animal.service.AnimalService;
-import br.com.alevh.sistema_adocao_pets.common.util.MediaType;
+import br.com.alevhvm.adotai.common.docs.AnimalControllerDocs;
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
+import br.com.alevhvm.adotai.animal.service.AnimalService;
+import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 

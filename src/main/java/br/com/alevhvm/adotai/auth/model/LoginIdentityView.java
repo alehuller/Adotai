@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.auth.model;
+package br.com.alevhvm.adotai.auth.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.alevh.sistema_adocao_pets.auth.enums.Roles;
+import br.com.alevhvm.adotai.auth.enums.Roles;
 
 import java.util.Collection;
 

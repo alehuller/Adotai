@@ -1,16 +1,16 @@
-package br.com.alevh.sistema_adocao_pets.common.runner;
+package br.com.alevhvm.adotai.common.runner;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import br.com.alevh.sistema_adocao_pets.administrador.repository.AdministradorRepository;
-import br.com.alevh.sistema_adocao_pets.ong.repository.OngRepository;
-import br.com.alevh.sistema_adocao_pets.usuario.repository.UsuarioRepository;
-import br.com.alevh.sistema_adocao_pets.administrador.model.Administrador;
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
-import br.com.alevh.sistema_adocao_pets.usuario.model.Usuario;
+import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
+import br.com.alevhvm.adotai.ong.repository.OngRepository;
+import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
+import br.com.alevhvm.adotai.administrador.model.Administrador;
+import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.usuario.model.Usuario;
 
 import java.util.List;
 

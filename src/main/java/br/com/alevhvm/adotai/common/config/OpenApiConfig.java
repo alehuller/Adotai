@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.config;
+package br.com.alevhvm.adotai.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

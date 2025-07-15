@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.ong.dto;
+package br.com.alevhvm.adotai.ong.dto;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.CnpjVO;
-import br.com.alevh.sistema_adocao_pets.common.vo.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.common.vo.SiteVO;
+import br.com.alevhvm.adotai.common.vo.CnpjVO;
+import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.common.vo.SiteVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

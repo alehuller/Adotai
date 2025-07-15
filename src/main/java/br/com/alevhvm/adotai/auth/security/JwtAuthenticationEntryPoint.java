@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.auth.security;
+package br.com.alevhvm.adotai.auth.security;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.alevh.sistema_adocao_pets.common.exceptions.ExceptionResponse;
+import br.com.alevhvm.adotai.common.exceptions.ExceptionResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

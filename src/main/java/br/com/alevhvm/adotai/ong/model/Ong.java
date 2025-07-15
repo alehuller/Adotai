@@ -1,12 +1,12 @@
-package br.com.alevh.sistema_adocao_pets.ong.model;
+package br.com.alevhvm.adotai.ong.model;
 
-import br.com.alevh.sistema_adocao_pets.common.model.PerfilBase;
+import br.com.alevhvm.adotai.common.model.PerfilBase;
 import jakarta.persistence.*;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.common.vo.SiteVO;
-import br.com.alevh.sistema_adocao_pets.ong.converter.EnderecoConverter;
-import br.com.alevh.sistema_adocao_pets.ong.converter.SiteConverter;
+import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.common.vo.SiteVO;
+import br.com.alevhvm.adotai.ong.converter.EnderecoConverter;
+import br.com.alevhvm.adotai.ong.converter.SiteConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,6 @@ import lombok.Setter;
 @Table(name = "ong")
 
 public class Ong extends PerfilBase {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id", nullable = false, unique = true)

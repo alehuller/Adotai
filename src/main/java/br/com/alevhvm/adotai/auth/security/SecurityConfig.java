@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.auth.security;
+package br.com.alevhvm.adotai.auth.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,12 +1,12 @@
-package br.com.alevh.sistema_adocao_pets.animal.model;
+package br.com.alevhvm.adotai.animal.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.DescricaoVO;
-import br.com.alevh.sistema_adocao_pets.animal.enums.StatusAnimal;
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
-import br.com.alevh.sistema_adocao_pets.animal.converter.DescricaoConverter;
+import br.com.alevhvm.adotai.common.vo.DescricaoVO;
+import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
+import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.animal.converter.DescricaoConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

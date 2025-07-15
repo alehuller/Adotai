@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.administrador.dto;
+package br.com.alevhvm.adotai.administrador.dto;
 
 import java.io.Serializable;
 

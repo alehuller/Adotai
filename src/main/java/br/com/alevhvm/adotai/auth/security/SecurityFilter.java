@@ -1,9 +1,9 @@
-package br.com.alevh.sistema_adocao_pets.auth.security;
+package br.com.alevhvm.adotai.auth.security;
 
-import br.com.alevh.sistema_adocao_pets.common.exceptions.TokenInvalidException;
-import br.com.alevh.sistema_adocao_pets.common.repository.LoginIdentityViewRepository;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenBlackListService;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
+import br.com.alevhvm.adotai.common.exceptions.TokenInvalidException;
+import br.com.alevhvm.adotai.auth.repository.LoginIdentityViewRepository;
+import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
+import br.com.alevhvm.adotai.auth.service.TokenService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

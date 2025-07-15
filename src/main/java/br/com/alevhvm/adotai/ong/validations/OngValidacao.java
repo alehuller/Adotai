@@ -1,15 +1,15 @@
-package br.com.alevh.sistema_adocao_pets.ong.validations;
+package br.com.alevhvm.adotai.ong.validations;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngDTO;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
-import br.com.alevh.sistema_adocao_pets.ong.repository.OngRepository;
+import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.ong.dto.OngDTO;
+import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
+import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component

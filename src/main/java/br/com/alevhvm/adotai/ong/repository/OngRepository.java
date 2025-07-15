@@ -1,11 +1,11 @@
-package br.com.alevh.sistema_adocao_pets.ong.repository;
+package br.com.alevhvm.adotai.ong.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
+import br.com.alevhvm.adotai.ong.model.Ong;
 
 @Repository
 public interface OngRepository extends JpaRepository<Ong, Long>, OngRepositoryCustom {

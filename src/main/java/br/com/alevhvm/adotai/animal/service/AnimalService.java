@@ -1,7 +1,7 @@
-package br.com.alevh.sistema_adocao_pets.animal.service;
+package br.com.alevhvm.adotai.animal.service;
 
-import br.com.alevh.sistema_adocao_pets.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.ResourceNotFoundException;
+import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
+import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -22,16 +22,16 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
-import br.com.alevh.sistema_adocao_pets.animal.controller.AnimalController;
-import br.com.alevh.sistema_adocao_pets.ong.controller.OngController;
-import br.com.alevh.sistema_adocao_pets.common.vo.DescricaoVO;
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.common.mapper.DozerMapper;
-import br.com.alevh.sistema_adocao_pets.animal.model.Animal;
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
-import br.com.alevh.sistema_adocao_pets.animal.repository.AnimalRepository;
-import br.com.alevh.sistema_adocao_pets.ong.repository.OngRepository;
+import br.com.alevhvm.adotai.animal.controller.AnimalController;
+import br.com.alevhvm.adotai.ong.controller.OngController;
+import br.com.alevhvm.adotai.common.vo.DescricaoVO;
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
+import br.com.alevhvm.adotai.common.mapper.DozerMapper;
+import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.animal.repository.AnimalRepository;
+import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;

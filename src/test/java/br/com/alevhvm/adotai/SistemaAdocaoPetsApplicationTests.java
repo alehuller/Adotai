@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets;
+package br.com.alevhvm.adotai;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

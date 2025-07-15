@@ -1,7 +1,7 @@
-package br.com.alevh.sistema_adocao_pets.usuario.repository;
+package br.com.alevhvm.adotai.usuario.repository;
 
-import br.com.alevh.sistema_adocao_pets.animal.model.Animal;
-import br.com.alevh.sistema_adocao_pets.usuario.model.Usuario;
+import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.usuario.model.Usuario;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;

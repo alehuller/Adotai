@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.vo;
+package br.com.alevhvm.adotai.common.vo;
 
 import java.io.Serializable;
 

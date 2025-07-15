@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.usuario.dto;
+package br.com.alevhvm.adotai.usuario.dto;
 
 import java.io.Serializable;
 

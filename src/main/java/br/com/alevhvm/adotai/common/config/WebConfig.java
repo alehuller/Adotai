@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.config;
+package br.com.alevhvm.adotai.common.config;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import br.com.alevh.sistema_adocao_pets.common.converter.YamlJackson2HttpMessageConverter;
+import br.com.alevhvm.adotai.common.converter.YamlJackson2HttpMessageConverter;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

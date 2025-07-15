@@ -1,6 +1,6 @@
-package br.com.alevh.sistema_adocao_pets.auth.repository;
+package br.com.alevhvm.adotai.auth.repository;
 
-import br.com.alevh.sistema_adocao_pets.auth.model.LoginIdentityView;
+import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

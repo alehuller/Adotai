@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.animal.dto;
+package br.com.alevhvm.adotai.animal.dto;
 
 import lombok.Getter;
 import lombok.Setter;

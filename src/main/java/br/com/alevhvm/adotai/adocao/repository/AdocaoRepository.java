@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.adocao.repository;
+package br.com.alevhvm.adotai.adocao.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import br.com.alevh.sistema_adocao_pets.adocao.model.Adocao;
+import br.com.alevhvm.adotai.adocao.model.Adocao;
 
 @Repository
 public interface AdocaoRepository extends JpaRepository<Adocao, Long> {

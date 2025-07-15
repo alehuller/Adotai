@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.administrador.service;
+package br.com.alevhvm.adotai.administrador.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,18 +22,18 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
-import br.com.alevh.sistema_adocao_pets.administrador.controller.AdministradorController;
-import br.com.alevh.sistema_adocao_pets.auth.dto.LoginDTO;
-import br.com.alevh.sistema_adocao_pets.auth.dto.TokenDTO;
-import br.com.alevh.sistema_adocao_pets.administrador.dto.AdministradorDTO;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.ResourceNotFoundException;
-import br.com.alevh.sistema_adocao_pets.common.mapper.DozerMapper;
-import br.com.alevh.sistema_adocao_pets.administrador.model.Administrador;
-import br.com.alevh.sistema_adocao_pets.auth.model.LoginIdentityView;
-import br.com.alevh.sistema_adocao_pets.administrador.repository.AdministradorRepository;
-import br.com.alevh.sistema_adocao_pets.auth.enums.Roles;
-import br.com.alevh.sistema_adocao_pets.service.auth.TokenService;
-import br.com.alevh.sistema_adocao_pets.administrador.validations.AdministradorValidacao;
+import br.com.alevhvm.adotai.administrador.controller.AdministradorController;
+import br.com.alevhvm.adotai.auth.dto.LoginDTO;
+import br.com.alevhvm.adotai.auth.dto.TokenDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
+import br.com.alevhvm.adotai.common.mapper.DozerMapper;
+import br.com.alevhvm.adotai.administrador.model.Administrador;
+import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
+import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
+import br.com.alevhvm.adotai.auth.enums.Roles;
+import br.com.alevhvm.adotai.auth.service.TokenService;
+import br.com.alevhvm.adotai.administrador.validations.AdministradorValidacao;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;

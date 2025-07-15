@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.animal.enums;
+package br.com.alevhvm.adotai.animal.enums;
 
 public enum StatusAnimal {
     DISPONIVEL,     //Pronto para adocao

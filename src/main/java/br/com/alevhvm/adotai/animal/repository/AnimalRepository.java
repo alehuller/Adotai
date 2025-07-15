@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.animal.repository;
+package br.com.alevhvm.adotai.animal.repository;
 
 import java.util.Optional;
 
@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.alevh.sistema_adocao_pets.animal.model.Animal;
+import br.com.alevhvm.adotai.animal.model.Animal;
 
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, Long>, AnimalRepositoryCustom {

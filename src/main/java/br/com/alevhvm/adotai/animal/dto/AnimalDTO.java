@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.animal.dto;
+package br.com.alevhvm.adotai.animal.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.DescricaoVO;
-import br.com.alevh.sistema_adocao_pets.common.vo.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.animal.enums.StatusAnimal;
+import br.com.alevhvm.adotai.common.vo.DescricaoVO;
+import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;

@@ -1,6 +1,6 @@
-package br.com.alevh.sistema_adocao_pets.auth.service;
+package br.com.alevhvm.adotai.auth.service;
 
-import br.com.alevh.sistema_adocao_pets.common.repository.LoginIdentityViewRepository;
+import br.com.alevhvm.adotai.auth.repository.LoginIdentityViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

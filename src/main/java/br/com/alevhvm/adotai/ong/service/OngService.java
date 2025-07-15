@@ -1,13 +1,13 @@
-package br.com.alevh.sistema_adocao_pets.ong.service;
+package br.com.alevhvm.adotai.ong.service;
 
-import br.com.alevh.sistema_adocao_pets.common.vo.EnderecoVO;
-import br.com.alevh.sistema_adocao_pets.common.vo.SiteVO;
-import br.com.alevh.sistema_adocao_pets.auth.dto.LoginDTO;
-import br.com.alevh.sistema_adocao_pets.auth.dto.TokenDTO;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.ResourceNotFoundException;
-import br.com.alevh.sistema_adocao_pets.auth.model.LoginIdentityView;
-import br.com.alevh.sistema_adocao_pets.ong.validations.OngValidacao;
+import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.common.vo.SiteVO;
+import br.com.alevhvm.adotai.auth.dto.LoginDTO;
+import br.com.alevhvm.adotai.auth.dto.TokenDTO;
+import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
+import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
+import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
+import br.com.alevhvm.adotai.ong.validations.OngValidacao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,18 +31,18 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
-import br.com.alevh.sistema_adocao_pets.adocao.controller.AdocaoController;
-import br.com.alevh.sistema_adocao_pets.ong.controller.OngController;
-import br.com.alevh.sistema_adocao_pets.adocao.dto.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngUpdateDTO;
-import br.com.alevh.sistema_adocao_pets.common.mapper.DozerMapper;
-import br.com.alevh.sistema_adocao_pets.adocao.model.Adocao;
-import br.com.alevh.sistema_adocao_pets.ong.model.Ong;
-import br.com.alevh.sistema_adocao_pets.adocao.repository.AdocaoRepository;
-import br.com.alevh.sistema_adocao_pets.ong.repository.OngRepository;
-import br.com.alevh.sistema_adocao_pets.auth.enums.Roles;
+import br.com.alevhvm.adotai.adocao.controller.AdocaoController;
+import br.com.alevhvm.adotai.ong.controller.OngController;
+import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.ong.dto.OngDTO;
+import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
+import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
+import br.com.alevhvm.adotai.common.mapper.DozerMapper;
+import br.com.alevhvm.adotai.adocao.model.Adocao;
+import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.adocao.repository.AdocaoRepository;
+import br.com.alevhvm.adotai.ong.repository.OngRepository;
+import br.com.alevhvm.adotai.auth.enums.Roles;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -66,7 +66,7 @@ public class OngService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final br.com.alevh.sistema_adocao_pets.service.auth.TokenService tokenService;
+    private final br.com.alevhvm.adotai.auth.service.TokenService tokenService;
 
     private final OngValidacao ongValidacao;
 

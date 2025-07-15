@@ -1,17 +1,17 @@
-package br.com.alevh.sistema_adocao_pets.ong.controller;
+package br.com.alevhvm.adotai.ong.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.alevh.sistema_adocao_pets.common.docs.OngControllerDocs;
-import br.com.alevh.sistema_adocao_pets.adocao.dto.AdocaoDTO;
-import br.com.alevh.sistema_adocao_pets.animal.dto.AnimalDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngFiltroDTO;
-import br.com.alevh.sistema_adocao_pets.ong.dto.OngUpdateDTO;
-import br.com.alevh.sistema_adocao_pets.animal.service.AnimalService;
-import br.com.alevh.sistema_adocao_pets.ong.service.OngService;
-import br.com.alevh.sistema_adocao_pets.common.util.MediaType;
+import br.com.alevhvm.adotai.common.docs.OngControllerDocs;
+import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.ong.dto.OngDTO;
+import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
+import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
+import br.com.alevhvm.adotai.animal.service.AnimalService;
+import br.com.alevhvm.adotai.ong.service.OngService;
+import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

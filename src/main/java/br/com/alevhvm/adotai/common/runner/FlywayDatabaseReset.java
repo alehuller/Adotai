@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.runner;
+package br.com.alevhvm.adotai.common.runner;
 
 import jakarta.annotation.PostConstruct;
 import org.flywaydb.core.Flyway;

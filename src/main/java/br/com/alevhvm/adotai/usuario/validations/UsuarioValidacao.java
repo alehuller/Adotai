@@ -1,14 +1,14 @@
-package br.com.alevh.sistema_adocao_pets.usuario.validations;
+package br.com.alevhvm.adotai.usuario.validations;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import br.com.alevh.sistema_adocao_pets.auth.dto.RegistroDTO;
-import br.com.alevh.sistema_adocao_pets.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevh.sistema_adocao_pets.usuario.model.Usuario;
-import br.com.alevh.sistema_adocao_pets.usuario.repository.UsuarioRepository;
+import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
+import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
+import br.com.alevhvm.adotai.usuario.model.Usuario;
+import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component

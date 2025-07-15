@@ -1,4 +1,4 @@
-package br.com.alevh.sistema_adocao_pets.common.util;
+package br.com.alevhvm.adotai.common.util;
 
 public class MediaType {
     public static final String APPLICATION_YML = "application/x-yaml";
