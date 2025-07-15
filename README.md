@@ -19,8 +19,11 @@
 - [🚀 Como rodar o projeto](#-como-rodar-o-projeto)
   - [📦 1. Clone o repositório](#-1-clone-o-repositório)
   - [🔙 2. Backend (Java + Spring Boot)](#-2-backend-java--spring-boot)
+    - [2.1. Compile o projeto](#21-compile-o-projeto)
+    - [2.2. Configure o banco de dados PostgreSQL](#22-configure-o-banco-de-dados-postgresql)
+    - [2.3. Inicie a API](#23-inicie-a-api)
   - [📘 3. Acesse a documentação da API (Swagger)](#-3-acesse-a-documentação-da-api-swagger)
-  - [🌐 Frontend (em desenvolvimento)](#-frontend-em-desenvolvimento)
+  - [🌐 4. Frontend (em desenvolvimento)](#-4-frontend-em-desenvolvimento)
 - [👥 Contribuidores](#-contribuidores)
 - [📝 Licença](#-licença)
 
@@ -116,13 +119,13 @@ cd Adotai
 
 ### 🔙 2. Backend (Java + Spring Boot)
 
-⬇️ Compile o projeto:
+#### 2.1. Compile o projeto
 
 ```bash
 ./mvnw clean install
 ```
 
-⚙️ Configure o banco de dados PostgreSQL
+#### 2.2. Configure o banco de dados PostgreSQL
 
 Certifique-se de que você tem um banco PostgreSQL rodando com as credenciais corretas. No arquivo application.yml, configure:
 
@@ -135,7 +138,7 @@ password: sua_senha
 > 💾 Recomenda-se colocar o nome do banco como `ongadocoes`. <br>
 > 🧑‍💻 O PostgreSQL por padrão, coloca o nome de usuário como `postgres`. Se não modificado, coloque em username `postgres`.
 
-▶️ Inicie a API
+#### 2.3. Inicie a API
 
 ```bash
 ./mvnw spring-boot:run
@@ -157,7 +160,7 @@ ou
 🔗 [Acesse a collection pública da API do Adotaí! no Postman](https://victor-5545008.postman.co/workspace/Victor's-Workspace~547f2bc0-b948-4fb6-88fe-f4905bcca801/collection/44764863-fc5303b4-02a1-47f8-81e2-1041139034c1?action=share&creator=45034750&active-environment=45034750-e0faefc3-6481-4a36-ac70-cf12ecfe13b9)
 
 
-### 🌐 Frontend (em desenvolvimento)
+### 🌐 4. Frontend (em desenvolvimento)
 
 O frontend será desenvolvido com **React** e ficará disponível nesta mesma aplicação.
 
@@ -170,7 +173,7 @@ O frontend será desenvolvido com **React** e ficará disponível nesta mesma ap
     <td align="center">
         <img src="https://avatars3.githubusercontent.com/u/92354266" width="100px;" alt="Foto do Alejandro Hüller no GitHub"/><br>
         <sub>
-          <span style="font-size:16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><b>Alejandro Hüller</b></span>
+          <span style="font-size:16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><b>Alejandro Hüller</b><br></span>
         </sub><br>
       <a href="https://github.com/alehuller" title="GitHub do Alejandro Hüller">
         <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt="Link do Alejandro Hüller no GitHub"/><br>
@@ -181,7 +184,7 @@ O frontend será desenvolvido com **React** e ficará disponível nesta mesma ap
     <td align="center">
         <img src="https://avatars3.githubusercontent.com/u/9754413" width="100px;" alt="Foto do Victor Hugo no GitHub"/><br>
         <sub>
-          <span style="font-size:16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><b>Victor Hugo</b></span>
+          <span style="font-size:16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><b>Victor Hugo</b><br></span>
         </sub><br>
       <a href="https://github.com/vhugoemcruz" title="GitHub do Victor Hugo">
         <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt="Link do Victor Hugo no GitHub"/><br>
@@ -192,7 +195,7 @@ O frontend será desenvolvido com **React** e ficará disponível nesta mesma ap
     <td align="center">
         <img src="https://avatars3.githubusercontent.com/u/105395280" width="100px;" alt="Foto do Victor Mesquita no GitHub"/><br>
         <sub>
-          <span style="font-size:16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><b>Victor Mesquita</b></span>
+          <span style="font-size:16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><b>Victor Mesquita</b><br></span>
         </sub><br>
       <a href="https://github.com/victormesquitta" title="GitHub do Victor Mesquita">
         <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt="Link do Victor Mesquita no GitHub"/><br>
