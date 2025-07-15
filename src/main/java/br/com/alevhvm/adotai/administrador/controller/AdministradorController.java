@@ -60,7 +60,7 @@ public class AdministradorController {
         return administradorService.findByNomeUsuario(nomeUsuario);
     }
 
-    @PostMapping(value = "/register", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public AdministradorDTO registrarAdministrador(@RequestBody @Valid AdministradorDTO admin) {
