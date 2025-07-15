@@ -99,6 +99,7 @@ Antes de rodar o projeto, certifique-se de que as seguintes ferramentas estão i
 - [Maven](https://maven.apache.org/download.cgi) (versão compatível com o Java 21)
 - [PostgreSQL 17.4](https://www.postgresql.org/download/)
 - [Postman](https://www.postman.com/downloads/) (opcional, caso queira testar a API)
+- [Git](https://git-scm.com/downloads) (Recomendado para usar os comandos necessários para rodar o projeto via Git Bash)
 
 <!--
 ### 🌐 Frontend
@@ -130,12 +131,12 @@ cd Adotai
 Certifique-se de que você tem um banco PostgreSQL rodando com as credenciais corretas. No arquivo application.yml, configure:
 
 ```bash
-url: jdbc:postgresql://localhost:5432/seu_banco
+url: jdbc:postgresql://localhost:5432/ongadocoes
 username: seu_usuario
 password: sua_senha
 ```
 > 💡 O Flyway aplicará as migrações automaticamente na inicialização. <br>
-> 💾 Recomenda-se colocar o nome do banco como `ongadocoes`. <br>
+> 💾 O nome do banco tem que ser necessáriamente `ongadocoes`. <br>
 > 🧑‍💻 O PostgreSQL por padrão, coloca o nome de usuário como `postgres`. Se não modificado, coloque em username `postgres`.
 
 #### 2.3. Inicie a API
