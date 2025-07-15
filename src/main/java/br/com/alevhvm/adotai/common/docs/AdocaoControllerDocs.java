@@ -35,7 +35,7 @@ public interface AdocaoControllerDocs {
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
     })
-    AdocaoDTO acharAdocaoPorId(Long id);
+    ResponseEntity<AdocaoDTO> acharAdocaoPorId(Long id);
 
     @Operation(summary = "Registra uma adoção", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -45,7 +45,7 @@ public interface AdocaoControllerDocs {
             @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
     })
-    AdocaoDTO registrarAdocao(AdocaoDTO adocao);
+    ResponseEntity<AdocaoDTO> registrarAdocao(AdocaoDTO adocao);
 
     @Operation(summary = "Atualiza a adoção", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -56,7 +56,7 @@ public interface AdocaoControllerDocs {
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
     })
-    AdocaoDTO atualizarAdocao(Long id, AdocaoDTO adocao);
+    ResponseEntity<AdocaoDTO> atualizarAdocao(Long id, AdocaoDTO adocao);
 
     @Operation(summary = "Atualização parcial de Adocao", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {

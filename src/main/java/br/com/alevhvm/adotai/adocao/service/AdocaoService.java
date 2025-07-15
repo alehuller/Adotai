@@ -2,7 +2,6 @@ package br.com.alevhvm.adotai.adocao.service;
 
 import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
 import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
-import br.com.alevhvm.adotai.animal.service.AnimalService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -24,7 +23,6 @@ import java.util.Set;
 
 import br.com.alevhvm.adotai.adocao.controller.AdocaoController;
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
-import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.animal.model.Animal;
@@ -48,8 +46,6 @@ public class AdocaoService {
     private final AnimalRepository animalRepository;
 
     private final UsuarioRepository usuarioRepository;
-
-    private final AnimalService animalService;
 
     private final OngRepository ongRepository;
 
@@ -109,8 +105,8 @@ public class AdocaoService {
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrada."));
 
-        AnimalDTO animalDTO = animalService.findById(adocao.getIdAnimal());
-        Animal animal = DozerMapper.parseObject(animalDTO, Animal.class);
+        Animal animal = animalRepository.findById(adocao.getIdAnimal())
+                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
 
         Ong ong = ongRepository.findById(animal.getOng().getIdOng())
                 .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
@@ -160,6 +156,9 @@ public class AdocaoService {
     }
 
     public void delete(Long id) {
+        if (!adocaoRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Adoção não encontrada.");
+        }
         adocaoRepository.deleteById(id);
     }
 }

@@ -1,6 +1,10 @@
 package br.com.alevhvm.adotai.adocao.controller;
 
+import java.net.URI;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,22 +53,25 @@ public class AdocaoController implements AdocaoControllerDocs{
 
         @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public AdocaoDTO acharAdocaoPorId(@PathVariable(value = "id") Long id) {
-                return adocaoService.findById(id);
+        public ResponseEntity<AdocaoDTO> acharAdocaoPorId(@PathVariable(value = "id") Long id) {
+                return ResponseEntity.ok(adocaoService.findById(id));
         }
 
-        @PostMapping(value = "/registro", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public AdocaoDTO registrarAdocao(@RequestBody AdocaoDTO adocao) {
-                return adocaoService.create(adocao);
+        public ResponseEntity<AdocaoDTO> registrarAdocao(@RequestBody AdocaoDTO adocao) {
+                AdocaoDTO criada = adocaoService.create(adocao);
+                URI location = linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(criada.getKey())).toUri();
+                return ResponseEntity.created(location).body(criada);
         }
 
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public AdocaoDTO atualizarAdocao(@PathVariable(value = "id") Long id, @RequestBody AdocaoDTO adocao) {
-                return adocaoService.update(adocao, id);
+        public ResponseEntity<AdocaoDTO> atualizarAdocao(@PathVariable(value = "id") Long id, @RequestBody AdocaoDTO adocao) {
+                AdocaoDTO atualizado = adocaoService.update(adocao, id);
+                return ResponseEntity.ok(atualizado);
         }
 
         @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,

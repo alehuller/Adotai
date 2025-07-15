@@ -72,7 +72,7 @@ public class SecurityConfig {
                         // Rotas de adoção
                         .requestMatchers(HttpMethod.GET, "/api/v1/adocoes").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/adocoes/{id}").hasAnyRole("ONG", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/adocoes/registro").hasRole("ONG")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/adocoes").hasRole("ONG")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/adocoes/{id}").hasRole("ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/adocoes/{id}").hasRole("ONG")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/adocoes/{id}").hasRole("ONG")
