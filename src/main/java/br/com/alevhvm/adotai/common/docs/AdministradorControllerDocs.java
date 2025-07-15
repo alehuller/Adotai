@@ -6,6 +6,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
 public interface AdministradorControllerDocs {
     @Operation(summary = "Retorna todos os administradores", responses = {
@@ -35,7 +37,7 @@ public interface AdministradorControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    AdministradorDTO acharAdministradorPorId(Long id);
+    ResponseEntity<AdministradorDTO> acharAdministradorPorId(Long id);
 
     @Operation(summary = "Retorna o administrador pelo nome de usuário pesquisado", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),
@@ -45,7 +47,15 @@ public interface AdministradorControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    AdministradorDTO acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario);
+    ResponseEntity<AdministradorDTO> acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario);
+
+    @Operation(summary = "Registra um administrador", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+    })
+    ResponseEntity<AdministradorDTO> registrarAdministrador(@RequestBody @Valid AdministradorDTO admin);
 
     @Operation(summary = "Atualiza o administrador", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),
@@ -54,7 +64,7 @@ public interface AdministradorControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    AdministradorDTO atualizarAdministrador(String nomeUsuario, AdministradorDTO administrador);
+    ResponseEntity<AdministradorDTO> atualizarAdministrador(String nomeUsuario, AdministradorDTO administrador);
 
     @Operation(summary = "Atualização parcial do administrador", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),

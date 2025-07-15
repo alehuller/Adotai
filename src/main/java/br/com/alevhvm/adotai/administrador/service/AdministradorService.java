@@ -184,6 +184,8 @@ public class AdministradorService {
 
     @Transactional
     public void delete(String nomeUsuario) {
-        administradorRepository.deleteByNomeUsuario(nomeUsuario);
+        var admin = administradorRepository.findByNomeUsuario(nomeUsuario)
+            .orElseThrow(() -> new ResourceNotFoundException("Administrador não encontrado"));
+        administradorRepository.delete(admin);
     }
 }

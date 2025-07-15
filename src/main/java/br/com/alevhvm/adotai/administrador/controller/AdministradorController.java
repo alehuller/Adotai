@@ -6,11 +6,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
+import br.com.alevhvm.adotai.common.docs.AdministradorControllerDocs;
 import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.net.URI;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +37,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/administradores")
 @Tag(name = "Administradores", description = "Endpoints para manipulação do registro de Administradores.")
-public class AdministradorController {
+public class AdministradorController implements AdministradorControllerDocs{
 
     private final AdministradorService administradorService;
 
@@ -50,29 +55,34 @@ public class AdministradorController {
 
     @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
-    public AdministradorDTO acharAdministradorPorId(@PathVariable(value = "id") Long id) {
-        return administradorService.findById(id);
+    public ResponseEntity<AdministradorDTO> acharAdministradorPorId(@PathVariable(value = "id") Long id) {
+        AdministradorDTO dto = administradorService.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
-    public AdministradorDTO acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
-        return administradorService.findByNomeUsuario(nomeUsuario);
+    public ResponseEntity<AdministradorDTO> acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
+        AdministradorDTO dto = administradorService.findByNomeUsuario(nomeUsuario);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
-    public AdministradorDTO registrarAdministrador(@RequestBody @Valid AdministradorDTO admin) {
-        return administradorService.create(admin);
+    public ResponseEntity<AdministradorDTO> registrarAdministrador(@RequestBody @Valid AdministradorDTO admin) {
+        AdministradorDTO criado = administradorService.create(admin);
+        URI location = linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(criado.getKey())).toUri();
+        return ResponseEntity.created(location).body(criado);
     }
 
     @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                     MediaType.APPLICATION_XML })
-    public AdministradorDTO atualizarAdministrador(@PathVariable(value = "nomeUsuario") String nomeUsuario,
+    public ResponseEntity<AdministradorDTO> atualizarAdministrador(@PathVariable(value = "nomeUsuario") String nomeUsuario,
             @RequestBody @Valid AdministradorDTO administrador) {
-        return administradorService.update(administrador, nomeUsuario);
+        AdministradorDTO dto = administradorService.update(administrador, nomeUsuario);    
+        return ResponseEntity.ok(dto);
     }
 
     @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
