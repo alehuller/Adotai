@@ -1,5 +1,6 @@
 package br.com.alevhvm.adotai.administrador.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -26,7 +27,6 @@ import br.com.alevhvm.adotai.administrador.controller.AdministradorController;
 import br.com.alevhvm.adotai.auth.dto.LoginDTO;
 import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
-import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
@@ -88,7 +88,7 @@ public class AdministradorService {
 
     public AdministradorDTO findById(Long id) {
         Administrador entity = administradorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(id)).withSelfRel());
@@ -98,7 +98,7 @@ public class AdministradorService {
     public AdministradorDTO update(AdministradorDTO administradorDTO, String nomeUsuario) {
 
         Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
 
         entity.setNome(administradorDTO.getNome());
         entity.setNomeUsuario(administradorDTO.getNomeUsuario());
@@ -117,7 +117,7 @@ public class AdministradorService {
     public AdministradorDTO findByNomeUsuario(String nomeUsuario) {
 
         Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorNomeUsuario(nomeUsuario))
@@ -127,7 +127,7 @@ public class AdministradorService {
     
     public AdministradorDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Administrador administrador = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         administradorValidacao.validatePartialUpdate(nomeUsuario, updates);
 
@@ -185,7 +185,7 @@ public class AdministradorService {
     @Transactional
     public void delete(String nomeUsuario) {
         var admin = administradorRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new ResourceNotFoundException("Administrador não encontrado"));
+            .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
         administradorRepository.delete(admin);
     }
 }

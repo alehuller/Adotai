@@ -37,18 +37,9 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                List.of(ex.getMessage()),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
 
-    @ExceptionHandler(RequiredObjectIsNullException.class)
-    public final ResponseEntity<ExceptionResponse> handleRequiredObjectIsNull(RequiredObjectIsNullException ex, WebRequest request) {
+    @ExceptionHandler(NullPointerException.class)
+    public final ResponseEntity<ExceptionResponse> handleRequiredObjectIsNull(NullPointerException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
                 List.of(ex.getMessage()),
@@ -69,17 +60,6 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public final ResponseEntity<ExceptionResponse> handleBadCredentialsException(BadCredentialsException ex, WebRequest request){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                List.of(ex.getMessage()),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
-    }
-
-
-    @ExceptionHandler(InvalidJwtAuthenticationException.class)
-    public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationException(InvalidJwtAuthenticationException ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
                 List.of(ex.getMessage()),

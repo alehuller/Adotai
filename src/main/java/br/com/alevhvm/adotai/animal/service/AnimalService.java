@@ -1,7 +1,6 @@
 package br.com.alevhvm.adotai.animal.service;
 
-import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -66,7 +65,7 @@ public class AnimalService {
     public AnimalDTO findById(Long id) {
 
         Animal entity = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(id)).withSelfRel());
@@ -75,7 +74,7 @@ public class AnimalService {
 
     public AnimalDTO findByNome(String nome) {
         Animal entity = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorNome(nome)).withSelfRel());
@@ -105,10 +104,10 @@ public class AnimalService {
 
     public AnimalDTO create(AnimalDTO animal) {
         if (animal == null)
-            throw new RequiredObjectIsNullException();
+            throw new NullPointerException();
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada"));
 
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
         entity.setOng(ong);
@@ -120,13 +119,13 @@ public class AnimalService {
     public AnimalDTO update(AnimalDTO animal, String nome) {
 
         if (animal == null)
-            throw new RequiredObjectIsNullException();
+            throw new NullPointerException();
 
         Animal entity = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
         entity.setNome(animal.getNome());
         entity.setEspecie(animal.getEspecie());
@@ -146,7 +145,7 @@ public class AnimalService {
 
     public AnimalDTO partialUpdate(String nome, Map<String, Object> updates) {
         Animal animal = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());

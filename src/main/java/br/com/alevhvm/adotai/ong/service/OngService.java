@@ -4,11 +4,10 @@ import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.SiteVO;
 import br.com.alevhvm.adotai.auth.dto.LoginDTO;
 import br.com.alevhvm.adotai.auth.dto.TokenDTO;
-import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
 import br.com.alevhvm.adotai.ong.validations.OngValidacao;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -87,7 +86,7 @@ public class OngService {
     public OngDTO findById(Long id) {
 
         Ong entity = ongRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrado."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
@@ -98,7 +97,7 @@ public class OngService {
     public OngDTO findByNomeUsuario(String nomeUsuario) {
 
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrado."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
@@ -169,10 +168,10 @@ public class OngService {
 
     public OngDTO update(OngUpdateDTO ongUpdate, String nomeUsuario) {
         if (ongUpdate == null)
-            throw new RequiredObjectIsNullException();
+            throw new NullPointerException();
 
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrado."));
 
         entity.setNome(ongUpdate.getNome());
         entity.setNomeUsuario(ongUpdate.getNomeUsuario());
@@ -196,7 +195,7 @@ public class OngService {
 
     public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Ong ong = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
         ongValidacao.validatePartialUpdate(nomeUsuario, updates);
 

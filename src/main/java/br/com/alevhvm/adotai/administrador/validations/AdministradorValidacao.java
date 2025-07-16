@@ -1,15 +1,13 @@
 package br.com.alevhvm.adotai.administrador.validations;
 
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
-import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +30,7 @@ public class AdministradorValidacao {
     public void validate(AdministradorDTO admin) {
 
         if (admin == null) {
-            throw new RequiredObjectIsNullException("Não há dados");
+            throw new NullPointerException("Não há dados");
         }
         if (existsAdministradorWithEmail(admin.getEmail().toLowerCase())) {
             throw new IllegalStateException("E-mail já está em uso");
