@@ -3,8 +3,12 @@ package br.com.alevhvm.adotai.usuario.controller;
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import org.springframework.data.domain.Pageable;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -56,14 +60,16 @@ public class UsuarioController implements UsuarioControllerDocs {
 
         @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public UsuarioDTO acharUsuarioPorId(@PathVariable(value = "id") Long id) {
-                return usuarioService.findById(id);
+        public ResponseEntity<UsuarioDTO> acharUsuarioPorId(@PathVariable(value = "id") Long id) {
+                UsuarioDTO dto = usuarioService.findById(id);
+                return ResponseEntity.ok(dto);
         }
 
         @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
-                return usuarioService.findByNomeUsuario(nomeUsuario);
+        public ResponseEntity<UsuarioDTO> acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
+                UsuarioDTO dto = usuarioService.findByNomeUsuario(nomeUsuario);
+                return ResponseEntity.ok(dto);
         }
 
         @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON,
@@ -84,19 +90,22 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
-        @PostMapping(value = "/signup", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO registrarUsuario(@RequestBody @Valid RegistroDTO registroDTO) {
-                return usuarioService.create(registroDTO);
+        public ResponseEntity<UsuarioDTO> registrarUsuario(@RequestBody @Valid RegistroDTO registroDTO) {
+                UsuarioDTO criado = usuarioService.create(registroDTO);
+                URI location = linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(criado.getKey())).toUri();
+                return ResponseEntity.created(location).body(criado);
         }
 
         @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public UsuarioDTO atualizarUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario,
+        public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario,
                         @RequestBody @Valid UsuarioUpdateDTO usuario) {
-                return usuarioService.update(usuario, nomeUsuario);
+                UsuarioDTO dto = usuarioService.update(usuario, nomeUsuario);
+                return ResponseEntity.ok(dto);
         }
 
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,

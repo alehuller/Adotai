@@ -42,7 +42,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO acharUsuarioPorId(
+    ResponseEntity<UsuarioDTO> acharUsuarioPorId(
             @Parameter(description = "ID do usuário") 
             @PathVariable Long id);
 
@@ -54,7 +54,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO acharUsuarioPorNomeUsuario(
+    ResponseEntity<UsuarioDTO> acharUsuarioPorNomeUsuario(
             @Parameter(description = "Nome de usuário do usuário") 
             @PathVariable("nomeUsuario") String nomeUsuario);
 
@@ -77,7 +77,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO registrarUsuario(
+    ResponseEntity<UsuarioDTO> registrarUsuario(
             @Parameter(description = "Dados do novo usuário") 
             @RequestBody @Valid RegistroDTO usuario);
 
@@ -88,7 +88,7 @@ public interface UsuarioControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    UsuarioDTO atualizarUsuario(
+    ResponseEntity<UsuarioDTO> atualizarUsuario(
             @Parameter(description = "Nome de usuário do usuário a ser atualizado") 
             @PathVariable String nomeUsuario,
             @Parameter(description = "Dados atualizados do usuário") 

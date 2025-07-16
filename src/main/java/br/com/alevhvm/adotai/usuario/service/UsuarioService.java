@@ -214,11 +214,17 @@ public class UsuarioService {
         }
 
         usuarioRepository.save(usuario);
-        return DozerMapper.parseObject(usuario, UsuarioDTO.class);
+
+        UsuarioDTO dto = DozerMapper.parseObject(usuario, UsuarioDTO.class);
+        dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
+
+        return dto;
     }
 
     @Transactional
     public void delete(String nomeUsuario) {
+        var usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
+            .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         usuarioRepository.deleteByNomeUsuario(nomeUsuario);
     }
 
