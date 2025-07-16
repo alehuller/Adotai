@@ -12,6 +12,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -42,6 +45,7 @@ public class UsuarioController implements UsuarioControllerDocs {
 
         private final UsuarioService usuarioService;
 
+
         @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<UsuarioDTO>>> listarUsuarios(
                         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -60,12 +64,15 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.findById(id);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public UsuarioDTO acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
+                System.out.println("variavel nome do usuario: " + nomeUsuario);
                 return usuarioService.findByNomeUsuario(nomeUsuario);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
@@ -91,6 +98,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.create(registroDTO);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -99,6 +107,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return usuarioService.update(usuario, nomeUsuario);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -109,6 +118,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(usuarioAtualizado);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<?> deletarPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
@@ -116,6 +126,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.noContent().build();
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PostMapping("/favoritar/{nomeUsuario}/{animalId}")
         public ResponseEntity<Map<String, Object>> toggleFavorito(
                         @PathVariable String nomeUsuario,
@@ -132,6 +143,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(response);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}/favoritos", produces = {
                         MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_YML,

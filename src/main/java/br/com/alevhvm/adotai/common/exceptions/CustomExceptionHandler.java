@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.common.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +26,16 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public final ResponseEntity<ExceptionResponse> handleAllExceptions(AuthorizationDeniedException ex, WebRequest request) {
+        System.out.println("Exceção capturada: " + ex.getClass().getSimpleName());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                List.of(ex.getMessage() + ": Você não tem permissão para acessar este recurso"),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
 
 
     @ExceptionHandler(NoResourceFoundException.class)

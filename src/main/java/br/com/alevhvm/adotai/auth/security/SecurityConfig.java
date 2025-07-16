@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final SecurityFilter securityFilter;
@@ -48,14 +50,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}/adocoes").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/{nomeUsuario}").hasRole("ADMIN")
 
                         // Rotas de ong
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs").hasAnyRole("USER", "ONG")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("USER", "ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasRole("ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais").hasAnyRole("ONG", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/ongs/filtro").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")

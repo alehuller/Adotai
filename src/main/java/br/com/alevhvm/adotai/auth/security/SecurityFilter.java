@@ -63,7 +63,8 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (token != null) {
                 if (tokenBlackListService.isTokenBlacklisted(token)) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Token inválido: usuário fez logout");
+                    jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("usuário fez logout") {
+                    });
                     return;
                 }
                 try {
@@ -77,12 +78,12 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 } catch (JWTVerificationException ex) {
                     jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("Token JWT inválido ou expirado", ex) {
-                    }); // <-- aqui está a mágica
+                    });
                     return;
                 }
                 catch (AuthenticationCredentialsNotFoundException ex) {
                     jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("Acesso negado: nenhuma credencial informada", ex) {
-                    }); // <-- aqui está a mágica
+                    });
                     return;
                 }
             }
