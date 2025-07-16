@@ -6,13 +6,16 @@ import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
 import br.com.alevhvm.adotai.ong.service.OngService;
+
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
@@ -50,9 +53,14 @@ public class AuthController {
 
     @PostMapping("/user/register")
     public ResponseEntity<UsuarioDTO> register(@RequestBody @Valid RegistroDTO data) {
-
         UsuarioDTO usuarioDTO = usuarioService.create(data);
-        return ResponseEntity.ok(usuarioDTO);
+
+        URI location = ServletUriComponentsBuilder
+            .fromUriString("/api/v1/usuarios/id/{id}")
+            .buildAndExpand(usuarioDTO.getKey())
+            .toUri();
+        
+        return ResponseEntity.created(location).body(usuarioDTO);
     }
 
     // auth de ong
@@ -63,9 +71,15 @@ public class AuthController {
 
     @PostMapping("/ong/register")
     public ResponseEntity<OngDTO> registerOng(@RequestBody @Valid OngDTO data) {
-        OngDTO ongDTO = ongService.create(data);
-        return ResponseEntity.ok(ongDTO);
-    }
+    OngDTO ongDTO = ongService.create(data);
+
+    URI location = ServletUriComponentsBuilder
+        .fromUriString("/api/v1/ongs/id/{id}")
+        .buildAndExpand(ongDTO.getKey())
+        .toUri();
+
+    return ResponseEntity.created(location).body(ongDTO);
+}
 
     // auth de adm
     @PostMapping("/admin/login")
@@ -75,9 +89,15 @@ public class AuthController {
 
     @PostMapping("/adminmaster/register")
     public ResponseEntity<AdministradorDTO> registerAdm(@RequestBody @Valid AdministradorDTO data) {
-        AdministradorDTO administradorDTO = administradorService.create(data);
-        return ResponseEntity.ok(administradorDTO);
-    }
+    AdministradorDTO administradorDTO = administradorService.create(data);
+
+    URI location = ServletUriComponentsBuilder
+        .fromUriString("/api/v1/administradores/id/{id}")
+        .buildAndExpand(administradorDTO.getKey())
+        .toUri();
+
+    return ResponseEntity.created(location).body(administradorDTO);
+}
 
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request) {
