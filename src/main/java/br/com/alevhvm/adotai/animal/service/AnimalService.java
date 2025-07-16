@@ -187,7 +187,10 @@ public class AnimalService {
         }
 
         animalRepository.save(animal);
-        return DozerMapper.parseObject(animal, AnimalDTO.class);
+
+        AnimalDTO dto = DozerMapper.parseObject(animal, AnimalDTO.class);
+        dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     @Transactional

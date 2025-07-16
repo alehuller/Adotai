@@ -1,5 +1,6 @@
 package br.com.alevhvm.adotai.animal.controller;
 
+import java.net.URI;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.alevhvm.adotai.common.docs.AnimalControllerDocs;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
@@ -51,14 +55,15 @@ public class AnimalController implements AnimalControllerDocs{
 
         @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public AnimalDTO acharAnimalPorId(@PathVariable(value = "id") Long id) {
-                return animalService.findById(id);
+        public ResponseEntity<AnimalDTO> acharAnimalPorId(@PathVariable(value = "id") Long id) {
+                return ResponseEntity.ok(animalService.findById(id));
         }
 
         @GetMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public AnimalDTO acharAnimalPorNome(@PathVariable(value = "nome") String nome) {
-                return animalService.findByNome(nome);
+        public ResponseEntity<AnimalDTO> acharAnimalPorNome(@PathVariable(value = "nome") String nome) {
+                AnimalDTO dto = animalService.findByNome(nome);
+                return ResponseEntity.ok(dto);
         }
 
         @PostMapping(value = "/filtro", produces = MediaType.APPLICATION_JSON)
@@ -75,18 +80,21 @@ public class AnimalController implements AnimalControllerDocs{
                 return ResponseEntity.ok(resultados);
         }
 
-        @PostMapping(value = "/registro", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public AnimalDTO registrarAnimal(@RequestBody AnimalDTO animal) {
-                return animalService.create(animal);
+        public ResponseEntity<AnimalDTO> registrarAnimal(@RequestBody AnimalDTO animal) {
+                AnimalDTO criado = animalService.create(animal);
+                URI location = linkTo(methodOn(AnimalController.class).acharAnimalPorId(criado.getKey())).toUri();
+                return ResponseEntity.created(location).body(criado);
         }
 
         @PutMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public AnimalDTO atualizarAnimal(@PathVariable(value = "nome") String nome, @RequestBody AnimalDTO animal) {
-                return animalService.update(animal, nome);
+        public ResponseEntity<AnimalDTO> atualizarAnimal(@PathVariable(value = "nome") String nome, @RequestBody AnimalDTO animal) {
+                AnimalDTO dto = animalService.update(animal, nome);
+                return ResponseEntity.ok(dto);
         }
 
         @PatchMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,

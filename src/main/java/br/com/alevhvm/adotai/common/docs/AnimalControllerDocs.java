@@ -35,7 +35,7 @@ public interface AnimalControllerDocs {
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     })
-    AnimalDTO acharAnimalPorId(Long id);
+    ResponseEntity<AnimalDTO> acharAnimalPorId(Long id);
 
     @Operation(summary = "Retorna o animal de nome especificado", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -47,7 +47,7 @@ public interface AnimalControllerDocs {
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     })
-    AnimalDTO acharAnimalPorNome(String nome);
+    ResponseEntity<AnimalDTO> acharAnimalPorNome(String nome);
 
     @Operation(summary = "Registra um animal", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -57,7 +57,7 @@ public interface AnimalControllerDocs {
             @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     })
-    AnimalDTO registrarAnimal(AnimalDTO animal);
+    ResponseEntity<AnimalDTO> registrarAnimal(AnimalDTO animal);
 
     @Operation(summary = "Atualiza o animal", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
@@ -68,7 +68,7 @@ public interface AnimalControllerDocs {
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     })
-    AnimalDTO atualizarAnimal(String nome, AnimalDTO animal);
+    ResponseEntity<AnimalDTO> atualizarAnimal(String nome, AnimalDTO animal);
 
     @Operation(summary = "Atualização parcial de animal", responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
