@@ -41,7 +41,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    OngDTO acharOngPorId(
+    ResponseEntity<OngDTO> acharOngPorId(
             @Parameter(description = "ID da ONG") 
             @PathVariable Long id);
 
@@ -52,7 +52,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    OngDTO acharOngPorNomeUsuario(
+    ResponseEntity<OngDTO> acharOngPorNomeUsuario(
             @Parameter(description = "Nome de usuário da ONG") 
             @PathVariable("nomeUsuario") String nomeUsuario);
 
@@ -90,7 +90,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    OngDTO registrarOng(
+    ResponseEntity<OngDTO> registrarOng(
             @Parameter(description = "Dados da ONG a ser registrada") 
             @RequestBody @Valid OngDTO ong);
 
@@ -100,7 +100,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
     })
-    OngDTO atualizarOng(
+    ResponseEntity<OngDTO> atualizarOng(
             @Parameter(description = "Nome de usuário da ONG a ser atualizada") 
             @PathVariable String nomeUsuario,
             @Parameter(description = "Dados atualizados da ONG") 

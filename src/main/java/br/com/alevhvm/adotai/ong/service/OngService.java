@@ -86,7 +86,7 @@ public class OngService {
     public OngDTO findById(Long id) {
 
         Ong entity = ongRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
@@ -97,7 +97,7 @@ public class OngService {
     public OngDTO findByNomeUsuario(String nomeUsuario) {
 
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
@@ -171,7 +171,7 @@ public class OngService {
             throw new NullPointerException();
 
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
         entity.setNome(ongUpdate.getNome());
         entity.setNomeUsuario(ongUpdate.getNomeUsuario());
@@ -262,11 +262,17 @@ public class OngService {
         }
 
         ongRepository.save(ong);
+
+        OngDTO dto = DozerMapper.parseObject(ong, OngDTO.class);
+        dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
+
         return DozerMapper.parseObject(ong, OngDTO.class);
     }
 
     @Transactional
     public void delete(String nomeUsuario) {
+        var ong = ongRepository.findByNomeUsuario(nomeUsuario)
+            .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
         ongRepository.deleteByNomeUsuario(nomeUsuario);
     }
 }

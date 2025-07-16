@@ -16,6 +16,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.net.URI;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -59,14 +63,16 @@ public class OngController implements OngControllerDocs {
 
         @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public OngDTO acharOngPorId(@PathVariable(value = "id") Long id) {
-                return ongService.findById(id);
+        public ResponseEntity<OngDTO> acharOngPorId(@PathVariable(value = "id") Long id) {
+                OngDTO dto = ongService.findById(id);
+                return ResponseEntity.ok(dto);
         }
 
         @GetMapping(value = "/{nome_usuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
-        public OngDTO acharOngPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario) {
-                return ongService.findByNomeUsuario(nomeUsuario);
+        public ResponseEntity<OngDTO> acharOngPorNomeUsuario(@PathVariable(value = "nome_usuario") String nomeUsuario) {
+                OngDTO dto = ongService.findByNomeUsuario(nomeUsuario);
+                return ResponseEntity.ok(dto);
         }
 
         @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -100,11 +106,13 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
-        @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @PostMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO registrarOng(@RequestBody @Valid OngDTO ong) {
-                return ongService.create(ong);
+        public ResponseEntity<OngDTO> registrarOng(@RequestBody @Valid OngDTO ong) {
+                OngDTO criado = ongService.create(ong);
+                URI location = linkTo(methodOn(OngController.class).acharOngPorId(criado.getKey())).toUri();
+                return ResponseEntity.created(location).body(criado);
         }
 
         @PostMapping(value = "/filtro", produces = MediaType.APPLICATION_JSON)
@@ -123,8 +131,9 @@ public class OngController implements OngControllerDocs {
         @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
-        public OngDTO atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid OngUpdateDTO ong) {
-                return ongService.update(ong, nomeUsuario);
+        public ResponseEntity<OngDTO> atualizarOng(@PathVariable(value = "nomeUsuario") String nomeUsuario, @RequestBody @Valid OngUpdateDTO ong) {
+                OngDTO dto = ongService.update(ong, nomeUsuario);
+                return ResponseEntity.ok(dto);
         }
 
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
