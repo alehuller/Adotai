@@ -1,7 +1,6 @@
 package br.com.alevhvm.adotai.adocao.service;
 
-import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
-import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -69,7 +68,7 @@ public class AdocaoService {
     public AdocaoDTO findById(Long id) {
 
         Adocao entity = adocaoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Adoção não encontrada."));
 
         AdocaoDTO dto = DozerMapper.parseObject(entity, AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
@@ -78,13 +77,13 @@ public class AdocaoService {
 
     public AdocaoDTO create(AdocaoDTO adocao) {
         if (adocao == null)
-            throw new RequiredObjectIsNullException();
+            throw new NullPointerException();
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         Adocao entity = DozerMapper.parseObject(adocao, Adocao.class);
         entity.setAnimal(animal);
@@ -97,19 +96,19 @@ public class AdocaoService {
     public AdocaoDTO update(AdocaoDTO adocao, Long id) {
 
         if (adocao == null)
-            throw new RequiredObjectIsNullException();
+            throw new NullPointerException();
 
         Adocao entity = adocaoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Adoção não encontrada."));
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrada."));
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
 
         Ong ong = ongRepository.findById(animal.getOng().getIdOng())
-                .orElseThrow(() -> new ResourceNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
         entity.setDataAdocao(adocao.getDataAdocao());
         entity.setStatus(adocao.getStatus());
@@ -124,7 +123,7 @@ public class AdocaoService {
 
     public AdocaoDTO partialUpdate(Long id, Map<String, Object> updates) {
         Adocao adocao = adocaoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Adoção não encontrada."));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -157,7 +156,7 @@ public class AdocaoService {
 
     public void delete(Long id) {
         if (!adocaoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Adoção não encontrada.");
+            throw new EntityNotFoundException("Adoção não encontrada.");
         }
         adocaoRepository.deleteById(id);
     }

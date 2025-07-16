@@ -1,6 +1,5 @@
 package br.com.alevhvm.adotai.auth.security;
 
-import br.com.alevhvm.adotai.common.exceptions.TokenInvalidException;
 import br.com.alevhvm.adotai.auth.repository.LoginIdentityViewRepository;
 import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
 import br.com.alevhvm.adotai.auth.service.TokenService;
@@ -10,7 +9,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,7 +76,13 @@ public class SecurityFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 } catch (JWTVerificationException ex) {
-                    jwtAuthenticationEntryPoint.commence(request, response, new TokenInvalidException("Token JWT inválido ou expirado", ex)); // <-- aqui está a mágica
+                    jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("Token JWT inválido ou expirado", ex) {
+                    }); // <-- aqui está a mágica
+                    return;
+                }
+                catch (AuthenticationCredentialsNotFoundException ex) {
+                    jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("Acesso negado: nenhuma credencial informada", ex) {
+                    }); // <-- aqui está a mágica
                     return;
                 }
             }

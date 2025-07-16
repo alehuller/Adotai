@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
-import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ public class UsuarioValidacao {
 
     public void validate(RegistroDTO registroDTO) {
         if (registroDTO == null) {
-            throw new RequiredObjectIsNullException("Não há dados");
+            throw new NullPointerException("Não há dados");
         }
         // se encontrar o usuario no bd retorna badrequest
         if (existsUsuarioWithEmail(registroDTO.getEmail().toLowerCase())) {

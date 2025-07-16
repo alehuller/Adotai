@@ -10,7 +10,6 @@ import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
-import br.com.alevhvm.adotai.common.exceptions.ResourceNotFoundException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.animal.model.Animal;
@@ -93,7 +92,7 @@ public class UsuarioService {
     public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
 
         Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
@@ -103,7 +102,7 @@ public class UsuarioService {
     public UsuarioDTO findById(Long id) {
 
         Usuario entity = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
@@ -166,7 +165,7 @@ public class UsuarioService {
     public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, String nomeUsuario) {
 
         Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuarioUpdate.getNome());
         entity.setNomeUsuario(usuarioUpdate.getNomeUsuario());
@@ -184,7 +183,7 @@ public class UsuarioService {
 
     public UsuarioDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         usuarioValidacao.validatePartialUpdate(nomeUsuario, updates);
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
-import br.com.alevhvm.adotai.common.exceptions.RequiredObjectIsNullException;
 import br.com.alevhvm.adotai.ong.model.Ong;
 import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class OngValidacao {
 
     public void validate(OngDTO ong) {
         if (ong == null)
-            throw new RequiredObjectIsNullException("Não há dados");
+            throw new NullPointerException("Não há dados");
 
         // se encontrar a ong no bd retorna badrequest
         if (existsOngWithEmail(ong.getEmail().toLowerCase())) {
