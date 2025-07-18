@@ -266,7 +266,7 @@ public class OngService {
         OngDTO dto = DozerMapper.parseObject(ong, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
 
-        return DozerMapper.parseObject(ong, OngDTO.class);
+        return dto;
     }
 
     @Transactional

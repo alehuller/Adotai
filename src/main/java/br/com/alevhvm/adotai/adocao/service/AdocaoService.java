@@ -151,7 +151,11 @@ public class AdocaoService {
         }
 
         adocaoRepository.save(adocao);
-        return DozerMapper.parseObject(adocao, AdocaoDTO.class);
+
+        AdocaoDTO dto = DozerMapper.parseObject(adocao, AdocaoDTO.class);
+        dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
+
+        return dto;
     }
 
     public void delete(Long id) {
