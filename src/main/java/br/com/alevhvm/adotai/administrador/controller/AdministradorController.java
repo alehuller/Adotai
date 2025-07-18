@@ -53,14 +53,14 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(administradorService.findAll(pageable));
     }
 
-    @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public ResponseEntity<AdministradorDTO> acharAdministradorPorId(@PathVariable(value = "id") Long id) {
         AdministradorDTO dto = administradorService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+    @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public ResponseEntity<AdministradorDTO> acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
         AdministradorDTO dto = administradorService.findByNomeUsuario(nomeUsuario);

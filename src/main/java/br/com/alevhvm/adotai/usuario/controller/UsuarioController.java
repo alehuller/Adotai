@@ -58,14 +58,14 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(usuarioService.findAll(pageable));
         }
 
-        @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<UsuarioDTO> acharUsuarioPorId(@PathVariable(value = "id") Long id) {
                 UsuarioDTO dto = usuarioService.findById(id);
                 return ResponseEntity.ok(dto);
         }
 
-        @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<UsuarioDTO> acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
                 UsuarioDTO dto = usuarioService.findByNomeUsuario(nomeUsuario);

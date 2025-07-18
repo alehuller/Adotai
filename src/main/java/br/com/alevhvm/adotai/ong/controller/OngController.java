@@ -61,14 +61,14 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(ongService.findAll(pageable));
         }
 
-        @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<OngDTO> acharOngPorId(@PathVariable(value = "id") Long id) {
                 OngDTO dto = ongService.findById(id);
                 return ResponseEntity.ok(dto);
         }
 
-        @GetMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<OngDTO> acharOngPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
                 OngDTO dto = ongService.findByNomeUsuario(nomeUsuario);

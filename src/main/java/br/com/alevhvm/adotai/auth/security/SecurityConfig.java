@@ -43,8 +43,8 @@ public class SecurityConfig {
 
                         // Rotas de usuário
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}").hasAnyRole("ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/id/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/nomeUsuario/{nomeUsuario}").hasAnyRole("ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/{nomeUsuario}/adocoes").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
@@ -52,8 +52,8 @@ public class SecurityConfig {
 
                         // Rotas de ong
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs").hasAnyRole("USER", "ONG")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}").hasAnyRole("ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/id/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/nomeUsuario/{nomeUsuario}").hasAnyRole("ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasRole("ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
@@ -62,8 +62,8 @@ public class SecurityConfig {
 
                         // Rotas de animal
                         .requestMatchers(HttpMethod.GET, "/api/v1/animais").hasAnyRole("ONG", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/id/{id}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/{nome}").hasAnyRole("ONG", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/animais/nome/{nome}").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/v1/animais").hasRole("ONG")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/animais/{nome}").hasRole("ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/animais/{nome}").hasRole("ONG")

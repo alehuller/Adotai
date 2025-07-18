@@ -53,13 +53,13 @@ public class AnimalController implements AnimalControllerDocs{
                 return ResponseEntity.ok(animalService.findAll(pageable));
         }
 
-        @GetMapping(value = "/id/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<AnimalDTO> acharAnimalPorId(@PathVariable(value = "id") Long id) {
                 return ResponseEntity.ok(animalService.findById(id));
         }
 
-        @GetMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+        @GetMapping(value = "/nome/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<AnimalDTO> acharAnimalPorNome(@PathVariable(value = "nome") String nome) {
                 AnimalDTO dto = animalService.findByNome(nome);
