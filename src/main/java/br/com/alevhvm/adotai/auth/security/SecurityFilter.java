@@ -1,9 +1,11 @@
 package br.com.alevhvm.adotai.auth.security;
 
+import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
 import br.com.alevhvm.adotai.auth.repository.LoginIdentityViewRepository;
 import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
 import br.com.alevhvm.adotai.auth.service.TokenService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,9 +19,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -61,7 +65,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(!shouldNotFilter(request)) {
             var token = this.recoverToken(request);
             if (token != null) {
-                if (tokenBlackListService.isTokenBlacklisted(token)) {
+                if(tokenBlackListService.isTokenBlacklisted(token)){
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("usuário fez logout") {
                     });
@@ -69,13 +73,17 @@ public class SecurityFilter extends OncePerRequestFilter {
                 }
                 try {
                     var email = tokenService.validateToken(token);
-                    UserDetails userDetails = loginIdentityViewRepository.findByEmail(email)
-                            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
-                    var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-                            userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-
+                    Optional<LoginIdentityView> userOptional = loginIdentityViewRepository.findByEmail(email);
+                    if(userOptional.isEmpty()){
+                        jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("Usuário não encontrado: " + email){});
+                        return;
+                    } else{
+                        UserDetails userDetails = userOptional.get();
+                        var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                                userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 } catch (JWTVerificationException ex) {
                     jwtAuthenticationEntryPoint.commence(request, response, new AuthenticationException("Token JWT inválido ou expirado", ex) {
                     });

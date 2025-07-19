@@ -1,5 +1,6 @@
 package br.com.alevhvm.adotai.ong.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,6 +69,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<OngDTO> acharOngPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
@@ -92,6 +94,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}/animais", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML})
         public ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisDeUmaOng(
                         @PathVariable("nomeUsuario") String nomeUsuario,
@@ -128,6 +131,7 @@ public class OngController implements OngControllerDocs {
                         return ResponseEntity.ok(resultados);
                 }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -136,6 +140,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -145,6 +150,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(ongAtualizada);
         }
 
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<?> deletarOngPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {

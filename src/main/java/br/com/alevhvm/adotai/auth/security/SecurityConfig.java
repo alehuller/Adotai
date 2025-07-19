@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/ongs/filtro").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasRole("ADMIN")
 
                         // Rotas de animal
                         .requestMatchers(HttpMethod.GET, "/api/v1/animais").hasAnyRole("ONG", "USER")

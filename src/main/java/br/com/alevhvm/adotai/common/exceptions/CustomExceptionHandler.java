@@ -1,5 +1,6 @@
 package br.com.alevhvm.adotai.common.exceptions;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,8 +39,8 @@ public class CustomExceptionHandler {
     }
 
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFound(NoResourceFoundException ex, WebRequest request) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleNotFound(EntityNotFoundException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),
                 List.of(ex.getMessage()),
