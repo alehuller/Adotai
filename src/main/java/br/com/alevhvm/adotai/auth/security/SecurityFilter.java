@@ -5,7 +5,6 @@ import br.com.alevhvm.adotai.auth.repository.LoginIdentityViewRepository;
 import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
 import br.com.alevhvm.adotai.auth.service.TokenService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,10 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.util.List;
