@@ -195,6 +195,8 @@ public class AnimalService {
 
     @Transactional
     public void delete(String nome) {
+        var animal = animalRepository.findByNome(nome)
+            .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
         animalRepository.deleteByNome(nome);
     }
 }
