@@ -20,8 +20,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.service.UsuarioService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
 import br.com.alevhvm.adotai.auth.service.TokenService;
+import br.com.alevhvm.adotai.common.docs.AuthControllerDocs;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,8 @@ import lombok.ToString;
 @RequestMapping("auth")
 @RequiredArgsConstructor
 @ToString
-public class AuthController {
+@Tag(name = "Autenticação", description = "Endpoints para Login, Registro e Logout de Administradores, Usuários e ONGs.")
+public class AuthController implements AuthControllerDocs{
 
     private final AdministradorService administradorService;
 
@@ -87,7 +90,7 @@ public class AuthController {
         return ResponseEntity.ok(administradorService.logar(data));
     }
 
-    @PostMapping("/adminmaster/register")
+    @PostMapping("/admin/register")
     public ResponseEntity<AdministradorDTO> registerAdm(@RequestBody @Valid AdministradorDTO data) {
     AdministradorDTO administradorDTO = administradorService.create(data);
 
