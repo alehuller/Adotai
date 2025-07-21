@@ -12,10 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.net.URI;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +25,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -65,15 +60,6 @@ public class AdministradorController implements AdministradorControllerDocs{
     public ResponseEntity<AdministradorDTO> acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
         AdministradorDTO dto = administradorService.findByNomeUsuario(nomeUsuario);
         return ResponseEntity.ok(dto);
-    }
-
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
-            MediaType.APPLICATION_XML })
-    public ResponseEntity<AdministradorDTO> registrarAdministrador(@RequestBody @Valid AdministradorDTO admin) {
-        AdministradorDTO criado = administradorService.create(admin);
-        URI location = linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(criado.getKey())).toUri();
-        return ResponseEntity.created(location).body(criado);
     }
 
     @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,

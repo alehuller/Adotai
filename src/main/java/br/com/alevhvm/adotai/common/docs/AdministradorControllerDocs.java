@@ -54,17 +54,6 @@ public interface AdministradorControllerDocs {
     @Parameter(description = "Nome de usuário do administrador") 
     @PathVariable String nomeUsuario);
 
-
-    @Operation(summary = "Registra um administrador", responses = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
-    })
-    ResponseEntity<AdministradorDTO> registrarAdministrador(
-            @Parameter(description = "Dados do administrador para registro") 
-            @RequestBody @Valid AdministradorDTO admin);
-
     @Operation(summary = "Atualiza o administrador", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
