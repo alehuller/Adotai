@@ -9,7 +9,7 @@
 		<version>3.4.6</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.com.alevh</groupId>
+	<groupId>br.com.alevhvm</groupId>
 	<artifactId>sistema-adocao-pets</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sistema-adocao-pets</name>
@@ -30,6 +30,7 @@
 	<properties>
 		<java.version>21</java.version>
 	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -100,7 +101,8 @@
 			<version>2.19.0</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
+		<!--
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
