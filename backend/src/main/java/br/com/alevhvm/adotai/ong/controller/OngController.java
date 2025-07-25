@@ -13,6 +13,7 @@ import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
 import br.com.alevhvm.adotai.animal.service.AnimalService;
 import br.com.alevhvm.adotai.ong.service.OngService;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(ongService.findAll(pageable));
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<OngDTO> acharOngPorId(@PathVariable(value = "id") Long id) {
@@ -76,6 +78,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(value = "/{id}/adocoes", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoesPorOngId(
@@ -107,6 +110,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PostMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -130,6 +134,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(resultados);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PutMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -139,6 +144,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -149,6 +155,7 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(ongAtualizada);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })

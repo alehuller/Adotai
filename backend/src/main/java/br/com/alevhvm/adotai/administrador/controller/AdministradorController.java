@@ -8,6 +8,7 @@ import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
 import br.com.alevhvm.adotai.common.docs.AdministradorControllerDocs;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class AdministradorController implements AdministradorControllerDocs{
 
     private final AdministradorService administradorService;
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
     public ResponseEntity<PagedModel<EntityModel<AdministradorDTO>>> listarAdministradores(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -48,6 +50,7 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(administradorService.findAll(pageable));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public ResponseEntity<AdministradorDTO> acharAdministradorPorId(@PathVariable(value = "id") Long id) {
@@ -55,6 +58,7 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(dto);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public ResponseEntity<AdministradorDTO> acharAdministradorPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
@@ -62,6 +66,7 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(dto);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                     MediaType.APPLICATION_XML })
@@ -71,6 +76,7 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(dto);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                     MediaType.APPLICATION_XML })
@@ -81,6 +87,7 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(administradorAtualizado);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
             MediaType.APPLICATION_XML })
     public ResponseEntity<?> deletarPorNomeUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {

@@ -35,6 +35,7 @@ import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
 import br.com.alevhvm.adotai.usuario.service.UsuarioService;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class UsuarioController implements UsuarioControllerDocs {
 
         private final UsuarioService usuarioService;
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML })
         public ResponseEntity<PagedModel<EntityModel<UsuarioDTO>>> listarUsuarios(
                         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -59,6 +61,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(usuarioService.findAll(pageable));
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<UsuarioDTO> acharUsuarioPorId(@PathVariable(value = "id") Long id) {
@@ -66,6 +69,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ONG')")
         @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
@@ -74,6 +78,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}/adocoes", produces = { MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_YML,
@@ -93,6 +98,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -102,6 +108,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.created(location).body(criado);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PutMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -112,6 +119,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PatchMapping(value = "/{nomeUsuario}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
@@ -123,6 +131,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(usuarioAtualizado);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @DeleteMapping(value = "/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
@@ -131,6 +140,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.noContent().build();
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @PostMapping("/favoritar/{nomeUsuario}/{animalId}")
         public ResponseEntity<Map<String, Object>> toggleFavorito(
@@ -148,6 +158,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(response);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}/favoritos", produces = {
                         MediaType.APPLICATION_JSON,

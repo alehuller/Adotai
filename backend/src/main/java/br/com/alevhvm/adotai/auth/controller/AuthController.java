@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.service.UsuarioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import br.com.alevhvm.adotai.auth.service.TokenBlackListService;
 import br.com.alevhvm.adotai.auth.service.TokenService;
@@ -102,6 +103,7 @@ public class AuthController implements AuthControllerDocs{
     return ResponseEntity.created(location).body(administradorDTO);
 }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request) {
         tokenBlackListService.addToBlacklist(request);

@@ -30,6 +30,7 @@ import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
 import br.com.alevhvm.adotai.animal.service.AnimalService;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +54,7 @@ public class AnimalController implements AnimalControllerDocs {
                 return ResponseEntity.ok(animalService.findAll(pageable));
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<AnimalDTO> acharAnimalPorId(@PathVariable(value = "id") Long id) {
@@ -81,6 +83,7 @@ public class AnimalController implements AnimalControllerDocs {
                 return ResponseEntity.ok(resultados);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -90,6 +93,7 @@ public class AnimalController implements AnimalControllerDocs {
                 return ResponseEntity.created(location).body(criado);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PutMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -98,6 +102,7 @@ public class AnimalController implements AnimalControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PatchMapping(value = "/{nome}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -107,6 +112,7 @@ public class AnimalController implements AnimalControllerDocs {
                 return ResponseEntity.ok(animalAtualizado);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @DeleteMapping(value = "/{nome}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<?> deletarPorNome(@PathVariable(name = "nome") String nome) {

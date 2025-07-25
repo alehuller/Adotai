@@ -28,6 +28,7 @@ import br.com.alevhvm.adotai.common.docs.AdocaoControllerDocs;
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.adocao.service.AdocaoService;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +40,7 @@ public class AdocaoController implements AdocaoControllerDocs {
 
         private final AdocaoService adocaoService;
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
         public ResponseEntity<PagedModel<EntityModel<AdocaoDTO>>> listarAdocoes(
                         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -51,12 +53,14 @@ public class AdocaoController implements AdocaoControllerDocs {
                 return ResponseEntity.ok(adocaoService.findAll(pageable));
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<AdocaoDTO> acharAdocaoPorId(@PathVariable(value = "id") Long id) {
                 return ResponseEntity.ok(adocaoService.findById(id));
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -66,6 +70,7 @@ public class AdocaoController implements AdocaoControllerDocs {
                 return ResponseEntity.created(location).body(criada);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -74,6 +79,7 @@ public class AdocaoController implements AdocaoControllerDocs {
                 return ResponseEntity.ok(atualizado);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -83,6 +89,7 @@ public class AdocaoController implements AdocaoControllerDocs {
                 return ResponseEntity.ok(adocaoAtualizado);
         }
 
+        @SecurityRequirement(name = "bearerAuth")
         @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
