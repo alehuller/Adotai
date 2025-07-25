@@ -60,7 +60,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}/adocoes").hasRole("ONG")
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{nomeUsuario}/animais").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/v1/ongs").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/ongs/filtro").hasAnyRole("ONG", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/ongs/{nomeUsuario}").hasRole("ONG")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/ongs/{nomeUsuario}").hasRole("ADMIN")
