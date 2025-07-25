@@ -173,6 +173,8 @@ public class OngService {
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
 
+        cepService.preencherEndereco(ongUpdate.getEndereco());
+        
         entity.setNome(ongUpdate.getNome());
         entity.setNomeUsuario(ongUpdate.getNomeUsuario());
         entity.setFotoPerfil(ongUpdate.getFotoPerfil());
@@ -184,6 +186,7 @@ public class OngService {
         entity.setDescricao(ongUpdate.getDescricao());
         entity.setRede(ongUpdate.getRede());
 
+        ongValidacao.validarEnderecoPreenchido(ongUpdate.getEndereco());
         ongValidacao.validateUpdate(entity);
 
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
