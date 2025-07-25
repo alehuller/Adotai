@@ -66,7 +66,7 @@ public class UsuarioController implements UsuarioControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
-        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ONG')")
         @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<UsuarioDTO> acharUsuarioPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {

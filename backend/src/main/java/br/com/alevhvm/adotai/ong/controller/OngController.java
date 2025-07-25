@@ -69,7 +69,6 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(dto);
         }
 
-        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/nomeUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<OngDTO> acharOngPorNomeUsuario(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
@@ -94,7 +93,6 @@ public class OngController implements OngControllerDocs {
                 return ResponseEntity.ok(pagedModel);
         }
 
-        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
         @GetMapping(value = "/{nomeUsuario}/animais", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML, MediaType.APPLICATION_XML})
         public ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisDeUmaOng(
                         @PathVariable("nomeUsuario") String nomeUsuario,
