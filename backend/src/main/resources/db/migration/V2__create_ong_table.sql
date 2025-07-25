@@ -10,6 +10,6 @@ CREATE TABLE IF NOT EXISTS ong (
     foto_perfil VARCHAR(255),
     endereco TEXT NOT NULL,
     descricao TEXT NOT NULL,
-    site VARCHAR(255),
+    rede VARCHAR(255),
     role VARCHAR DEFAULT 0 NOT NULL
 );

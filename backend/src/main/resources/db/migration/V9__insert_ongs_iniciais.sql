@@ -10,7 +10,7 @@ INSERT INTO
         endereco,
         foto_perfil,
         descricao,
-        site,
+        rede,
         role
     )
 VALUES

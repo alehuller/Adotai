@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
-import br.com.alevhvm.adotai.common.vo.SiteVO;
+import br.com.alevhvm.adotai.common.vo.RedeVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder({ "nome", "nomeUsuario", "email", "endereco", "cell", "descricao", "responsavel", "site",
+@JsonPropertyOrder({ "nome", "nomeUsuario", "email", "endereco", "cell", "descricao", "responsavel", "rede",
         "fotoPerfil" })
 public class OngUpdateDTO extends RepresentationModel<OngUpdateDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -72,5 +72,5 @@ public class OngUpdateDTO extends RepresentationModel<OngUpdateDTO> implements S
     private String descricao;
 
     @Valid
-    private SiteVO site;
+    private RedeVO rede;
 }

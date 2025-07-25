@@ -1,7 +1,7 @@
 package br.com.alevhvm.adotai.ong.service;
 
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
-import br.com.alevhvm.adotai.common.vo.SiteVO;
+import br.com.alevhvm.adotai.common.vo.RedeVO;
 import br.com.alevhvm.adotai.auth.dto.LoginDTO;
 import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
@@ -182,7 +182,7 @@ public class OngService {
         entity.setCell(ongUpdate.getCell());
         entity.setResponsavel(ongUpdate.getResponsavel());
         entity.setDescricao(ongUpdate.getDescricao());
-        entity.setSite(ongUpdate.getSite());
+        entity.setRede(ongUpdate.getRede());
 
         ongValidacao.validateUpdate(entity);
 
@@ -232,29 +232,29 @@ public class OngService {
                             enderecoOriginal.setCep(enderecoAtualizado.getCep());
                     }
 
-                } else if (campo.equals("site") && valor instanceof Map<?, ?> valorMapSite) {
-                    SiteVO siteOriginal = ong.getSite();
-                    SiteVO siteAtualizado = mapper.convertValue(valor, SiteVO.class);
+                } else if (campo.equals("rede") && valor instanceof Map<?, ?> valorMapRede) {
+                    RedeVO redeOriginal = ong.getRede();
+                    RedeVO redeAtualizado = mapper.convertValue(valor, RedeVO.class);
 
-                    if (siteOriginal == null) {
-                        ong.setSite(siteAtualizado);
+                    if (redeOriginal == null) {
+                        ong.setRede(redeAtualizado);
                     } else {
-                        if (siteAtualizado.getSite() != null)
-                            siteOriginal.setSite(siteAtualizado.getSite());
-                        if (siteAtualizado.getInstagram() != null)
-                            siteOriginal.setInstagram(siteAtualizado.getInstagram());
-                        if (siteAtualizado.getFacebook() != null)
-                            siteOriginal.setFacebook(siteAtualizado.getFacebook());
-                        if (siteAtualizado.getTiktok() != null)
-                            siteOriginal.setTiktok(siteAtualizado.getTiktok());
-                        if (siteAtualizado.getYoutube() != null)
-                            siteOriginal.setYoutube(siteAtualizado.getYoutube());
-                        if (siteAtualizado.getWhatsapp() != null)
-                            siteOriginal.setWhatsapp(siteAtualizado.getWhatsapp());
-                        if (siteAtualizado.getX() != null)
-                            siteOriginal.setX(siteAtualizado.getX());
-                        if (siteAtualizado.getLinkedin() != null)
-                            siteOriginal.setLinkedin(siteAtualizado.getLinkedin());
+                        if (redeAtualizado.getSite() != null)
+                            redeOriginal.setSite(redeAtualizado.getSite());
+                        if (redeAtualizado.getInstagram() != null)
+                            redeOriginal.setInstagram(redeAtualizado.getInstagram());
+                        if (redeAtualizado.getFacebook() != null)
+                            redeOriginal.setFacebook(redeAtualizado.getFacebook());
+                        if (redeAtualizado.getTiktok() != null)
+                            redeOriginal.setTiktok(redeAtualizado.getTiktok());
+                        if (redeAtualizado.getYoutube() != null)
+                            redeOriginal.setYoutube(redeAtualizado.getYoutube());
+                        if (redeAtualizado.getWhatsapp() != null)
+                            redeOriginal.setWhatsapp(redeAtualizado.getWhatsapp());
+                        if (redeAtualizado.getX() != null)
+                            redeOriginal.setX(redeAtualizado.getX());
+                        if (redeAtualizado.getLinkedin() != null)
+                            redeOriginal.setLinkedin(redeAtualizado.getLinkedin());
                     }
                 } else {
                     ReflectionUtils.setField(field, ong, mapper.convertValue(valor, field.getType()));

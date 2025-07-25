@@ -10,7 +10,7 @@ import com.github.dozermapper.core.Mapping;
 
 import br.com.alevhvm.adotai.common.vo.CnpjVO;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
-import br.com.alevhvm.adotai.common.vo.SiteVO;
+import br.com.alevhvm.adotai.common.vo.RedeVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder({ "nome", "nomeUsuario", "email", "endereco", "cell", "descricao", "cnpj", "responsavel", "site",
+@JsonPropertyOrder({ "nome", "nomeUsuario", "email", "endereco", "cell", "descricao", "cnpj", "responsavel", "rede",
         "fotoPerfil" })
 public class OngDTO extends RepresentationModel<OngDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -77,5 +77,5 @@ public class OngDTO extends RepresentationModel<OngDTO> implements Serializable 
     private String descricao;
 
     @Valid
-    private SiteVO site;
+    private RedeVO rede;
 }

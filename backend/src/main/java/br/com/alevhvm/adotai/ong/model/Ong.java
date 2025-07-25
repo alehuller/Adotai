@@ -4,9 +4,9 @@ import br.com.alevhvm.adotai.common.model.PerfilBase;
 import jakarta.persistence.*;
 
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
-import br.com.alevhvm.adotai.common.vo.SiteVO;
+import br.com.alevhvm.adotai.common.vo.RedeVO;
 import br.com.alevhvm.adotai.ong.converter.EnderecoConverter;
-import br.com.alevhvm.adotai.ong.converter.SiteConverter;
+import br.com.alevhvm.adotai.ong.converter.RedeConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,6 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "ong")
-
 public class Ong extends PerfilBase {
 
     @Id
@@ -39,8 +38,8 @@ public class Ong extends PerfilBase {
     @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 
-    @Convert(converter = SiteConverter.class)
-    @Column(name = "site", nullable = true, columnDefinition = "TEXT")
-    private SiteVO site;
+    @Convert(converter = RedeConverter.class)
+    @Column(name = "rede", nullable = true, columnDefinition = "TEXT")
+    private RedeVO rede;
 
 }
