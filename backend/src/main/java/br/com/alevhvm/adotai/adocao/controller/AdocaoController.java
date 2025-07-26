@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,6 +55,7 @@ public class AdocaoController implements AdocaoControllerDocs {
         }
 
         @SecurityRequirement(name = "bearerAuth")
+        @PreAuthorize("@adocaoSecurity.podeVisualizar(#id, authentication) or hasRole('ADMIN')")
         @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<AdocaoDTO> acharAdocaoPorId(@PathVariable(value = "id") Long id) {
@@ -71,6 +73,7 @@ public class AdocaoController implements AdocaoControllerDocs {
         }
 
         @SecurityRequirement(name = "bearerAuth")
+        @PreAuthorize("@adocaoSecurity.ongDonaDaAdocao(#id, authentication)  or hasRole('ADMIN')")
         @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -80,6 +83,7 @@ public class AdocaoController implements AdocaoControllerDocs {
         }
 
         @SecurityRequirement(name = "bearerAuth")
+        @PreAuthorize("@adocaoSecurity.ongDonaDaAdocao(#id, authentication) or hasRole('ADMIN')")
         @PatchMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                                         MediaType.APPLICATION_XML })
@@ -90,6 +94,7 @@ public class AdocaoController implements AdocaoControllerDocs {
         }
 
         @SecurityRequirement(name = "bearerAuth")
+        @PreAuthorize("@adocaoSecurity.ongDonaDaAdocao(#id, authentication) or hasRole('ADMIN')")
         @DeleteMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                         MediaType.APPLICATION_XML })
         public ResponseEntity<?> deletarPorId(@PathVariable(name = "id") Long id) {
