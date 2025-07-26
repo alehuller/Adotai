@@ -92,4 +92,14 @@ public class CustomExceptionHandler {
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ValidacaoException.class)
+    public final ResponseEntity<ExceptionResponse> handleMultipleValidaptionException(ValidacaoException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getErros(), 
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
 }

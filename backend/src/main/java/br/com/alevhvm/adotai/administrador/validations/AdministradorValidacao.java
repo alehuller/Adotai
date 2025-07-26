@@ -3,9 +3,12 @@ package br.com.alevhvm.adotai.administrador.validations;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
+import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,35 +35,50 @@ public class AdministradorValidacao {
         if (admin == null) {
             throw new NullPointerException("Não há dados");
         }
+
+        List<String> erros = new ArrayList<>();
+
         if (existsAdministradorWithEmail(admin.getEmail().toLowerCase())) {
-            throw new IllegalStateException("E-mail já está em uso");
+            erros.add("E-mail já está em uso");
         }
         if (existsAdministradorWithNomeUsuario(admin.getNomeUsuario())) {
-            throw new IllegalStateException("Nome de Usuário já está em uso");
+            erros.add("Nome de Usuário já está em uso");
         }
         if (existsAdministradorWithCell(admin.getCell())) {
-            throw new IllegalStateException("Cell já está em uso");
+            erros.add("Cell já está em uso");
+        }
+
+        if (!erros.isEmpty()) {
+            throw new ValidacaoException(erros);
         }
     }
 
     public void validateUpdate(Administrador entity) {
+        List<String> erros = new ArrayList<>();
+
         if (existsAdministradorWithEmail(entity.getEmail().toLowerCase())) {
-            throw new IllegalStateException("E-mail já está em uso");
+            erros.add("E-mail já está em uso");
         }
         if (existsAdministradorWithNomeUsuario(entity.getNomeUsuario())) {
-            throw new IllegalStateException("Nome de Usuário já está em uso");
+            erros.add("Nome de Usuário já está em uso");
         }
         if (existsAdministradorWithCell(entity.getCell())) {
-            throw new IllegalStateException("Cell já está em uso");
+            erros.add("Cell já está em uso");
+        }
+
+        if (!erros.isEmpty()) {
+            throw new ValidacaoException(erros);
         }
     }
 
     public void validatePartialUpdate(String nomeUsuario, Map<String, Object> updates) {
+        List<String> erros = new ArrayList<>();
+
         if (updates.containsKey("email")) {
             String email = updates.get("email").toString().toLowerCase();
             Optional<Administrador> usuarioExistente = administradorRepository.findByEmail(email);
             if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                throw new IllegalStateException("E-mail já está em uso por outro administrador");
+                erros.add("E-mail já está em uso por outro administrador");
             }
         }
 
@@ -68,7 +86,7 @@ public class AdministradorValidacao {
             String nomeUsuario2 = updates.get("nomeUsuario").toString();
             Optional<Administrador> usuarioExistente = administradorRepository.findByNomeUsuario(nomeUsuario2);
             if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                throw new IllegalStateException("Nome de usuário já está em uso por outro administrador");
+                erros.add("Nome de usuário já está em uso por outro administrador");
             }
         }
 
@@ -76,8 +94,12 @@ public class AdministradorValidacao {
             String cell = updates.get("cell").toString();
             Optional<Administrador> usuarioExistente = administradorRepository.findByCell(cell);
             if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                throw new IllegalStateException("Celular já está em uso por outro administrador");
+                erros.add("Celular já está em uso por outro administrador");
             }
+        }
+
+        if (!erros.isEmpty()) {
+            throw new ValidacaoException(erros);
         }
     }
 }
