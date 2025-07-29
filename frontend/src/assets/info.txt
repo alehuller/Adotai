@@ -1,0 +1,1 @@
+Diretório para os recursos processados (imagens, fonts, etc.)

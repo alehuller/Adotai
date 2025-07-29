@@ -1,0 +1,1 @@
+Diretório para arquivos estáticos (acessados via "/")

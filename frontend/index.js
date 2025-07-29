@@ -1,1 +1,0 @@
-// Arquivo inicial do frontend
