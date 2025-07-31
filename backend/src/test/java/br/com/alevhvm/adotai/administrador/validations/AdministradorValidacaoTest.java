@@ -1,6 +1,7 @@
 package br.com.alevhvm.adotai.administrador.validations;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -109,6 +110,22 @@ class AdministradorValidacaoTest {
     }
 
     @Test
+    void naoDeveLancarExcecaoQuandoEmailNaoEstaEmUsoParaValidate() {
+        when(administradorRepository.findByEmail(any())).thenReturn(Optional.empty());
+
+        assertDoesNotThrow(() -> validacao.validate(adminDTO));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoAdminEstiverNuloNoValidate() {
+        NullPointerException ex = assertThrows(NullPointerException.class, () -> {
+            validacao.validate(null);
+        });
+
+        assertEquals("Não há dados", ex.getMessage());
+    }
+
+    @Test
     void deveLancarExcecaoQuandoEmailJaExisteParaValidateUpdate() {
         when(administradorRepository.findByEmail("testeadmin@email.com"))
                 .thenReturn(Optional.of(new Administrador()));
@@ -149,6 +166,13 @@ class AdministradorValidacaoTest {
         when(administradorRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(administradorRepository.findByNomeUsuario(any())).thenReturn(Optional.empty());
         when(administradorRepository.findByCell(any())).thenReturn(Optional.empty());
+
+        assertDoesNotThrow(() -> validacao.validateUpdate(admin));
+    }
+
+    @Test
+    void naoDeveLancarExcecaoQuandoEmailNaoEstaEmUsoParaValidadeUpdate() {
+        when(administradorRepository.findByEmail(any())).thenReturn(Optional.empty());
 
         assertDoesNotThrow(() -> validacao.validateUpdate(admin));
     }
