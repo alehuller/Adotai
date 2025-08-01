@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private static final MediaType MEDIA_TYPE_APPLICATION_YML = MediaType.valueOf("application/yaml");
 
+    //colocar o dominio do front para este estar liberado a receber a nossa api
     @Value("${cors.originPatterns:default}")
     private String corsOriginPatterns = "";
 
@@ -35,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "Authorization",
                         "Accept",
                         "X-Requested-With")
-                .allowedOrigins(allowedOrigins)
+                .allowedOriginPatterns(allowedOrigins)
                 .allowCredentials(true);
     }
 
