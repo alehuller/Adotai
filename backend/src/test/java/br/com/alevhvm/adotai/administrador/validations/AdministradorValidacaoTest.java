@@ -50,6 +50,15 @@ class AdministradorValidacaoTest {
     }
 
     @Test
+    void deveLancarExcecaoQuandoAdminEstiverNuloNoValidate() {
+        NullPointerException ex = assertThrows(NullPointerException.class, () -> {
+            validacao.validate(null);
+        });
+
+        assertEquals("Não há dados", ex.getMessage());
+    }
+
+    @Test
     void deveLancarExcecaoQuandoEmailJaExisteParaValidate() {
         when(administradorRepository.findByEmail("teste@email.com"))
                 .thenReturn(Optional.of(new Administrador()));
@@ -114,15 +123,6 @@ class AdministradorValidacaoTest {
         when(administradorRepository.findByEmail(any())).thenReturn(Optional.empty());
 
         assertDoesNotThrow(() -> validacao.validate(adminDTO));
-    }
-
-    @Test
-    void deveLancarExcecaoQuandoAdminEstiverNuloNoValidate() {
-        NullPointerException ex = assertThrows(NullPointerException.class, () -> {
-            validacao.validate(null);
-        });
-
-        assertEquals("Não há dados", ex.getMessage());
     }
 
     @Test
