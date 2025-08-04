@@ -16,64 +16,80 @@ public class DocsControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    void deveConterEndpointDeAdministradorNaDocumentacao() throws Exception {
-        String openApiJson = mockMvc.perform(get("/v3/api-docs"))
+    private String obterJsonDocumentacao() throws Exception {
+        return mockMvc.perform(get("/v3/api-docs"))
             .andReturn()
             .getResponse()
             .getContentAsString();
-
-        assertThat(openApiJson).contains("/api/v1/administradores");
     }
 
     @Test
-    void deveConterEndpointDeAdocaoNaDocumentacao() throws Exception {
-        String openApiJson = mockMvc.perform(get("/v3/api-docs"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+    void deveConterEndpointsDeAdministradorNaDocumentacao() throws Exception {
+        String json = obterJsonDocumentacao();
 
-        assertThat(openApiJson).contains("/api/v1/adocoes");
+        assertThat(json).contains("/api/v1/administradores");
+        assertThat(json).contains("/api/v1/administradores/{id}");
+        assertThat(json).contains("/api/v1/administradores/nomeUsuario/{nomeUsuario}");
+        assertThat(json).contains("/api/v1/administradores/{nomeUsuario}");
     }
 
     @Test
-    void deveConterEndpointDeAnimalNaDocumentacao() throws Exception {
-        String openApiJson = mockMvc.perform(get("/v3/api-docs"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+    void deveConterEndpointsDeAdocaoNaDocumentacao() throws Exception {
+        String json = obterJsonDocumentacao();
 
-        assertThat(openApiJson).contains("/api/v1/animais");
+        assertThat(json).contains("/api/v1/adocoes");
+        assertThat(json).contains("/api/v1/adocoes/{id}");
     }
 
     @Test
-    void deveConterEndpointDeAuthNaDocumentacao() throws Exception {
-        String openApiJson = mockMvc.perform(get("/v3/api-docs"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+    void deveConterEndpointsDeAnimalNaDocumentacao() throws Exception {
+        String json = obterJsonDocumentacao();
 
-        assertThat(openApiJson).contains("/auth");
+        assertThat(json).contains("/api/v1/animais");
+        assertThat(json).contains("/api/v1/animais/{id}");
+        assertThat(json).contains("/api/v1/animais/nome/{nome}");
+        assertThat(json).contains("/api/v1/animais/filtro");
+        assertThat(json).contains("/api/v1/animais/{nome}");
     }
 
     @Test
-    void deveConterEndpointDeOngNaDocumentacao() throws Exception {
-        String openApiJson = mockMvc.perform(get("/v3/api-docs"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+    void deveConterEndpointsDeAuthNaDocumentacao() throws Exception {
+        String json = obterJsonDocumentacao();
 
-        assertThat(openApiJson).contains("/api/v1/ongs");
+        assertThat(json).contains("/auth");
+        assertThat(json).contains("/auth/user/login");
+        assertThat(json).contains("/auth/user/register");
+        assertThat(json).contains("/auth/ong/login");
+        assertThat(json).contains("/auth/ong/register");
+        assertThat(json).contains("/auth/admin/login");
+        assertThat(json).contains("/auth/admin/register");
+        assertThat(json).contains("/auth/signout");
     }
 
     @Test
-    void deveConterEndpointDeUsuarioNaDocumentacao() throws Exception {
-        String openApiJson = mockMvc.perform(get("/v3/api-docs"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+    void deveConterEndpointsDeOngNaDocumentacao() throws Exception {
+        String json = obterJsonDocumentacao();
 
-        assertThat(openApiJson).contains("/api/v1/usuarios");
+        assertThat(json).contains("/api/v1/ongs");
+        assertThat(json).contains("/api/v1/ongs/{id}");
+        assertThat(json).contains("/api/v1/ongs/nomeUsuario/{nomeUsuario}");
+        assertThat(json).contains("/api/v1/ongs/{id}/adocoes");
+        assertThat(json).contains("/api/v1/ongs/{nomeUsuario}/animais");
+        assertThat(json).contains("/api/v1/ongs/{nomeUsuario}");
+        assertThat(json).contains("/api/v1/ongs/filtro");
+    }
+
+    @Test
+    void deveConterEndpointsDeUsuarioNaDocumentacao() throws Exception {
+        String json = obterJsonDocumentacao();
+
+        assertThat(json).contains("/api/v1/usuarios");
+        assertThat(json).contains("/api/v1/usuarios/{id}");
+        assertThat(json).contains("/api/v1/usuarios/nomeUsuario/{nomeUsuario}");
+        assertThat(json).contains("/api/v1/usuarios/{nomeUsuario}/adocoes");
+        assertThat(json).contains("/api/v1/usuarios/{nomeUsuario}/favoritos");
+        assertThat(json).contains("/api/v1/usuarios/favoritar/{nomeUsuario}/{animalId}");
+        assertThat(json).contains("/api/v1/usuarios/{nomeUsuario}");
     }
 
 }
