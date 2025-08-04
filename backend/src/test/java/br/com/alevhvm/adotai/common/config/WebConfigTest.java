@@ -1,4 +1,4 @@
-package br.com.alevhvm.adotai.commom.config;
+package br.com.alevhvm.adotai.common.config;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +63,8 @@ public class WebConfigTest {
     @Test
     void deveRetornarYmlQuandoAcceptForYml() throws Exception {
         mockMvc.perform(get("/api/v1/animais")
-                .accept("application/x-yaml"))
+                .accept(MediaType.APPLICATION_YML))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/x-yaml"));
+                .andExpect(content().contentType(MediaType.APPLICATION_YML));
     }
 }

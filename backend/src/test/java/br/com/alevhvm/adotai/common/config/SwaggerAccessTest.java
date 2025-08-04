@@ -1,4 +1,4 @@
-package br.com.alevhvm.adotai.commom.config;
+package br.com.alevhvm.adotai.common.config;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

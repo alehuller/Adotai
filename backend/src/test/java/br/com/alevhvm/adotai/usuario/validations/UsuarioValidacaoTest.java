@@ -1,6 +1,5 @@
 package br.com.alevhvm.adotai.usuario.validations;
 
-import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import br.com.alevhvm.adotai.common.vo.CpfVO;
