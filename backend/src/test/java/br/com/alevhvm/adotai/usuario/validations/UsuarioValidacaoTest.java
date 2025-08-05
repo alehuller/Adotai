@@ -1,5 +1,6 @@
 package br.com.alevhvm.adotai.usuario.validations;
 
+import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import br.com.alevhvm.adotai.common.vo.CpfVO;
@@ -12,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -176,5 +179,112 @@ public class UsuarioValidacaoTest {
         assertTrue(ex.getErros().contains("Nome de Usuário já está em uso"));
     }
 
+    @Test
+    void naoDeveLancarExcecaoQuandoTodosDadosSaoValidosParaValidateUpdate() {
+        when(usuarioRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(usuarioRepository.findByNomeUsuario(any())).thenReturn(Optional.empty());
+        when(usuarioRepository.findByCell(any())).thenReturn(Optional.empty());
 
+        assertDoesNotThrow(() -> validacao.validateUpdate(usuario));
+    }
+
+    @Test
+    void naoDeveLancarExcecaoQuandoEmailNaoEstaEmUsoParaValidadeUpdate() {
+        when(usuarioRepository.findByEmail(any())).thenReturn(Optional.empty());
+
+        assertDoesNotThrow(() -> validacao.validateUpdate(usuario));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoEmailJaExisteParaPartialUpdate() {
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setNomeUsuario("outroUsuario");
+
+        when(usuarioRepository.findByEmail("teste@email.com"))
+                .thenReturn(Optional.of(usuarioExistente));
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("email", "teste@email.com");
+
+        ValidacaoException ex = assertThrows(ValidacaoException.class, () -> {
+            validacao.validatePartialUpdate("usuarioteste", updates);
+        });
+
+        assertTrue(ex.getErros().contains("E-mail já está em uso por outro usuário"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNomeUsuarioJaExisteParaPartialUpdate() {
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setNomeUsuario("testeExistente");
+
+        when(usuarioRepository.findByNomeUsuario("testeExistente"))
+                .thenReturn(Optional.of(usuarioExistente));
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "testeExistente");
+
+        ValidacaoException ex = assertThrows(ValidacaoException.class, () -> {
+            validacao.validatePartialUpdate("usuarioteste", updates);
+        });
+
+        assertTrue(ex.getErros().contains("Nome de usuário já está em uso por outro usuário"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoCelularJaExisteParaPartialUpdate() {
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setNomeUsuario("testeExistente");
+
+        when(usuarioRepository.findByCell("11333333333"))
+                .thenReturn(Optional.of(usuarioExistente));
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("cell", "11333333333");
+
+        ValidacaoException ex = assertThrows(ValidacaoException.class, () -> {
+            validacao.validatePartialUpdate("usuarioteste", updates);
+        });
+
+        assertTrue(ex.getErros().contains("Celular já está em uso por outro usuário"));
+    }
+
+    @Test
+    void naoDeveLancarExcecaoQuandoUsuarioAtualizarNomeComProprioNome() {
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setNomeUsuario("ProprioNome");
+
+        when(usuarioRepository.findByNomeUsuario("ProprioNome"))
+                .thenReturn(Optional.of(usuarioExistente));
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "ProprioNome");
+
+        assertDoesNotThrow(() -> validacao.validatePartialUpdate("ProprioNome", updates));
+    }
+
+    @Test
+    void naoDeveLancarExcecaoQuandoTodosDadosSaoValidosParaPartialUpdate() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("email", "emailnaousado@email.com");
+        updates.put("nomeUsuario", "NomeNaoUsado");
+        updates.put("cell", "11777777777");
+
+        when(usuarioRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(usuarioRepository.findByNomeUsuario(any())).thenReturn(Optional.empty());
+        when(usuarioRepository.findByCell(any())).thenReturn(Optional.empty());
+
+        assertDoesNotThrow(() -> validacao.validatePartialUpdate("usuarioteste", updates));
+    }
+
+    @Test
+    void naoDeveValidarCampoNaoPresenteNoPartialUpdate() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "NovoNome");
+
+        when(usuarioRepository.findByNomeUsuario("NovoNome"))
+                .thenReturn(Optional.empty());
+
+        assertDoesNotThrow(() -> validacao.validatePartialUpdate("usuarioteste", updates));
+    }
 }
