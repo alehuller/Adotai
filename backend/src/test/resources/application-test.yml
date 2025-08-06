@@ -6,16 +6,8 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: true
-  h2:
-    console:
-      enabled: true
-  flyway:
-    enabled: false
-  sql:
-    init:
-      mode: always
 
 logging:
   level:
