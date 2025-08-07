@@ -259,9 +259,9 @@ public class UsuarioService {
         boolean isFavorito = usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal(nomeUsuario, animalId);
 
         if (isFavorito) {
-            usuarioRepository.removerFavoritoNativo(nomeUsuario, animalId);
+            usuarioRepository.removerAnimalDosFavoritos(nomeUsuario, animalId);
         } else {
-            usuarioRepository.adicionarFavoritoNativo(nomeUsuario, animalId);
+            usuarioRepository.adicionarAnimalAosFavoritos(nomeUsuario, animalId);
         }
 
         return !isFavorito;

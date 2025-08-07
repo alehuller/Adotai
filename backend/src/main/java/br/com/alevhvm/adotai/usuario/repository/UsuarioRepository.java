@@ -37,10 +37,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM usuario_animais_favoritos WHERE usuario_id = (SELECT id FROM usuario WHERE nome_usuario = ?1) AND animal_id = ?2", nativeQuery = true)
-    void removerFavoritoNativo(String nomeUsuario, Long animalId);
+    void removerAnimalDosFavoritos(String nomeUsuario, Long animalId);
 
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO usuario_animais_favoritos (usuario_id, animal_id) VALUES ((SELECT id FROM usuario WHERE nome_usuario = ?1), ?2)", nativeQuery = true)
-    void adicionarFavoritoNativo(String nomeUsuario, Long animalId);
+    void adicionarAnimalAosFavoritos(String nomeUsuario, Long animalId);
 }
