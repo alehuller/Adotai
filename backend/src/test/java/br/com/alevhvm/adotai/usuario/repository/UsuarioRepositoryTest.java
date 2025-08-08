@@ -38,13 +38,13 @@ public class UsuarioRepositoryTest {
     @Autowired
     OngRepository ongRepository;
 
-    private final Usuario usuario = new Usuario();
-    private final Animal cachorro = new Animal();
-    private final Animal gato = new Animal();
-    private final Ong ong = new Ong();
-    private final RedeVO redeVO = new RedeVO();
-    private Long idCachorro;
-    private Long idGato;
+    final Usuario usuario = new Usuario();
+    final Animal cachorro = new Animal();
+    final Animal gato = new Animal();
+    final Ong ong = new Ong();
+    final RedeVO redeVO = new RedeVO();
+    Long idCachorro;
+    Long idGato;
 
 
     @BeforeEach
