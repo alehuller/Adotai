@@ -89,6 +89,7 @@ public class UsuarioRepositoryTest {
         cachorro.setPorte("Grande");
         cachorro.setSexo("Fêmea");
         cachorro.setStatus(StatusAnimal.DISPONIVEL);
+        cachorro.setFoto("foto.png");
         cachorro.setOng(ong);
         idCachorro = animalRepository.save(cachorro).getIdAnimal();
 
@@ -99,6 +100,7 @@ public class UsuarioRepositoryTest {
         gato.setPorte("Pequeno");
         gato.setSexo("Macho");
         gato.setStatus(StatusAnimal.INDISPONIVEL);
+        gato.setFoto("foto.png");
         gato.setOng(ong);
         idGato = animalRepository.save(gato).getIdAnimal();
     }
