@@ -1,6 +1,7 @@
 package br.com.alevhvm.adotai.ong.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,11 +12,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import br.com.alevhvm.adotai.auth.enums.Roles;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.RedeVO;
+import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
 import br.com.alevhvm.adotai.ong.model.Ong;
 
 @DataJpaTest
@@ -150,11 +156,59 @@ class OngRepositoryTest {
     }
 
     @Test
-    void deveExcluirOPngPorNomeUsuario() {
+    void deveExcluirOngPorNomeUsuario() {
         ongRepository.deleteByNomeUsuario("OngTesteNome");
 
         Optional<Ong> resultado = ongRepository.findByNomeUsuario("OngTesteNome");
 
         assertTrue(resultado.isEmpty());
+    }
+
+    @Test
+    void deveRetornarExcluirOngPorNomeUsuario() {
+        ongRepository.deleteByNomeUsuario("OngTesteNome");
+
+        Optional<Ong> resultado = ongRepository.findByNomeUsuario("OngTesteNome");
+
+        assertTrue(resultado.isEmpty());
+    }
+
+    @Test
+    void deveEncontrarOngQuandoExistirPeloNomeEnviadoNoFiltro() {
+        OngFiltroDTO ongFiltroDTO = new OngFiltroDTO();
+        ongFiltroDTO.setNome("OngTeste");
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
+
+        Page<Ong> resultado = ongRepository.filtrarOngsNativo(ongFiltroDTO, pageable);
+
+        assertFalse(resultado.isEmpty());
+        assertEquals("ongteste@email.com", resultado.getContent().get(0).getEmail());
+    }
+
+    @Test
+    void deveEncontrarOngQuandoExistirPeloNomeEnviadoMesmoMinusculoNoFiltro() {
+        OngFiltroDTO ongFiltroDTO = new OngFiltroDTO();
+        ongFiltroDTO.setNome("ongteste");
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
+
+        Page<Ong> resultado = ongRepository.filtrarOngsNativo(ongFiltroDTO, pageable);
+
+        assertFalse(resultado.isEmpty());
+        assertEquals("ongteste@email.com", resultado.getContent().get(0).getEmail());
+    }
+
+    @Test
+    void deveRetornarVazioQuandoNaoEncontrarOngPeloNomeEnviadoNoFiltro() {
+        OngFiltroDTO ongFiltroDTO = new OngFiltroDTO();
+        ongFiltroDTO.setNome("OngTesteErrado");
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
+        
+        Page<Ong> resultado = ongRepository.filtrarOngsNativo(ongFiltroDTO, pageable);
+
+        assertTrue(resultado.isEmpty());
+        assertEquals(0, resultado.getTotalElements());
     }
 }
