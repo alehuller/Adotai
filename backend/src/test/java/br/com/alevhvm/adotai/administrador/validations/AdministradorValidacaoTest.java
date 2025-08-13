@@ -71,6 +71,20 @@ class AdministradorValidacaoTest {
     }
 
     @Test
+    void deveLancarExcecaoQuandoEmailJaExisteMesmoComMaiusculasParaValidate() {
+        adminDTO.setEmail("Teste@EMAIL.Com");
+
+        when(administradorRepository.findByEmail("teste@email.com"))
+                .thenReturn(Optional.of(new Administrador()));
+
+        ValidacaoException ex = assertThrows(ValidacaoException.class, () -> {
+            validacao.validate(adminDTO);
+        });
+
+        assertTrue(ex.getErros().contains("E-mail já está em uso"));
+    }
+
+    @Test
     void deveLancarExcecaoQuandoNomeUsuarioJaExisteParaValidate() {
         when(administradorRepository.findByNomeUsuario("usuario123"))
                 .thenReturn(Optional.of(new Administrador()));
