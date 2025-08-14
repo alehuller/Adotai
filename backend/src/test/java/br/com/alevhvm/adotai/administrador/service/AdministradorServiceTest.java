@@ -9,13 +9,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,15 +37,25 @@ import org.springframework.hateoas.PagedModel.PageMetadata;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
 import br.com.alevhvm.adotai.administrador.validations.AdministradorValidacao;
+import br.com.alevhvm.adotai.auth.dto.LoginDTO;
+import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.auth.enums.Roles;
+import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
+import br.com.alevhvm.adotai.auth.service.TokenService;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Validator;
 
 @ExtendWith(MockitoExtension.class)
 public class AdministradorServiceTest {
@@ -57,10 +72,20 @@ public class AdministradorServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private Validator validator;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
+
+    @Mock
+    private TokenService tokenService;
+
     @InjectMocks
     private AdministradorService administradorService;
 
     private AdministradorDTO administradorDTO;
+    private AdministradorDTO adminDiferente;
     private Administrador administradorEntity;
     private List<String> erros;
 
@@ -84,6 +109,14 @@ public class AdministradorServiceTest {
         administradorEntity.setCell("(11) 94345-9969");
         administradorEntity.setFotoPerfil("teste foto");
         administradorEntity.setRole(Roles.ADMIN);
+
+        adminDiferente = new AdministradorDTO();
+        adminDiferente.setNome("AdmNomeDiferente");
+        adminDiferente.setNomeUsuario("AdmNomeDiferente");
+        adminDiferente.setFotoPerfil("FotoDiferente");
+        adminDiferente.setEmail("admdiferente@email.com");
+        adminDiferente.setSenha("senhaDiferente");
+        adminDiferente.setCell("(11) 95555-5555");
 
         erros = new ArrayList<>();
     }
@@ -226,5 +259,183 @@ public class AdministradorServiceTest {
 
         assertNotNull(resultado);
         assertTrue(resultado.getContent().isEmpty());
+    }
+
+    @Test
+    void deveRetornarAdministradorPeloNomeUsuarioProcuradoComSucesso() {
+        when(administradorRepository.findByNomeUsuario("AdmTeste")).thenReturn(Optional.of(administradorEntity));
+
+        //O método converte a entitidade para dto, isto é apenas visual
+        /*AdministradorDTO dtoEsperado = DozerMapper.parseObject(administradorEntity, AdministradorDTO.class);
+        dtoEsperado.add(Link.of("http://localhost/api/v1/administradores/nomeUsuario/" + administradorEntity.getNomeUsuario()).withSelfRel()); */
+
+        AdministradorDTO resultado = administradorService.findByNomeUsuario("AdmTeste");
+
+        assertNotNull(resultado);
+        assertEquals("emailteste@teste.com", resultado.getEmail());
+        assertTrue(resultado.getLinks().hasLink("self"));
+        assertTrue(resultado.getRequiredLink("self").getHref().endsWith("/api/v1/administradores/nomeUsuario/" + administradorEntity.getNomeUsuario()));
+
+        verify(administradorRepository, times(1)).findByNomeUsuario("AdmTeste");
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdministradorPorNomeUsuarioProcurado() {
+        when(administradorRepository.findByNomeUsuario("AdmTesteErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            administradorService.findByNomeUsuario("AdmTesteErrado");
+        });
+
+        assertEquals("Usuário não encontrado.", ex.getMessage());
+    }
+
+    @Test
+    void deveRetornarAdministradorPeloIdProcuradoComSucesso() {
+        when(administradorRepository.findById(1L)).thenReturn(Optional.of(administradorEntity));
+
+        //O método converte a entitidade para dto, isto é apenas visual
+        /*AdministradorDTO dtoEsperado = DozerMapper.parseObject(administradorEntity, AdministradorDTO.class);
+        dtoEsperado.add(Link.of("http://localhost/api/v1/administradores/id/" + administradorEntity.getIdAdministrador()).withSelfRel()); */
+
+        AdministradorDTO resultado = administradorService.findById(1L);
+
+        assertNotNull(resultado);
+        assertEquals("emailteste@teste.com", resultado.getEmail());
+        assertTrue(resultado.getLinks().hasLink("self"));
+        assertTrue(resultado.getRequiredLink("self").getHref().endsWith("/api/v1/administradores/" + administradorEntity.getIdAdministrador()));
+
+        verify(administradorRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdministradorPorIdProcurado() {
+        when(administradorRepository.findById(2L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            administradorService.findById(2L);
+        });
+
+        assertEquals("Administrador não encontrado.", ex.getMessage());
+    }
+
+    @Test
+    void deveAtualizarAdministradorInteiroComSucesso() {
+        when(administradorRepository.findByNomeUsuario("AdmTeste")).thenReturn(Optional.of(administradorEntity));
+        when(passwordEncoder.encode(adminDiferente.getSenha())).thenReturn("senhaCriptograda");
+        when(administradorRepository.save(any(Administrador.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        AdministradorDTO resultado = administradorService.update(adminDiferente, "AdmTeste");
+
+        assertNotNull(resultado);
+        assertEquals("AdmNomeDiferente", resultado.getNomeUsuario());
+        assertTrue(resultado.getLinks().hasLink("self"));
+
+        verify(administradorRepository).findByNomeUsuario("AdmTeste");
+        verify(administradorValidacao).validateUpdate(any(Administrador.class));
+        verify(administradorRepository).save(any(Administrador.class));
+        verify(passwordEncoder).encode(adminDiferente.getSenha());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdministradorPorNomeUsuarioNoUpdate() {
+        when(administradorRepository.findByNomeUsuario("AdmTesteErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            administradorService.update(adminDiferente, "AdmTesteErrado");
+        });
+
+        assertEquals("Administrador não encontrado.", ex.getMessage());
+    }
+
+    @Test
+    void deveAtualizarAdministradorPartialComSucesso() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "NovoNome");
+        updates.put("email", "novoemail@teste.com");
+
+        when(administradorRepository.findByNomeUsuario("AdmTeste")).thenReturn(Optional.of(administradorEntity));
+
+        doNothing().when(administradorValidacao).validatePartialUpdate("AdmTeste", updates);
+        when(administradorRepository.save(any(Administrador.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(validator.validate(any(AdministradorDTO.class))).thenReturn(Collections.emptySet());
+
+        AdministradorDTO resultado = administradorService.partialUpdate("AdmTeste", updates);
+
+        assertNotNull(resultado);
+        assertEquals("NovoNome", resultado.getNomeUsuario());
+        assertEquals("novoemail@teste.com", resultado.getEmail());
+        assertTrue(resultado.getLinks().hasLink("self"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdministradorNoPartialUpdate() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "NomeUsuarioNovo");
+
+        when(administradorRepository.findByNomeUsuario("AdmTesteErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            administradorService.partialUpdate("AdmTesteErrado", updates);
+        });
+
+        assertEquals("Usuário não encontrado.", ex.getMessage());
+    }
+
+    @Test
+    void deveLogarAdministradorComSucesso() {
+        LoginDTO loginDTO = new LoginDTO("emailteste@teste.com", "senha123");
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.identifier(), loginDTO.password());
+
+        Authentication auth = mock(Authentication.class);
+        LoginIdentityView principal = mock(LoginIdentityView.class);
+        when(auth.getPrincipal()).thenReturn(principal);
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
+
+        when(tokenService.generateToken(principal)).thenReturn("token123");
+
+        TokenDTO resultado = administradorService.logar(loginDTO);
+
+        assertNotNull(resultado);
+        assertEquals("token123", resultado.accessToken());
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(tokenService).generateToken(principal);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoCredenciasInvalidas() {
+        LoginDTO loginDTO = new LoginDTO("emailteste@teste.com", "senhaErrada");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(new BadCredentialsException("Credenciais inválidas"));
+
+        assertThrows(BadCredentialsException.class, () -> {
+            administradorService.logar(loginDTO);
+        });
+
+        verify(authenticationManager).authenticate((any(UsernamePasswordAuthenticationToken.class)));
+        verify(tokenService, never()).generateToken(any());
+    }
+
+    @Test
+    void deveDeletarAdministradorComSucesso() {
+        when(administradorRepository.findByNomeUsuario("AdmTeste")).thenReturn(Optional.of(administradorEntity));
+
+        administradorService.delete("AdmTeste");
+
+        verify(administradorRepository).findByNomeUsuario("AdmTeste");
+        verify(administradorRepository).delete(administradorEntity);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdministradorNoDelete() {
+        when(administradorRepository.findByNomeUsuario("AdmTesteErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            administradorService.delete("AdmTesteErrado");
+        });
+
+        assertEquals("Administrador não encontrado", ex.getMessage());
     }
 }
