@@ -2,11 +2,15 @@ package br.com.alevhvm.adotai.adocao.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +19,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.PagedModel.PageMetadata;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
@@ -24,11 +37,13 @@ import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
 import br.com.alevhvm.adotai.animal.model.Animal;
 import br.com.alevhvm.adotai.animal.repository.AnimalRepository;
 import br.com.alevhvm.adotai.auth.enums.Roles;
+import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.RedeVO;
 import br.com.alevhvm.adotai.ong.model.Ong;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class AdocaoServiceTest {
@@ -41,6 +56,9 @@ public class AdocaoServiceTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private PagedResourcesAssembler<AdocaoDTO> assembler;
 
     @InjectMocks
     private AdocaoService adocaoService;
@@ -130,5 +148,80 @@ public class AdocaoServiceTest {
         assertEquals(LocalDate.parse("2024-07-11"), resultado.getDataAdocao());
         assertEquals("Garfield", resultado.getNomeAnimal());
         verify(adocaoRepository).save(any(Adocao.class));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoAdocaoEstiverNulaNaCriacao() {
+        AdocaoDTO adocaoNula = null;
+        
+        assertThrows(NullPointerException.class, () -> {
+            adocaoService.create(adocaoNula);
+        });
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAnimalNaBuscaPeloMesmoNaCriacao() {
+        adocaoDTO.setIdAnimal(2L);
+        when(animalRepository.findById(adocaoDTO.getIdAnimal())).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.create(adocaoDTO);
+        });
+       
+        assertEquals("Animal não encontrado", ex.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarUsuarioNaBuscaPeloMesmoNaCriacao() {
+        adocaoDTO.setIdUsuario(2L);
+        when(animalRepository.findById(adocaoDTO.getIdAnimal())).thenReturn(Optional.of(animal));
+        when(usuarioRepository.findById(adocaoDTO.getIdUsuario())).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.create(adocaoDTO);
+        });
+
+        assertEquals("Usuário não encontrado", ex.getMessage());
+    }
+
+    @Test
+    void deveRetornarPaginaDeAdocoesComSucesso() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Adocao> adocoes = List.of(adocaoEntity);
+        Page<Adocao> adocaoPage = new PageImpl<>(adocoes, pageable, adocoes.size());
+
+        when(adocaoRepository.findAll(pageable)).thenReturn(adocaoPage);
+
+        AdocaoDTO dto = DozerMapper.parseObject(adocaoEntity, AdocaoDTO.class);
+        List<AdocaoDTO> dtoList = List.of(dto);
+        Page<AdocaoDTO> dtoPage = new PageImpl<>(dtoList, pageable, dtoList.size());
+
+        PageMetadata metadata = new PageMetadata(10, 0, 1);
+        PagedModel<EntityModel<AdocaoDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<AdocaoDTO>> resultado = adocaoService.findAll(pageable);
+
+        assertNotNull(resultado);
+        verify(adocaoRepository).findAll(pageable);
+        verify(assembler).toModel(any(Page.class), any(Link.class));
+    }
+
+    @Test
+    void deveRetornarPaginaVaziaQuandoNaoExistirAdocao() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Adocao> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(adocaoRepository.findAll(pageable)).thenReturn(emptyPage);
+
+        PageMetadata metadata = new PageMetadata(10, 0, 0);
+        PagedModel<EntityModel<AdocaoDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<AdocaoDTO>> resultado = adocaoService.findAll(pageable);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.getContent().isEmpty());
     }
 }
