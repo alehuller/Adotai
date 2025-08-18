@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,9 +44,11 @@ import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.RedeVO;
 import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Validator;
 
 @ExtendWith(MockitoExtension.class)
 public class AdocaoServiceTest {
@@ -58,17 +63,23 @@ public class AdocaoServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
+    private OngRepository ongRepository;
+
+    @Mock
     private PagedResourcesAssembler<AdocaoDTO> assembler;
+
+    @Mock
+    private Validator validator;
 
     @InjectMocks
     private AdocaoService adocaoService;
 
     private AdocaoDTO adocaoDTO;
+    private AdocaoDTO adocaoDiferente;
     private Adocao adocaoEntity;
     private Usuario usuario;
     private Ong ong;
     private Animal animal;
-
 
     private RedeVO redeVO;
 
@@ -76,6 +87,7 @@ public class AdocaoServiceTest {
     @BeforeEach
     void setUp() {
         usuario = new Usuario();
+        usuario.setIdUsuario(1L);
         usuario.setEmail("teste@email.com");
         usuario.setNome("UserTeste");
         usuario.setNomeUsuario("UserTesteNome");
@@ -89,6 +101,7 @@ public class AdocaoServiceTest {
         redeVO.setFacebook("https://teste.facebook.com/adotai");
 
         ong = new Ong();
+        ong.setIdOng(1L);
         ong.setNome("Amigos dos Animais");
         ong.setNomeUsuario("amigosanimais");
         ong.setEmail("contato@amigosanimais.org");
@@ -111,6 +124,7 @@ public class AdocaoServiceTest {
         ong.setRede(redeVO);
 
         animal = new Animal();
+        animal.setIdAnimal(1L);
         animal.setNome("Garfield");
         animal.setEspecie("Gato");
         animal.setRaca("Persa");
@@ -134,6 +148,12 @@ public class AdocaoServiceTest {
         adocaoEntity.setStatus(StatusAdocao.APROVADA);
         adocaoEntity.setAnimal(animal);
         adocaoEntity.setUsuario(usuario);
+
+        adocaoDiferente = new AdocaoDTO();
+        adocaoDiferente.setDataAdocao(LocalDate.parse("2024-07-10"));
+        adocaoDiferente.setStatus(StatusAdocao.CANCELADA);
+        adocaoDiferente.setIdAnimal(1L);;
+        adocaoDiferente.setIdUsuario(1L);
     }
 
     @Test
@@ -223,5 +243,165 @@ public class AdocaoServiceTest {
 
         assertNotNull(resultado);
         assertTrue(resultado.getContent().isEmpty());
+    }
+
+    @Test
+    void deveRetornarAdocaoPeloIdProcuradoComSucesso() {
+        when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
+
+        AdocaoDTO resultado = adocaoService.findById(1L);
+
+        assertNotNull(resultado);
+        assertEquals(LocalDate.parse("2024-07-11"), resultado.getDataAdocao());
+        assertTrue(resultado.getLinks().hasLink("self"));
+
+        verify(adocaoRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdocaoPorIdProcurado() {
+        when(adocaoRepository.findById(2L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.findById(2L);
+        });
+
+        assertEquals("Adoção não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveAtualizarAdocaoInteiroComSucesso() {
+        when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
+        when(usuarioRepository.findById(adocaoDiferente.getIdUsuario())).thenReturn(Optional.of(usuario));
+        when(animalRepository.findById(adocaoDiferente.getIdAnimal())).thenReturn(Optional.of(animal));
+        when(ongRepository.findById(animal.getOng().getIdOng())).thenReturn(Optional.of(ong));
+        when(adocaoRepository.save(any(Adocao.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        AdocaoDTO resultado = adocaoService.update(adocaoDiferente, 1L);
+
+        assertNotNull(resultado);
+        assertEquals(LocalDate.parse("2024-07-10"), resultado.getDataAdocao());
+        assertEquals(StatusAdocao.CANCELADA, resultado.getStatus());
+        assertTrue(resultado.getLinks().hasLink("self"));
+
+        verify(adocaoRepository).findById(1L);
+        verify(usuarioRepository).findById(adocaoDiferente.getIdUsuario());
+        verify(animalRepository).findById(adocaoDiferente.getIdAnimal());
+        verify(ongRepository).findById(animal.getOng().getIdOng());
+        verify(adocaoRepository).save(any(Adocao.class));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoAdocaoEstiverNulaNoUpdate() {
+        AdocaoDTO adocaoNula = null;
+
+        assertThrows(NullPointerException.class, () -> {
+            adocaoService.update(adocaoNula, 1L);
+        });
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdocaoPeloIdInseridoNoUpdate() {
+        when(adocaoRepository.findById(2L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.update(adocaoDiferente, 2L);
+        });
+
+        assertEquals("Adoção não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarUsuarioPeloIdInseridoNoUpdate() {
+        adocaoDiferente.setIdUsuario(2L);
+        when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
+        when(usuarioRepository.findById(adocaoDiferente.getIdUsuario())).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.update(adocaoDiferente, 1L);
+        });
+
+        assertEquals("Usuário não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAnimalPeloIdInseridoNoUpdate() {
+        adocaoDiferente.setIdAnimal(2L);
+        when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
+        when(usuarioRepository.findById(adocaoDiferente.getIdUsuario())).thenReturn(Optional.of(usuario));
+        when(animalRepository.findById(adocaoDiferente.getIdAnimal())).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.update(adocaoDiferente, 1L);
+        });
+
+        assertEquals("Animal não encontrado", ex.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarOngPeloAnimalInseridoNoUpdate() {
+        when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
+        when(usuarioRepository.findById(adocaoDiferente.getIdUsuario())).thenReturn(Optional.of(usuario));
+        when(animalRepository.findById(adocaoDiferente.getIdAnimal())).thenReturn(Optional.of(animal));
+        when(ongRepository.findById(animal.getOng().getIdOng())).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.update(adocaoDiferente, 1L);
+        });
+
+        assertEquals("Ong não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveAtualizarAdocaoPartialComSucesso() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("status", "CANCELADA");
+
+        when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
+
+        when(adocaoRepository.save(any(Adocao.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(validator.validate(any(AdocaoDTO.class))).thenReturn(Collections.emptySet());
+
+        AdocaoDTO resultado = adocaoService.partialUpdate(1L, updates);
+
+        assertNotNull(resultado);
+        assertEquals(LocalDate.parse("2024-07-11"), resultado.getDataAdocao());
+        assertEquals(StatusAdocao.CANCELADA, resultado.getStatus());
+        assertTrue(resultado.getLinks().hasLink("self"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdocaoNoPartialUpdate() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("status", "CANCELADA");
+
+        when(adocaoRepository.findById(2L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.partialUpdate(2L, updates);
+        });
+
+        assertEquals("Adoção não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveDeletarAdocaoComSucesso() {
+        when(adocaoRepository.existsById(1L)).thenReturn(true);
+
+        adocaoService.delete(1L);
+
+        verify(adocaoRepository).existsById(1L);
+        verify(adocaoRepository).deleteById(1L);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAdocaoNoDelete() {
+        when(adocaoRepository.existsById(2L)).thenReturn(false);
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            adocaoService.delete(2L);
+        });
+
+        assertEquals("Adoção não encontrada.", ex.getMessage());
     }
 }
