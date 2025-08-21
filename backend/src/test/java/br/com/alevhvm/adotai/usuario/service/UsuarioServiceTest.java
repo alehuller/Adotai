@@ -48,8 +48,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
-import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
@@ -287,7 +285,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoCellJaEstiverEmUsoNaCriacao() {
-        erros.add("Cell já está em usoo");
+        erros.add("Cell já está em uso");
 
         doThrow(new ValidacaoException(erros)).when(usuarioValidacao).validate(registroDTO);
 
