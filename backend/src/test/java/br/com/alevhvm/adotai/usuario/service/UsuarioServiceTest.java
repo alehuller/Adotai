@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.usuario.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +29,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,10 +54,10 @@ import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.adocao.repository.AdocaoRepository;
-import br.com.alevhvm.adotai.adocao.service.AdocaoService;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
 import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.animal.repository.AnimalRepository;
 import br.com.alevhvm.adotai.auth.dto.LoginDTO;
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.auth.dto.TokenDTO;
@@ -90,10 +92,13 @@ public class UsuarioServiceTest {
     private AdocaoRepository adocaoRepository;
 
     @Mock
+    private AnimalRepository animalRepository;
+
+    @Mock
     private UsuarioValidacao usuarioValidacao;
 
     @Mock
-    private PagedResourcesAssembler<AdministradorDTO> assembler;
+    private PagedResourcesAssembler<AnimalDTO> assembler;
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -118,7 +123,6 @@ public class UsuarioServiceTest {
     private DescricaoVO descricaoVO;
     private RedeVO redeVO;
     private CpfVO cpf;
-    private CpfVO cpfDiferente;
     private Set<Animal> animaisFavoritos;
     private List<String> erros;
 
@@ -174,7 +178,6 @@ public class UsuarioServiceTest {
 
         cpf = new CpfVO("111222233344");
         cpf.setCpf("111222233344");
-        cpfDiferente = new CpfVO("22233344455");
 
         registroDTO = new RegistroDTO();
         registroDTO.setEmail("usuario@email.com");
@@ -587,5 +590,148 @@ public class UsuarioServiceTest {
         });
 
         assertEquals("Usuário não encontrado", ex.getMessage());
+    }
+
+    @Test
+    void deveRetornarPaginaDeAnimaisFavoritosPorNomeUsuario() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Animal> animais = List.of(animalEntity);
+        Page<Animal> animalPage = new PageImpl<>(animais, pageable, animais.size());
+
+        when(usuarioRepository.findAnimaisFavoritosByNomeUsuario("UsuarioNomeUsuario", pageable)).thenReturn(animalPage);
+
+        PageMetadata metadata = new PageMetadata(10, 0 , 1);
+        PagedModel<EntityModel<AnimalDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<AnimalDTO>> resultado = usuarioService.findAnimaisFavoritosByNomeUsuario("UsuarioNomeUsuario", pageable);
+
+        assertNotNull(resultado);
+        assertSame(pagedModelMock, resultado);
+        verify(usuarioRepository).findAnimaisFavoritosByNomeUsuario("UsuarioNomeUsuario", pageable);
+
+        ArgumentCaptor<Page<AnimalDTO>> pageCaptor = ArgumentCaptor.forClass(Page.class);
+        verify(assembler).toModel(pageCaptor.capture(), any(Link.class));
+
+        Page<AnimalDTO> pagePassada = pageCaptor.getValue();
+        assertEquals(1, pagePassada.getTotalElements());
+        assertEquals("Animal Nome", pagePassada.getContent().get(0).getNome());
+    }
+
+    @Test
+    void deveRetornarPaginaVaziaQuandoNaoExistirAnimaisFavoritosPorNomeUsuario() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Animal> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(usuarioRepository.findAnimaisFavoritosByNomeUsuario("UsuarioNomeUsuarioErrado", pageable)).thenReturn(emptyPage);
+
+        PageMetadata metadata = new PageMetadata(10, 0, 0);
+        PagedModel<EntityModel<AnimalDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<AnimalDTO>> resultado = usuarioService.findAnimaisFavoritosByNomeUsuario("UsuarioNomeUsuarioErrado", pageable);
+
+        assertNotNull(resultado);
+        assertSame(pagedModelMock, resultado);
+        assertTrue(resultado.getContent().isEmpty());
+    }
+
+    @Test
+    void deveRetornarTrueQuandoUsuarioFavoritouOAnimal() {
+        when(usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L)).thenReturn(true);
+
+        Boolean resultado = usuarioService.isAnimalFavorito("UsuarioNomeUsuario", 1L);
+
+        assertTrue(resultado);
+        verify(usuarioRepository, times(1)).existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L);
+    }
+
+    @Test
+    void deveRetornarFalseQuandoUsuarioNaoFavoritouOAnimal() {
+        when(usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L)).thenReturn(false);
+
+        Boolean resultado = usuarioService.isAnimalFavorito("UsuarioNomeUsuario", 1L);
+
+        assertFalse(resultado);
+        verify(usuarioRepository, times(1)).existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L);
+    }
+
+    @Test
+    void deveRetornarFalseQuandoOAnimalEstaFavoritado() {
+        when(usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L)).thenReturn(true);
+
+        Boolean resultado = usuarioService.toggleAnimalFavorito("UsuarioNomeUsuario", 1L);
+
+        assertFalse(resultado);
+        verify(usuarioRepository, times(1)).existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L);
+        verify(usuarioRepository, times(1)).removerAnimalDosFavoritos("UsuarioNomeUsuario", 1L);
+    }
+
+    @Test
+    void deveRetornarTrueQuandoOAnimalNaoEstaFavoritado() {
+        when(usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L)).thenReturn(false);
+
+        Boolean resultado = usuarioService.toggleAnimalFavorito("UsuarioNomeUsuario", 1L);
+
+        assertTrue(resultado);
+        verify(usuarioRepository, times(1)).existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal("UsuarioNomeUsuario", 1L);
+        verify(usuarioRepository, times(1)).adicionarAnimalAosFavoritos("UsuarioNomeUsuario", 1L);
+    }
+
+    @Test
+    void deveSalvarAnimalFavoritoParaUsuario() {
+        when(usuarioRepository.findByNomeUsuario("UsuarioNomeUsuario")).thenReturn(Optional.of(usuario));
+        when(animalRepository.findById(1L)).thenReturn(Optional.of(animalEntity));
+
+        usuarioService.adicionarAnimalFavorito("UsuarioNomeUsuario", 1L);
+
+        assertTrue(usuario.getAnimaisFavoritos().contains(animalEntity));
+        verify(usuarioRepository, times(1)).save(usuario);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarUsuarioNoAdicionarAnimalFavorito() {
+        when(usuarioRepository.findByNomeUsuario("UsuarioNomeUsuarioErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            usuarioService.adicionarAnimalFavorito("UsuarioNomeUsuarioErrado", 1L);
+        });
+
+        assertEquals("Usuário não encontrado", ex.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAnimalNoAdicionarAnimalFavorito() {
+        when(usuarioRepository.findByNomeUsuario("UsuarioNomeUsuario")).thenReturn(Optional.of(usuario));
+        when(animalRepository.findById(2L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            usuarioService.adicionarAnimalFavorito("UsuarioNomeUsuario", 2L);
+        });
+
+        assertEquals("Animal não encontrado", ex.getMessage());
+    }
+
+    @Test
+    void deveRemoverAnimalFavorito() {
+        when(usuarioRepository.findByNomeUsuario("UsuarioNomeUsuario")).thenReturn(Optional.of(usuario));
+
+        usuarioService.removerAnimalFavorito("UsuarioNomeUsuario", 1L);
+
+        assertFalse(usuario.getAnimaisFavoritos().contains(animalEntity));
+        verify(usuarioRepository).save(usuario);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarUsuarioNoRemoverAnimalFavorito() {
+        when(usuarioRepository.findByNomeUsuario("UsuarioNomeUsuarioErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            usuarioService.removerAnimalFavorito("UsuarioNomeUsuarioErrado", 1L);
+        });
+
+        assertEquals("Usuário não encontrado", ex.getMessage());
+        verify(usuarioRepository, never()).save(usuario);
     }
 }

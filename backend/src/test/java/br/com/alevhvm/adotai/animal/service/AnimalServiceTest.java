@@ -34,7 +34,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.PagedModel.PageMetadata;
 
-import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
 import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
@@ -63,7 +62,7 @@ public class AnimalServiceTest {
     private AnimalRepository animalRepository;
 
     @Mock
-    private PagedResourcesAssembler<AdministradorDTO> assembler;
+    private PagedResourcesAssembler<AnimalDTO> assembler;
 
     @Mock
     private Validator validator;
