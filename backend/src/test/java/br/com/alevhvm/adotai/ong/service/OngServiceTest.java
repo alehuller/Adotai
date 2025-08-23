@@ -10,11 +10,14 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +25,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.PagedModel.PageMetadata;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.auth.enums.Roles;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
+import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.common.vo.CnpjVO;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.RedeVO;
@@ -34,7 +48,7 @@ import br.com.alevhvm.adotai.ong.model.Ong;
 import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import br.com.alevhvm.adotai.ong.validations.OngValidacao;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
-import br.com.alevhvm.adotai.usuario.model.Usuario;
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class OngServiceTest {
@@ -53,6 +67,9 @@ public class OngServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private PagedResourcesAssembler<AnimalDTO> assembler;
 
     private Ong ong;
     private OngDTO ongDTO;
@@ -222,5 +239,96 @@ public class OngServiceTest {
 
         assertFalse(resultado.getLinks().isEmpty());
         assertTrue(resultado.getLinks().stream().anyMatch(link -> link.getRel().value().equals("self")));
+    }
+
+    @Test
+    void deveRetornarPaginaDeOngComSucesso() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Ong> ongs = List.of(ong);
+        Page<Ong> ongPage = new PageImpl<>(ongs, pageable, ongs.size());
+
+        when(ongRepository.findAll(pageable)).thenReturn(ongPage);
+
+        OngDTO dto = DozerMapper.parseObject(ong, OngDTO.class);
+        List<OngDTO> dtoList = List.of(dto);
+        Page<OngDTO> dtoPage = new PageImpl<>(dtoList, pageable, dtoList.size());
+
+        PageMetadata metadata = new PageMetadata(10, 0, 1);
+        PagedModel<EntityModel<OngDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<OngDTO>> resultado = ongService.findAll(pageable);
+
+        assertNotNull(resultado);
+        verify(ongRepository).findAll(pageable);
+        verify(assembler).toModel(any(Page.class), any(Link.class));
+    }
+
+    @Test
+    void deveRetornarPaginaVaziaQuandoNaoExistirOngs() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Ong> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(ongRepository.findAll(pageable)).thenReturn(emptyPage);
+
+        PageMetadata metadata = new PageMetadata(10, 0, 0);
+        PagedModel<EntityModel<OngDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<OngDTO>> resultado = ongService.findAll(pageable);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.getContent().isEmpty());
+    }
+
+    @Test
+    void deveRetornarOngPeloIdProcuradoComSucesso() {
+        when(ongRepository.findById(1L)).thenReturn(Optional.of(ong));
+
+        OngDTO resultado = ongService.findById(1L);
+
+        assertNotNull(resultado);
+        assertEquals("contato@amigosanimais.org", resultado.getEmail());
+        assertTrue(resultado.getLinks().hasLink("self"));
+        assertTrue(resultado.getRequiredLink("self").getHref().endsWith("/api/v1/ongs/" + ong.getIdOng()));
+
+        verify(ongRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarOngPorIdProcurado() {
+        when(ongRepository.findById(2L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            ongService.findById(2L);
+        });
+
+        assertEquals("Ong não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveRetornarOngPeloNomeUsuarioProcuradoComSucesso() {
+        when(ongRepository.findByNomeUsuario("amigosanimais")).thenReturn(Optional.of(ong));
+
+        OngDTO resultado = ongService.findByNomeUsuario("amigosanimais");
+
+        assertNotNull(resultado);
+        assertEquals("contato@amigosanimais.org", resultado.getEmail());
+        assertTrue(resultado.getLinks().hasLink("self"));
+        assertTrue(resultado.getRequiredLink("self").getHref().endsWith("/api/v1/ongs/nomeUsuario/" + ong.getNomeUsuario()));
+
+        verify(ongRepository, times(1)).findByNomeUsuario("amigosanimais");
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarOngPorNomeUsuarioProcurado() {
+        when(ongRepository.findByNomeUsuario("amigosanimaiserrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            ongService.findByNomeUsuario("amigosanimaiserrado");
+        });
+
+        assertEquals("Ong não encontrada.", ex.getMessage());
     }
 }
