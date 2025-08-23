@@ -9,15 +9,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.net.Authenticator;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,20 +39,36 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.PagedModel.PageMetadata;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
+import br.com.alevhvm.adotai.adocao.model.Adocao;
+import br.com.alevhvm.adotai.adocao.repository.AdocaoRepository;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
+import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.auth.dto.LoginDTO;
+import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.auth.enums.Roles;
+import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
+import br.com.alevhvm.adotai.auth.service.TokenService;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.common.vo.CnpjVO;
+import br.com.alevhvm.adotai.common.vo.DescricaoVO;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.RedeVO;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
+import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
 import br.com.alevhvm.adotai.ong.model.Ong;
 import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import br.com.alevhvm.adotai.ong.validations.OngValidacao;
-import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
+import br.com.alevhvm.adotai.usuario.model.Usuario;
 import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,22 +84,39 @@ public class OngServiceTest {
     private OngRepository ongRepository;
 
     @Mock
+    private AdocaoRepository adocaoRepository;
+
+    @Mock
     private OngValidacao ongValidacao;
 
     @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
+    private AuthenticationManager authenticationManager;
+
+    @Mock
+    private TokenService tokenService;
+
+    @Mock
     private PagedResourcesAssembler<AnimalDTO> assembler;
 
+    private Animal animalEntity;
+    private Adocao adocaoEntity;
+    private Usuario usuario;
     private Ong ong;
     private OngDTO ongDTO;
 
+    private DescricaoVO descricaoVO;
     private RedeVO redeVO;
     private List<String> erros;
+    private Set<Animal> animaisFavoritos;
+    private OngFiltroDTO filtro;
 
     @BeforeEach
     void setUp() {
+        filtro = new OngFiltroDTO();
+
         redeVO = new RedeVO();
         redeVO.setInstagram("https://teste.adotai.com/");
         redeVO.setFacebook("https://teste.facebook.com/adotai");
@@ -129,6 +167,41 @@ public class OngServiceTest {
         ong.setRede(redeVO);
 
         erros = new ArrayList<>();
+
+        usuario = new Usuario();
+        usuario.setIdUsuario(1L);
+        usuario.setNome("Usuario Nome");
+        usuario.setEmail("usuario@email.com");
+        usuario.setNomeUsuario("UsuarioNomeUsuario");
+        usuario.setFotoPerfil("Foto Usuario");
+        usuario.setSenha("senhaCriptografada");
+        usuario.setCell("(11) 94345-9969");
+        usuario.setCpf("11122233344");
+        usuario.setRole(Roles.USER);
+        usuario.setAnimaisFavoritos(animaisFavoritos);
+
+        animalEntity = new Animal();
+        animalEntity.setIdAnimal(1L);
+        animalEntity.setNome("Animal Nome");
+        animalEntity.setEspecie("Cachorro");
+        animalEntity.setRaca("Spitz Alemão");
+        animalEntity.setDataNascimento(LocalDate.parse("2024-07-11"));
+        animalEntity.setFoto("Foto Teste");
+        animalEntity.setDescricao(descricaoVO);
+        animalEntity.setPorte("Porte Teste");
+        animalEntity.setSexo("Macho");
+        animalEntity.setStatus(StatusAnimal.ADOTADO);
+        animalEntity.setOng(ong);
+
+        adocaoEntity = new Adocao();
+        adocaoEntity.setIdAdocao(1L);
+        adocaoEntity.setDataAdocao(LocalDate.parse("2024-07-11"));
+        adocaoEntity.setStatus(StatusAdocao.APROVADA);
+        adocaoEntity.setAnimal(animalEntity);
+        adocaoEntity.setUsuario(usuario);
+
+        animaisFavoritos = new HashSet<>();
+        animaisFavoritos.add(animalEntity);
     }
 
     @Test
@@ -330,5 +403,115 @@ public class OngServiceTest {
         });
 
         assertEquals("Ong não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveRetornarPaginaDeAdocoesPorIdDaOngComSucesso() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Adocao> adocoes = List.of(adocaoEntity);
+        Page<Adocao> adocaoPage = new PageImpl<>(adocoes, pageable, adocoes.size());
+
+        when(adocaoRepository.findAdocoesByOngId(1L, pageable)).thenReturn(adocaoPage);
+
+        AdocaoDTO dto = DozerMapper.parseObject(adocaoEntity, AdocaoDTO.class);
+        List<AdocaoDTO> dtoList = List.of(dto);
+        Page<AdocaoDTO> dtoPage = new PageImpl<>(dtoList, pageable, dtoList.size());
+
+        PageMetadata metadata = new PageMetadata(10, 0, 1);
+        PagedModel<EntityModel<AdocaoDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<AdocaoDTO>> resultado = ongService.findAllAdocoesByOngId(1L, pageable);
+
+        assertNotNull(resultado);
+        verify(adocaoRepository).findAdocoesByOngId(1L, pageable);
+        verify(assembler).toModel(any(Page.class), any(Link.class));
+    }
+
+    @Test
+    void deveRetornarPaginaDeAdocoesPorIdDaOngVazia() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Adocao> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(adocaoRepository.findAdocoesByOngId(1L, pageable)).thenReturn(emptyPage);
+
+        PageMetadata metadata = new PageMetadata(10, 0, 0);
+        PagedModel<EntityModel<AdocaoDTO>> pagedModelMock = PagedModel.empty(metadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(pagedModelMock);
+
+        PagedModel<EntityModel<AdocaoDTO>> resultado = ongService.findAllAdocoesByOngId(1L, pageable);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.getContent().isEmpty());
+    }
+
+    @Test
+    void deveRetornarOsOngsPeloFiltro() {
+        filtro.setNome("Amigos dos Animais");
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Ong> ongs = List.of(ong);
+        Page<Ong> ongPage = new PageImpl<>(ongs, pageable, ongs.size());
+
+        when(ongRepository.filtrarOngsNativo(filtro, pageable)).thenReturn(ongPage);
+
+        Page<OngDTO> resultado = ongService.filtrarOngs(filtro, pageable);
+
+        assertNotNull(resultado);
+        assertEquals(1, resultado.getTotalElements());
+        assertEquals("Amigos dos Animais", resultado.getContent().get(0).getNome());
+
+        verify(ongRepository).filtrarOngsNativo(filtro, pageable);
+    }
+
+    @Test
+    void deveRetornarPaginaVazioDeAnimaisPeloFiltro() {
+        filtro.setNome("Ong Nome Inexistente");
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Ong> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(ongRepository.filtrarOngsNativo(filtro, pageable)).thenReturn(emptyPage);
+
+        Page<OngDTO> resultado = ongService.filtrarOngs(filtro, pageable);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.getContent().isEmpty());
+    }
+
+    @Test
+    void deveLogarOngComSucesso() {
+        LoginDTO loginDTO = new LoginDTO("contato@amigosanimais.org", "123456");
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.identifier(), loginDTO.password());
+
+        Authentication auth = mock(Authentication.class);
+        LoginIdentityView principal = mock(LoginIdentityView.class);
+        when(auth.getPrincipal()).thenReturn(principal).thenReturn("token123");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
+
+        when(tokenService.generateToken(principal)).thenReturn("token123");
+
+        TokenDTO resultado = ongService.logar(loginDTO);
+
+        assertNotNull(resultado);
+        assertEquals("token123", resultado.accessToken());
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(tokenService).generateToken(principal);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoCredenciasInvalidas() {
+        LoginDTO loginDTO = new LoginDTO("contatoerrado@amigosanimais.org", "senhaErrada");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(new BadCredentialsException("Credenciais inválidas"));
+
+        assertThrows(BadCredentialsException.class, () -> {
+            ongService.logar(loginDTO);
+        });
+
+        verify(authenticationManager).authenticate((any(UsernamePasswordAuthenticationToken.class)));
+        verify(tokenService, never()).generateToken(any());
     }
 }
