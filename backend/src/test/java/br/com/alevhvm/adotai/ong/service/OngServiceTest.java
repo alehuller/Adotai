@@ -15,12 +15,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.net.Authenticator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -65,11 +66,13 @@ import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.common.vo.RedeVO;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
 import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
+import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
 import br.com.alevhvm.adotai.ong.model.Ong;
 import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import br.com.alevhvm.adotai.ong.validations.OngValidacao;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Validator;
 
 @ExtendWith(MockitoExtension.class)
 public class OngServiceTest {
@@ -101,11 +104,15 @@ public class OngServiceTest {
     @Mock
     private PagedResourcesAssembler<AnimalDTO> assembler;
 
+    @Mock
+    private Validator validator;
+
     private Animal animalEntity;
     private Adocao adocaoEntity;
     private Usuario usuario;
     private Ong ong;
     private OngDTO ongDTO;
+    private OngUpdateDTO ongDiferente;
 
     private DescricaoVO descricaoVO;
     private RedeVO redeVO;
@@ -164,7 +171,28 @@ public class OngServiceTest {
         ongDTO.setCnpj(new CnpjVO("12.345.678/0001-90"));
         ongDTO.setResponsavel("Maria Silva");
         ongDTO.setDescricao("ONG dedicada ao resgate e adoção de animais abandonados.");
-        ong.setRede(redeVO);
+        ongDTO.setRede(redeVO);
+
+        ongDiferente = new OngUpdateDTO();
+        ongDiferente.setKey(2L);
+        ongDiferente.setNome("Amigos dos Animais Diferente");
+        ongDiferente.setNomeUsuario("amigosanimaisdiferente");
+        ongDiferente.setFotoPerfil("foto_ong_diferente.png");
+        ongDiferente.setEmail("contatodiferente@amigosanimais.org");
+        ongDiferente.setSenha("123456");
+        ongDiferente.setEndereco(new EnderecoVO(
+                "Rua das Flores Diferente",
+                "120",
+                "Casa 3",
+                "SubCentro",
+                "Rio de Janeiro",
+                "RJ",
+                "11111-000"
+        ));
+        ongDiferente.setCell("11911112222");
+        ongDiferente.setResponsavel("Maria Silva Diferente");
+        ongDiferente.setDescricao("ONG dedicada ao resgate e adoção de animais abandonados Diferente.");
+        ongDiferente.setRede(redeVO);
 
         erros = new ArrayList<>();
 
@@ -513,5 +541,108 @@ public class OngServiceTest {
 
         verify(authenticationManager).authenticate((any(UsernamePasswordAuthenticationToken.class)));
         verify(tokenService, never()).generateToken(any());
+    }
+
+    @Test
+    void deveAtualizarOngInteiraComSucesso() {
+        when(ongRepository.findByNomeUsuario("amigosanimais")).thenReturn(Optional.of(ong));
+        when(passwordEncoder.encode(ongDiferente.getSenha())).thenReturn("senhaCriptograda");
+        when(ongRepository.save(any(Ong.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OngDTO resultado = ongService.update(ongDiferente, "amigosanimais");
+
+        assertNotNull(resultado);
+        assertEquals("amigosanimaisdiferente", resultado.getNomeUsuario());
+        assertEquals("contatodiferente@amigosanimais.org", resultado.getEmail());
+        assertEquals("Maria Silva Diferente", resultado.getResponsavel());
+        assertTrue(resultado.getLinks().hasLink("self"));
+
+        verify(ongRepository).findByNomeUsuario("amigosanimais");
+        verify(cepService).preencherEndereco(ongDiferente.getEndereco());
+        verify(ongValidacao).validarEnderecoPreenchido(ongDiferente.getEndereco());
+        verify(ongValidacao).validateUpdate(any(Ong.class));
+        verify(ongRepository).save(any(Ong.class));
+        verify(passwordEncoder).encode(ongDiferente.getSenha());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarOngPorNomeUsuarioNoUpdate() {
+        when(ongRepository.findByNomeUsuario("OngNomeUsuarioErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            ongService.update(ongDiferente, "OngNomeUsuarioErrado");
+        });
+
+        assertEquals("Ong não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveAtualizarOngPartialComSucesso() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "NovoNome");
+        updates.put("email", "novoemail@teste.com");
+
+        when(ongRepository.findByNomeUsuario("amigosanimais")).thenReturn(Optional.of(ong));
+
+        doNothing().when(ongValidacao).validatePartialUpdate("amigosanimais", updates);
+        when(ongRepository.save(any(Ong.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(validator.validate(any(OngDTO.class))).thenReturn(Collections.emptySet());
+
+        OngDTO resultado = ongService.partialUpdate("amigosanimais", updates);
+
+        assertNotNull(resultado);
+        assertEquals("NovoNome", resultado.getNomeUsuario());
+        assertEquals("novoemail@teste.com", resultado.getEmail());
+        assertTrue(resultado.getLinks().hasLink("self"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarOngNoPartialUpdate() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nomeUsuario", "NomeUsuarioNovo");
+
+        when(ongRepository.findByNomeUsuario("UsuarioNomeUsuarioErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            ongService.partialUpdate("UsuarioNomeUsuarioErrado", updates);
+        });
+
+        assertEquals("Ong não encontrada.", ex.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoUsuarioTentarAtualizarCnpjDaOngNoPartialUpdate() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("cnpj", "53.962.605/0001-20");
+
+        erros.add("Não é permitido alterar o CNPJ.");
+
+        when(ongRepository.findByNomeUsuario("amigosanimais")).thenReturn(Optional.of(ong));
+        doThrow(new ValidacaoException(erros)).when(ongValidacao).validatePartialUpdate("amigosanimais", updates);
+
+        assertThrows(ValidacaoException.class, () -> {
+            ongService.partialUpdate("amigosanimais", updates);
+        });
+    }
+
+    @Test
+    void deveDeletarOngComSucesso() {
+        when(ongRepository.findByNomeUsuario("amigosanimais")).thenReturn(Optional.of(ong));
+
+        ongService.delete("amigosanimais");
+
+        verify(ongRepository).findByNomeUsuario("amigosanimais");
+        verify(ongRepository).deleteByNomeUsuario("amigosanimais");
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarOngNoDelete() {
+        when(ongRepository.findByNomeUsuario("OngNomeUsuarioErrado")).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
+            ongService.delete("OngNomeUsuarioErrado");
+        });
+
+        assertEquals("Ong não encontrada.", ex.getMessage());
     }
 }
