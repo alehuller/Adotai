@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.administrador.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,6 +33,7 @@ import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
 import br.com.alevhvm.adotai.auth.security.SecurityFilter;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(
     controllers = AdministradorController.class,
@@ -105,6 +107,15 @@ public class AdministradorControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundQuandoNacoAcharAdministradorPorId() throws Exception {
+        when(administradorService.findById(99L)).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
+
+        mockMvc.perform(get("/api/v1/administradores/{id}", 99L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Administrador não encontrado."));
+    }
+
+    @Test
     void deveAcharAdministradorPorNomeUsuario() throws Exception {
         when(administradorService.findByNomeUsuario("adminTeste")).thenReturn(administradorDTO);
         
@@ -113,6 +124,15 @@ public class AdministradorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Administrador Teste"))
                 .andExpect(jsonPath("$.nomeUsuario").value("adminTeste"));
+    }
+
+    @Test
+    void deveRetornarNotFoundQuandoNaoAcharAdministradorPorNomeUsuario() throws Exception {
+        when(administradorService.findByNomeUsuario("naoExistente")).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
+
+        mockMvc.perform(get("/api/v1/administradores/nomeUsuario/{nomeUsuario}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
     }
 
     @Test
@@ -138,6 +158,28 @@ public class AdministradorControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarAdministradorInexistente() throws Exception{
+        String json = """
+        {
+          "nome": "Novo Nome",
+          "nomeUsuario": "naoExistente",
+          "email": "teste@teste.com",
+          "senha": "123",
+          "celular": "(11) 91111-1111",
+          "fotoPerfil": "foto.png"
+        }
+        """;
+
+        when(administradorService.update(any(AdministradorDTO.class), eq("naoExistente"))).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
+
+        mockMvc.perform(put("/api/v1/administradores/{nomeUsuario}", "naoExistente")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").value("Administrador não encontrado."));
+    }
+
+    @Test
     void deveAtualizarParcialAdministrador() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Novo Nome");
         when(administradorService.partialUpdate("adminTeste", updates)).thenReturn(administradorPartialUpdate);
@@ -156,4 +198,14 @@ public class AdministradorControllerTest {
         mockMvc.perform(delete("/api/v1/administradores/{nomeUsuario}", "adminTeste"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void deveRetornarNotFoundAoDeletarAdministradorInexistente() throws Exception {
+        doThrow(new EntityNotFoundException("Administrador não encontrado")).when(administradorService).delete("naoExistente");
+
+        mockMvc.perform(delete("/api/v1/administradores/{nomeUsuario}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Administrador não encontrado"));
+    }
+
 }
