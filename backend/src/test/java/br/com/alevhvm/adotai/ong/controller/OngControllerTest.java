@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
 import br.com.alevhvm.adotai.animal.service.AnimalService;
 import br.com.alevhvm.adotai.auth.security.SecurityFilter;
 import br.com.alevhvm.adotai.common.util.MediaType;
@@ -65,6 +70,8 @@ public class OngControllerTest {
     private OngDTO ongUpdateDTO;
     private OngDTO ongPartialUpdate;
     private OngDTO ongFiltro;
+    private AdocaoDTO adocaoDTO;
+    private AnimalDTO animalDTO;
 
     private EnderecoVO enderecoVO;
 
@@ -105,6 +112,22 @@ public class OngControllerTest {
         ongFiltro.setNome("Nome Teste Filtro");
         ongFiltro.setEmail("email@testefiltro.com");
         ongFiltro.setDescricao("Descricao Teste Filtro");
+
+        adocaoDTO = new AdocaoDTO();
+        adocaoDTO.setKey(1L);
+        adocaoDTO.setDataAdocao(LocalDate.parse("2024-07-11"));
+        adocaoDTO.setStatus(StatusAdocao.APROVADA);
+
+        animalDTO = new AnimalDTO();
+        animalDTO.setKey(1L);
+        animalDTO.setNome("Nome Teste Animal");
+        animalDTO.setEspecie("Especie Teste");
+        animalDTO.setRaca("Raca Teste");
+        animalDTO.setDataNascimento(LocalDate.parse("2024-07-11"));
+        animalDTO.setPorte("Porte Teste");
+        animalDTO.setSexo("Sexo Teste");
+        animalDTO.setStatus(StatusAnimal.DISPONIVEL);
+        animalDTO.setIdOng(1L);
     }
 
     @Test
@@ -151,6 +174,49 @@ public class OngControllerTest {
                 .andExpect(jsonPath("$.nome").value("Nome Teste"))
                 .andExpect(jsonPath("$.email").value("email@teste.com"))
                 .andExpect(jsonPath("$.descricao").value("Descricao Teste"));
+    }
+
+    @Test
+    void deveListarAdocoesPorId() throws Exception{
+        List<EntityModel<AdocaoDTO>> adocoes = List.of(EntityModel.of(adocaoDTO));
+
+        PagedModel<EntityModel<AdocaoDTO>> pagedModel = PagedModel.of(
+            adocoes,
+            new PagedModel.PageMetadata(1, 0, 1)
+        );
+
+        when(ongService.findAllAdocoesByOngId(eq(1L), any(Pageable.class))).thenReturn(pagedModel);
+
+        mockMvc.perform(get("/api/v1/ongs/{id}/adocoes", 1l)
+                .param("page", "0")
+                .param("size", "10")
+                .param("direction", "asc")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.adocaoDTOList[0].dataAdocao").value("11/07/2024"))
+                .andExpect(jsonPath("$._embedded.adocaoDTOList[0].status").value("APROVADA"));
+    }
+
+    @Test
+    void deveListarAnimaisDeUmaOng() throws Exception {
+        List<EntityModel<AnimalDTO>> animais = List.of(EntityModel.of(animalDTO));
+
+        PagedModel<EntityModel<AnimalDTO>> pagedModel = PagedModel.of(
+            animais,
+            new PagedModel.PageMetadata(1, 0, 1)
+        );
+
+        when(animalService.findAllByOngNome(eq("Nome Teste"), any(Pageable.class))).thenReturn(pagedModel);
+
+        mockMvc.perform(get("/api/v1/ongs/{nomeUsuario}/animais", "Nome Teste")
+                .param("page", "0")
+                .param("size", "10")
+                .param("direction", "asc")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.animalDTOList[0].nome").value("Nome Teste Animal"))
+                .andExpect(jsonPath("$._embedded.animalDTOList[0].raca").value("Raca Teste"))
+                .andExpect(jsonPath("$._embedded.animalDTOList[0].status").value("DISPONIVEL"));
     }
 
     @Test
