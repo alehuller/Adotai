@@ -61,6 +61,9 @@ public class UsuarioControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private UsuarioService usuarioService;
 
@@ -71,6 +74,8 @@ public class UsuarioControllerTest {
     private RegistroDTO registroDTO;
     private AnimalDTO animalDTO;
     private DescricaoVO descricaoVO;
+
+    private String jsonAtualizar;
 
     @BeforeEach
     void setUp() {
@@ -126,10 +131,19 @@ public class UsuarioControllerTest {
         animalDTO.setSexo("Macho");
         animalDTO.setStatus(StatusAnimal.ADOTADO);
         animalDTO.setIdOng(1L);
+
+        jsonAtualizar = "{"
+        + "\"nome\":\"Nome Teste Update\","
+        + "\"nomeUsuario\":\"NomeUsuarioTesteUpdate\","
+        + "\"fotoPerfil\":\"Foto Teste Update\","
+        + "\"email\":\"email@testeupdate.com\","
+        + "\"senha\":\"senha123\","
+        + "\"celular\":\"(11) 92222-2222\""
+        + "}";
     }
 
     @Test
-    void deveListarUsuarios() throws Exception {
+    void deveRetornar200AoListarUsuarios() throws Exception {
         List<EntityModel<UsuarioDTO>> usuarios = List.of(EntityModel.of(usuarioDTO));
 
         PagedModel<EntityModel<UsuarioDTO>> pagedModel = PagedModel.of(
@@ -151,7 +165,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveAcharUsuarioPorId() throws Exception {
+    void deveRetornar200AoAcharUsuarioPorId() throws Exception {
         when(usuarioService.findById(1L)).thenReturn(usuarioDTO);
 
         mockMvc.perform(get("/api/v1/usuarios/{id}", 1L)
@@ -172,7 +186,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveAcharUsuarioPorNomeUsuario() throws Exception {
+    void deveRetornar200AoAcharUsuarioPorNomeUsuario() throws Exception {
         when(usuarioService.findByNomeUsuario("Nome Teste")).thenReturn(usuarioDTO);
 
         mockMvc.perform(get("/api/v1/usuarios/nomeUsuario/{nomeUsuario}", "Nome Teste")
@@ -193,7 +207,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveListarAdocoesPorNomeUsuario() throws Exception{
+    void deveRetornar200AoListarAdocoesPorNomeUsuario() throws Exception{
         List<EntityModel<AdocaoDTO>> adocoes = List.of(EntityModel.of(adocaoDTO));
 
         PagedModel<EntityModel<AdocaoDTO>> pagedModel = PagedModel.of(
@@ -214,7 +228,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveRegistrarUsuario() throws Exception {
+    void deveRetornar201AoRegistrarUsuario() throws Exception {
         when(usuarioService.create(any(RegistroDTO.class))).thenReturn(usuarioDTO);
 
         String json = "{"
@@ -259,23 +273,12 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveAtualizarUsuario() throws Exception {
+    void deveRetornar200AoAtualizarUsuario() throws Exception {
         when(usuarioService.update(any(UsuarioUpdateDTO.class), eq("Nome Teste"))).thenReturn(usuarioUpdateDTO);
-
-        String json = "{"
-        + "\"nome\":\"Nome Teste Update\","
-        + "\"nomeUsuario\":\"NomeUsuarioTesteUpdate\","
-        + "\"fotoPerfil\":\"Foto Teste Update\","
-        + "\"email\":\"email@testeupdate.com\","
-        + "\"senha\":\"senha123\","
-        + "\"celular\":\"(11) 92222-2222\""
-        + "}";
-
-
 
         mockMvc.perform(put("/api/v1/usuarios/{nomeUsuario}", "Nome Teste")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+                .content(jsonAtualizar))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Nome Teste Update"))
                 .andExpect(jsonPath("$.email").value("email@testeupdate.com"))
@@ -284,32 +287,23 @@ public class UsuarioControllerTest {
 
     @Test
     void deveRetornarNotFoundAoAtualizarUsuarioInexistente() throws Exception{
-        String json = "{"
-        + "\"nome\":\"Nome Teste Update\","
-        + "\"nomeUsuario\":\"NomeUsuarioTesteUpdate\","
-        + "\"fotoPerfil\":\"Foto Teste Update\","
-        + "\"email\":\"email@testeupdate.com\","
-        + "\"senha\":\"senha123\","
-        + "\"celular\":\"(11) 92222-2222\""
-        + "}";
-
         when(usuarioService.update(any(UsuarioUpdateDTO.class), eq("naoExistente"))).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
 
         mockMvc.perform(put("/api/v1/usuarios/{nomeUsuario}", "naoExistente")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(json))
+        .content(jsonAtualizar))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
     }
 
     @Test
-    void deveAtualizarParcialUsuario() throws Exception {
+    void deveRetornar200AoAtualizarParcialUsuario() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Nome Teste Partial");
         when(usuarioService.partialUpdate("Nome Teste", updates)).thenReturn(usuarioPartialUpdate);
 
         mockMvc.perform(patch("/api/v1/usuarios/{nomeUsuario}", "Nome Teste")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Nome Teste Partial"));
     }
@@ -321,13 +315,13 @@ public class UsuarioControllerTest {
 
         mockMvc.perform(patch("/api/v1/usuarios/{nomeUsuario}", "usuarioTesteErrado")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
     }
 
     @Test
-    void deveDeletarUsuario() throws Exception {
+    void deveRetornarNoContentAoDeletarUsuario() throws Exception {
         doNothing().when(usuarioService).delete("Nome Teste");
 
         mockMvc.perform(delete("/api/v1/usuarios/{nomeUsuario}", "Nome Teste"))
@@ -344,7 +338,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveFavoritarAnimal() throws Exception {
+    void deveRetornar200AoFavoritarAnimal() throws Exception {
         when(usuarioService.toggleAnimalFavorito("NomeUsuarioTeste", 1L)).thenReturn(true);
 
         mockMvc.perform(post("/api/v1/usuarios/favoritar/{nomeUsuario}/{animalId}", "NomeUsuarioTeste", 1L)
@@ -356,7 +350,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveDesfavoritarAnimal() throws Exception {
+    void deveRetornar200AoDesfavoritarAnimal() throws Exception {
         when(usuarioService.toggleAnimalFavorito("NomeUsuarioTeste", 1L)).thenReturn(false);
 
         mockMvc.perform(post("/api/v1/usuarios/favoritar/{nomeUsuario}/{animalId}", "NomeUsuarioTeste", 1L)
@@ -368,7 +362,7 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    void deveListarAnimaisFavoritos() throws Exception {
+    void deveRetornar200AoListarAnimaisFavoritos() throws Exception {
         List<EntityModel<AnimalDTO>> animais = List.of(EntityModel.of(animalDTO));
 
         PagedModel<EntityModel<AnimalDTO>> pagedModel = PagedModel.of(

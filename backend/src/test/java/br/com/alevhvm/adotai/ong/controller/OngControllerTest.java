@@ -62,6 +62,9 @@ public class OngControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private OngService ongService;
 
@@ -133,7 +136,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveListarOngs() throws Exception {
+    void deveRetornar200AoListarOngs() throws Exception {
         List<EntityModel<OngDTO>> ongs = List.of(EntityModel.of(ongDTO));
 
         PagedModel<EntityModel<OngDTO>> pagedModel = PagedModel.of(
@@ -155,7 +158,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveAcharOngPorId() throws Exception {
+    void deveRetornar200AoAcharOngPorId() throws Exception {
         when(ongService.findById(1L)).thenReturn(ongDTO);
 
         mockMvc.perform(get("/api/v1/ongs/{id}", 1L)
@@ -176,7 +179,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveAcharOngPorNome() throws Exception {
+    void deveRetornar200AoAcharOngPorNome() throws Exception {
         when(ongService.findByNomeUsuario("Nome Teste")).thenReturn(ongDTO);
 
         mockMvc.perform(get("/api/v1/ongs/nomeUsuario/{nomeUsuario}", "Nome Teste")
@@ -197,7 +200,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveListarAdocoesPorId() throws Exception{
+    void deveRetornar200AoListarAdocoesPorId() throws Exception{
         List<EntityModel<AdocaoDTO>> adocoes = List.of(EntityModel.of(adocaoDTO));
 
         PagedModel<EntityModel<AdocaoDTO>> pagedModel = PagedModel.of(
@@ -218,7 +221,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveListarAnimaisDeUmaOng() throws Exception {
+    void deveRetornar200AoListarAnimaisDeUmaOng() throws Exception {
         List<EntityModel<AnimalDTO>> animais = List.of(EntityModel.of(animalDTO));
 
         PagedModel<EntityModel<AnimalDTO>> pagedModel = PagedModel.of(
@@ -240,7 +243,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveFiltrarOngs() throws Exception {
+    void deveRetornar200AoFiltrarOngs() throws Exception {
         OngFiltroDTO filtro = new OngFiltroDTO();
         filtro.setNome("Nome Teste Filtro");
 
@@ -253,7 +256,7 @@ public class OngControllerTest {
                 .param("size", "10")
                 .param("direction", "asc")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(filtro)))
+                .content(objectMapper.writeValueAsString(filtro)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].nome").value("Nome Teste Filtro"))
                 .andExpect(jsonPath("$.content[0].email").value("email@testefiltro.com"))
@@ -261,7 +264,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveRegistrarOng() throws Exception{
+    void deveRetornar201AoRegistrarOng() throws Exception{
         when(ongService.create(any(OngDTO.class))).thenReturn(ongDTO);
 
         String json = "{"
@@ -313,7 +316,7 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveAtualizarOng() throws Exception {
+    void deveRetornar200AoAtualizarOng() throws Exception {
         when(ongService.update(any(OngUpdateDTO.class), eq("Nome Teste"))).thenReturn(ongUpdateDTO);
 
         String json = "{"
@@ -368,13 +371,13 @@ public class OngControllerTest {
     }
 
     @Test
-    void deveAtualizarParcialOng() throws Exception {
+    void deveRetornar200AoAtualizarParcialOng() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Nome Teste Partial");
         when(ongService.partialUpdate("Nome Teste", updates)).thenReturn(ongPartialUpdate);
 
         mockMvc.perform(patch("/api/v1/ongs/{nomeUsuario}", "Nome Teste")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Nome Teste Partial"));
     }
@@ -386,13 +389,13 @@ public class OngControllerTest {
 
         mockMvc.perform(patch("/api/v1/ongs/{nomeUsuario}", "ongTesteErrado")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Ong não encontrada."));
     }
 
     @Test
-    void deveDeletarOng() throws Exception {
+    void deveRetornarNoContentAoDeletarOng() throws Exception {
         doNothing().when(ongService).delete("Nome Teste");
 
         mockMvc.perform(delete("/api/v1/ongs/{nomeUsuario}", "Nome Teste"))

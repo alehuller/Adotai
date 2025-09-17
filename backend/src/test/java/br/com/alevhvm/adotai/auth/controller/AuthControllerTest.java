@@ -53,6 +53,9 @@ public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private AdministradorService administradorService;
 
@@ -143,7 +146,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void deveLogarUsuario() throws Exception{
+    void deveRetornar200AoLogarUsuario() throws Exception{
         when(usuarioService.logar(any(LoginDTO.class))).thenReturn(tokenDTO);
 
         mockMvc.perform(post("/auth/user/login")
@@ -154,7 +157,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void deveRegistrarUsuario() throws Exception {
+    void deveRetornar201AoRegistrarUsuario() throws Exception {
         when(usuarioService.create(any(RegistroDTO.class))).thenReturn(usuarioDTO);
 
         String json = """
@@ -200,18 +203,18 @@ public class AuthControllerTest {
     }
 
     @Test
-    void deveLogarOng() throws Exception {
+    void deveRetornar200AoLogarOng() throws Exception {
         when(ongService.logar(any(LoginDTO.class))).thenReturn(tokenDTO);
 
         mockMvc.perform(post("/auth/ong/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(loginDTO)))
+                .content(objectMapper.writeValueAsString(loginDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value("fake-jwt-token"));
     }
 
     @Test
-    void deveRegistrarOng() throws Exception {
+    void deveRetornar201AoRegistrarOng() throws Exception {
         when(ongService.create(any(OngDTO.class))).thenReturn(ongDTO);
 
         String json = "{"
@@ -272,18 +275,18 @@ public class AuthControllerTest {
     }
 
     @Test
-    void deveLogarAdministrador() throws Exception {
+    void deveRetornar200AoLogarAdministrador() throws Exception {
         when(administradorService.logar(any(LoginDTO.class))).thenReturn(tokenDTO);
 
         mockMvc.perform(post("/auth/admin/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(loginDTO)))
+                .content(objectMapper.writeValueAsString(loginDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value("fake-jwt-token"));   
     }
 
     @Test
-    void deveRegistrarAdministrador() throws Exception {
+    void deveRetornar201AoRegistrarAdministrador() throws Exception {
         when(administradorService.create(any(AdministradorDTO.class))).thenReturn(administradorDTO);
 
         String json = "{"
@@ -325,7 +328,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void deveFazerSignout() throws Exception {
+    void deveRetornar200AoFazerSignout() throws Exception {
         doNothing().when(tokenBlackListService).addToBlacklist(any(HttpServletRequest.class));
 
         mockMvc.perform(post("/auth/signout")

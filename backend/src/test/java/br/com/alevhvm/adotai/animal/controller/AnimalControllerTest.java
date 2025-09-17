@@ -107,7 +107,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveListarAnimais() throws Exception {
+    void deveRetornar200AoListarAnimais() throws Exception {
         List<EntityModel<AnimalDTO>> animais = List.of(EntityModel.of(animalDTO));
 
         PagedModel<EntityModel<AnimalDTO>> pagedModel = PagedModel.of(
@@ -129,7 +129,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveAcharAnimalPorId() throws Exception {
+    void deveRetornar200AoAcharAnimalPorId() throws Exception {
         when(animalService.findById(1L)).thenReturn(animalDTO);
 
         mockMvc.perform(get("/api/v1/animais/{id}", 1L)
@@ -150,7 +150,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveAcharAnimalPorNome() throws Exception {
+    void deveRetornar200AoAcharAnimalPorNome() throws Exception {
         when(animalService.findByNome("Nome Teste")).thenReturn(animalDTO);
 
         mockMvc.perform(get("/api/v1/animais/nome/{nome}", "Nome Teste")
@@ -171,7 +171,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveFiltrarAnimais() throws Exception {
+    void deveRetornar200AoFiltrarAnimais() throws Exception {
         AnimalFiltroDTO filtro = new AnimalFiltroDTO();
         filtro.setNome("Nome Teste Filtro");
 
@@ -192,7 +192,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveRegistrarAnimal() throws Exception{
+    void deveRetornar201AoRegistrarAnimal() throws Exception{
         when(animalService.create(any(AnimalDTO.class))).thenReturn(animalDTO);
 
         String json = "{"
@@ -217,7 +217,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveAtualizarAnimal() throws Exception {
+    void deveRetornar200AoAtualizarAnimal() throws Exception {
         when(animalService.update(any(AnimalDTO.class), eq("Nome Teste"))).thenReturn(animalUpdate);
 
         mockMvc.perform(put("/api/v1/animais/{nome}", "Nome Teste")
@@ -241,7 +241,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveAtualizarParcialAnimal() throws Exception {
+    void deveRetornar200AoAtualizarParcialAnimal() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Nome Teste Partial");
         when(animalService.partialUpdate("Nome Teste", updates)).thenReturn(animalPartialUpdate);
 
@@ -265,7 +265,7 @@ public class AnimalControllerTest {
     }
 
     @Test
-    void deveDeletarAnimal() throws Exception {
+    void deveRetornarNoContentAoDeletarAnimal() throws Exception {
         doNothing().when(animalService).delete("Nome Teste");
 
         mockMvc.perform(delete("/api/v1/animais/{nome}", "Nome Teste"))
