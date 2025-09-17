@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,7 +95,7 @@ public class AnimalRepositoryTest {
     }
 
     @Test
-    void deveEncontrarAnimalPorNome(){
+    void deveEncontrarAnimalPorNomeQuandoHaCadastrado(){
         Optional<Animal> resultado = animalRepository.findByNome("Garfield");
 
         assertTrue(resultado.isPresent());
@@ -102,11 +103,20 @@ public class AnimalRepositoryTest {
     }
 
     @Test
+    void deveLancarExcecaoQuandoNaoEncontrarAnimalPorNome() {
+        assertThrows(NoSuchElementException.class, () -> {
+            animalRepository.findByNome("Nome Errado")
+                .orElseThrow();
+        });
+    }
+
+    @Test
     void deveDeletarAnimalPorNome(){
+        assertTrue(animalRepository.findByNome("Garfield").isPresent());
+
         animalRepository.deleteByNome("Garfield");
 
-        Optional<Animal> resultado = animalRepository.findByNome(animal.getNome());
-        assertTrue(resultado.isEmpty());
+        assertTrue(animalRepository.findByNome(animal.getNome()).isEmpty());
     }
 
     @Test

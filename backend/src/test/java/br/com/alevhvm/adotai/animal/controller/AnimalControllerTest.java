@@ -55,6 +55,9 @@ public class AnimalControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private AnimalService animalService;
 
@@ -62,6 +65,7 @@ public class AnimalControllerTest {
     private AnimalDTO animalUpdate;
     private AnimalDTO animalPartialUpdate;
     private AnimalDTO animalFiltro;
+    private String jsonAtualizar;
 
     @BeforeEach
     void setUp() {
@@ -91,6 +95,15 @@ public class AnimalControllerTest {
         animalFiltro.setNome("Nome Teste Filtro");
         animalFiltro.setEspecie("Especie Teste");
         animalFiltro.setRaca("Raca Teste");
+        
+        jsonAtualizar = "{"
+            + "\"nome\":\"Nome Teste Update\","
+            + "\"especie\":\"Especie Teste Update\","
+            + "\"raca\":\"Raca Teste Update\","
+            + "\"dataNascimento\":\"11/07/2025\","
+            + "\"porte\":\"Porte Teste Update\","
+            + "\"sexo\":\"Sexo Teste Update\""
+            + "}";
     }
 
     @Test
@@ -207,18 +220,9 @@ public class AnimalControllerTest {
     void deveAtualizarAnimal() throws Exception {
         when(animalService.update(any(AnimalDTO.class), eq("Nome Teste"))).thenReturn(animalUpdate);
 
-        String json = "{"
-            + "\"nome\":\"Nome Teste Update\","
-            + "\"especie\":\"Especie Teste Update\","
-            + "\"raca\":\"Raca Teste Update\","
-            + "\"dataNascimento\":\"11/07/2025\","
-            + "\"porte\":\"Porte Teste Update\","
-            + "\"sexo\":\"Sexo Teste Update\""
-            + "}";
-
         mockMvc.perform(put("/api/v1/animais/{nome}", "Nome Teste")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+                .content(jsonAtualizar))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Nome Teste Update"))
                 .andExpect(jsonPath("$.especie").value("Especie Teste Update"))
@@ -227,20 +231,11 @@ public class AnimalControllerTest {
 
     @Test
     void deveRetornarNotFoundAoAtualizarAnimalInexistente() throws Exception{
-        String json = "{"
-            + "\"nome\":\"Nome Teste Update\","
-            + "\"especie\":\"Especie Teste Update\","
-            + "\"raca\":\"Raca Teste Update\","
-            + "\"dataNascimento\":\"11/07/2025\","
-            + "\"porte\":\"Porte Teste Update\","
-            + "\"sexo\":\"Sexo Teste Update\""
-            + "}";
-
         when(animalService.update(any(AnimalDTO.class), eq("AnimalInexistente"))).thenThrow(new EntityNotFoundException("Animal não encontrado."));
 
         mockMvc.perform(put("/api/v1/animais/{nome}", "AnimalInexistente")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(json))
+        .content(jsonAtualizar))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("Animal não encontrado."));
     }
@@ -252,7 +247,7 @@ public class AnimalControllerTest {
 
         mockMvc.perform(patch("/api/v1/animais/{nome}", "Nome Teste")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Nome Teste Partial"));
     }
@@ -264,7 +259,7 @@ public class AnimalControllerTest {
 
         mockMvc.perform(patch("/api/v1/animais/{nome}", "animalTesteErrado")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Animal não encontrado."));
     }
