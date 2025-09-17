@@ -192,6 +192,18 @@ public class AdministradorControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarParcialAdministradorInexistente() throws Exception {
+        Map<String, Object> updates = Map.of("nome", "Novo Nome");
+        when(administradorService.partialUpdate("adminTesteErrado", updates)).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
+
+        mockMvc.perform(patch("/api/v1/administradores/{nomeUsuario}", "adminTesteErrado")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updates)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Administrador não encontrado."));
+    }
+
+    @Test
     void deveDeletarAdministrador() throws Exception {
         doNothing().when(administradorService).delete("adminTeste");
 

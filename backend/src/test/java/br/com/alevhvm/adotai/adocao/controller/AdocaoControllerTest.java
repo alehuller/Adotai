@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.adocao.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,6 +37,7 @@ import br.com.alevhvm.adotai.adocao.enums.StatusAdocao;
 import br.com.alevhvm.adotai.adocao.service.AdocaoService;
 import br.com.alevhvm.adotai.auth.security.SecurityFilter;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(
     controllers = AdocaoController.class,
@@ -110,6 +112,15 @@ public class AdocaoControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundQuandoNaoAcharAdocaoPorId() throws Exception{
+        when(adocaoService.findById(99L)).thenThrow(new EntityNotFoundException("Adoção não encontrada."));
+
+        mockMvc.perform(get("/api/v1/adocoes/{id}", 99L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Adoção não encontrada."));
+    }
+
+    @Test
     void deveRegistrarAdocao() throws Exception {
         when(adocaoService.create(any(AdocaoDTO.class))).thenReturn(adocaoCriada);
 
@@ -145,6 +156,22 @@ public class AdocaoControllerTest {
     }
 
     @Test
+    void deveRetonarNotFoundAoAtualizarAdocaoInexistente() throws Exception {
+        when(adocaoService.update(any(AdocaoDTO.class), eq(99L))).thenThrow(new EntityNotFoundException("Adoção não encontrada."));
+
+        String json = "{"
+            + "\"dataAdocao\":\"11/07/2025\","
+            + "\"status\":\"CANCELADA\""
+            + "}";
+
+        mockMvc.perform(put("/api/v1/adocoes/{id}", 99L)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").value("Adoção não encontrada."));
+    }
+
+    @Test
     void deveAtualizarParcialAdocao() throws Exception {
         Map<String, Object> updates = Map.of("status", "CANCELADA");
         when(adocaoService.partialUpdate(1L, updates)).thenReturn(adocaoPartialUpdate);
@@ -157,10 +184,32 @@ public class AdocaoControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarAdocaoInexistente() throws Exception {
+        Map<String, Object> updates = Map.of("status", "CANCELADA");
+        when(adocaoService.partialUpdate(99L, updates)).thenThrow(new EntityNotFoundException("Adoção não encontrada."));
+
+        mockMvc.perform(patch("/api/v1/adocoes/{id}", 99L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updates)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Adoção não encontrada."));
+
+    }
+
+    @Test
     void deveDeletarAdocao() throws Exception {
         doNothing().when(adocaoService).delete(1L);
 
         mockMvc.perform(delete("/api/v1/adocoes/{id}", 1L))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deveRetornarNotFoundAoDeletarAdocaoInexistente() throws Exception{
+        doThrow(new EntityNotFoundException("Adoção não encontrada.")).when(adocaoService).delete(99L);
+
+        mockMvc.perform(delete("/api/v1/adocoes/{id}", 99L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Adoção não encontrada."));
     }
 }

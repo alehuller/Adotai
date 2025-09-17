@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.animal.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -39,6 +40,7 @@ import br.com.alevhvm.adotai.animal.enums.StatusAnimal;
 import br.com.alevhvm.adotai.animal.service.AnimalService;
 import br.com.alevhvm.adotai.auth.security.SecurityFilter;
 import br.com.alevhvm.adotai.common.util.MediaType;
+import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(
     controllers = AnimalController.class,
@@ -126,6 +128,15 @@ public class AnimalControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoNaoAcharAnimalPorId() throws Exception {
+        when(animalService.findById(99L)).thenThrow(new EntityNotFoundException("Animal não encontrado."));
+
+        mockMvc.perform(get("/api/v1/animais/{id}", 99L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Animal não encontrado."));
+    }
+
+    @Test
     void deveAcharAnimalPorNome() throws Exception {
         when(animalService.findByNome("Nome Teste")).thenReturn(animalDTO);
 
@@ -135,6 +146,15 @@ public class AnimalControllerTest {
                 .andExpect(jsonPath("$.nome").value("Nome Teste"))
                 .andExpect(jsonPath("$.especie").value("Especie Teste"))
                 .andExpect(jsonPath("$.raca").value("Raca Teste"));
+    }
+
+    @Test
+    void deveRetornarNotFoundAoNaoAcharAnimalPorNome() throws Exception {
+        when(animalService.findByNome("NomeErrado")).thenThrow(new EntityNotFoundException("Animal não encontrado."));
+
+        mockMvc.perform(get("/api/v1/animais/nome/{nome}", "NomeErrado"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Animal não encontrado."));
     }
 
     @Test
@@ -206,6 +226,26 @@ public class AnimalControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarAnimalInexistente() throws Exception{
+        String json = "{"
+            + "\"nome\":\"Nome Teste Update\","
+            + "\"especie\":\"Especie Teste Update\","
+            + "\"raca\":\"Raca Teste Update\","
+            + "\"dataNascimento\":\"11/07/2025\","
+            + "\"porte\":\"Porte Teste Update\","
+            + "\"sexo\":\"Sexo Teste Update\""
+            + "}";
+
+        when(animalService.update(any(AnimalDTO.class), eq("AnimalInexistente"))).thenThrow(new EntityNotFoundException("Animal não encontrado."));
+
+        mockMvc.perform(put("/api/v1/animais/{nome}", "AnimalInexistente")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").value("Animal não encontrado."));
+    }
+
+    @Test
     void deveAtualizarParcialAnimal() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Nome Teste Partial");
         when(animalService.partialUpdate("Nome Teste", updates)).thenReturn(animalPartialUpdate);
@@ -218,10 +258,31 @@ public class AnimalControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarParcialAnimalInexistente() throws Exception {
+        Map<String, Object> updates = Map.of("nome", "Novo Nome");
+        when(animalService.partialUpdate("animalTesteErrado", updates)).thenThrow(new EntityNotFoundException("Animal não encontrado."));
+
+        mockMvc.perform(patch("/api/v1/animais/{nome}", "animalTesteErrado")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updates)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Animal não encontrado."));
+    }
+
+    @Test
     void deveDeletarAnimal() throws Exception {
         doNothing().when(animalService).delete("Nome Teste");
 
         mockMvc.perform(delete("/api/v1/animais/{nome}", "Nome Teste"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deveRetornarNotFoundAoDeletarAnimalInexistente() throws Exception {
+        doThrow(new EntityNotFoundException("Animal não encontrado")).when(animalService).delete("naoExistente");
+
+        mockMvc.perform(delete("/api/v1/animais/{nome}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Animal não encontrado"));
     }
 }

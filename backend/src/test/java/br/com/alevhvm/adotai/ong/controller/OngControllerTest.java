@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.ong.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,6 +47,7 @@ import br.com.alevhvm.adotai.ong.dto.OngDTO;
 import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
 import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
 import br.com.alevhvm.adotai.ong.service.OngService;
+import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(
     controllers = OngController.class,
@@ -165,6 +167,15 @@ public class OngControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundQuandoNaoAcharOngPorId() throws Exception {
+        when(ongService.findById(99L)).thenThrow(new EntityNotFoundException("Ong não encontrada."));
+
+        mockMvc.perform(get("/api/v1/ongs/{id}", 99L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Ong não encontrada."));
+    }
+
+    @Test
     void deveAcharOngPorNome() throws Exception {
         when(ongService.findByNomeUsuario("Nome Teste")).thenReturn(ongDTO);
 
@@ -174,6 +185,15 @@ public class OngControllerTest {
                 .andExpect(jsonPath("$.nome").value("Nome Teste"))
                 .andExpect(jsonPath("$.email").value("email@teste.com"))
                 .andExpect(jsonPath("$.descricao").value("Descricao Teste"));
+    }
+
+    @Test
+    void deveRetornarNotFoundQuandoNaoAcharOngPorNomeUsuario() throws Exception {
+        when(ongService.findByNomeUsuario("naoExistente")).thenThrow(new EntityNotFoundException("Ong não encontrada."));
+
+        mockMvc.perform(get("/api/v1/ongs/nomeUsuario/{nomeUsuario}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Ong não encontrada."));
     }
 
     @Test
@@ -272,6 +292,27 @@ public class OngControllerTest {
     }
 
     @Test
+    void deveRetonarBadRequestQuandoRegistroDeOngForInvalido() throws Exception {
+        String json = """
+        {
+            "nome": "",
+            "nomeUsuario": "ong teste",
+            "fotoPerfil": "",
+            "email": "email-invalido",
+            "senha": "123",
+            "cell": "11999999999",
+            "responsavel": "",
+            "descricao": ""
+        }
+        """;
+
+        mockMvc.perform(post("/api/v1/ongs")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void deveAtualizarOng() throws Exception {
         when(ongService.update(any(OngUpdateDTO.class), eq("Nome Teste"))).thenReturn(ongUpdateDTO);
 
@@ -301,6 +342,32 @@ public class OngControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarOngInexistente() throws Exception{
+        String json = "{"
+        + "\"nome\":\"Nome Teste Update\","
+        + "\"nomeUsuario\":\"NomeUsuarioTesteUpdate\","
+        + "\"fotoPerfil\":\"FotoTesteUpdate\","
+        + "\"email\":\"email@testeupdate.com\","
+        + "\"senha\":\"senha123\","
+        + "\"endereco\":{"
+        +     "\"numero\":\"111\","
+        +     "\"cep\":\"01111-011\""
+        + "},"
+        + "\"cell\":\"(11) 91111-1111\","
+        + "\"responsavel\":\"Responsavel Teste Update\","
+        + "\"descricao\":\"Descricao Teste Update\""
+        + "}";
+
+        when(ongService.update(any(OngUpdateDTO.class), eq("naoExistente"))).thenThrow(new EntityNotFoundException("Ong não encontrada."));
+
+        mockMvc.perform(put("/api/v1/ongs/{nomeUsuario}", "naoExistente")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").value("Ong não encontrada."));
+    }
+
+    @Test
     void deveAtualizarParcialOng() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Nome Teste Partial");
         when(ongService.partialUpdate("Nome Teste", updates)).thenReturn(ongPartialUpdate);
@@ -313,10 +380,31 @@ public class OngControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarParcialOngInexistente() throws Exception {
+        Map<String, Object> updates = Map.of("nome", "Novo Nome");
+        when(ongService.partialUpdate("ongTesteErrado", updates)).thenThrow(new EntityNotFoundException("Ong não encontrada."));
+
+        mockMvc.perform(patch("/api/v1/ongs/{nomeUsuario}", "ongTesteErrado")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updates)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Ong não encontrada."));
+    }
+
+    @Test
     void deveDeletarOng() throws Exception {
         doNothing().when(ongService).delete("Nome Teste");
 
         mockMvc.perform(delete("/api/v1/ongs/{nomeUsuario}", "Nome Teste"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deveRetornarNotFoundAoDeletarOngInexistente() throws Exception {
+        doThrow(new EntityNotFoundException("Ong não encontrada")).when(ongService).delete("naoExistente");
+
+        mockMvc.perform(delete("/api/v1/ongs/{nomeUsuario}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Ong não encontrada"));
     }
 }

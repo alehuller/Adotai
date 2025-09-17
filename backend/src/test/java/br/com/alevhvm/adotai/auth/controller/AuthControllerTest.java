@@ -181,6 +181,25 @@ public class AuthControllerTest {
     }
 
     @Test
+    void deveRetornarBadRequestQuandoRegistroDeUsuarioForInvalido() throws Exception {
+        String json = """
+        {
+            "email": "",
+            "senha": "123",
+            "nome": "",
+            "nomeUsuario": "nome usuario", 
+            "fotoPerfil": "",
+            "celular": "11999999999"
+        }
+        """;
+
+        mockMvc.perform(post("/auth/user/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());       
+    }
+
+    @Test
     void deveLogarOng() throws Exception {
         when(ongService.logar(any(LoginDTO.class))).thenReturn(tokenDTO);
 
@@ -232,6 +251,27 @@ public class AuthControllerTest {
     }
 
     @Test
+    void deveRetonarBadRequestQuandoRegistroDeOngForInvalido() throws Exception {
+        String json = """
+        {
+            "nome": "",
+            "nomeUsuario": "ong teste",
+            "fotoPerfil": "",
+            "email": "email-invalido",
+            "senha": "123",
+            "cell": "11999999999",
+            "responsavel": "",
+            "descricao": ""
+        }
+        """;
+
+        mockMvc.perform(post("/auth/ong/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void deveLogarAdministrador() throws Exception {
         when(administradorService.logar(any(LoginDTO.class))).thenReturn(tokenDTO);
 
@@ -263,6 +303,25 @@ public class AuthControllerTest {
         .andExpect(jsonPath("$.nome").value("AdmTeste"))
         .andExpect(jsonPath("$.email").value("emailteste@teste.com"))
         .andExpect(jsonPath("$.fotoPerfil").value("teste foto"));
+    }
+
+    @Test
+    void deveRetornarBadRequestQuandoRegistroDeAdministradorForInvalido() throws Exception {
+        String json = """
+        {
+            "nome": "",
+            "nomeUsuario": "adm teste",
+            "email": "email-invalido",
+            "senha": "",
+            "celular": "11988887777",
+            "fotoPerfil": "foto.png"
+        }
+        """;
+
+        mockMvc.perform(post("/auth/admin/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
