@@ -3,6 +3,7 @@ package br.com.alevhvm.adotai.usuario.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,6 +46,7 @@ import br.com.alevhvm.adotai.common.vo.DescricaoVO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
 import br.com.alevhvm.adotai.usuario.service.UsuarioService;
+import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(
     controllers = UsuarioController.class,
@@ -161,6 +163,15 @@ public class UsuarioControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoNaoAcharUsuarioPorId() throws Exception{
+        when(usuarioService.findById(99L)).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
+
+        mockMvc.perform(get("/api/v1/usuarios/{id}", 99L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
+    }
+
+    @Test
     void deveAcharUsuarioPorNomeUsuario() throws Exception {
         when(usuarioService.findByNomeUsuario("Nome Teste")).thenReturn(usuarioDTO);
 
@@ -170,6 +181,15 @@ public class UsuarioControllerTest {
                 .andExpect(jsonPath("$.nome").value("Nome Teste"))
                 .andExpect(jsonPath("$.email").value("email@teste.com"))
                 .andExpect(jsonPath("$.celular").value("(11) 91111-1111"));
+    }
+
+    @Test
+    void deveRetornarNotFoundQuandoNaoAcharUsuarioPorNomeUsuario() throws Exception {
+        when(usuarioService.findByNomeUsuario("naoExistente")).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
+
+        mockMvc.perform(get("/api/v1/usuarios/nomeUsuario/{nomeUsuario}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
     }
 
     @Test
@@ -220,6 +240,25 @@ public class UsuarioControllerTest {
     }
 
     @Test
+    void deveRetornarBadRequestQuandoRegistroDeUsuarioForInvalido() throws Exception {
+        String json = """
+        {
+            "email": "",
+            "senha": "123",
+            "nome": "",
+            "nomeUsuario": "nome usuario", 
+            "fotoPerfil": "",
+            "celular": "11999999999"
+        }
+        """;
+
+        mockMvc.perform(post("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());       
+    }
+
+    @Test
     void deveAtualizarUsuario() throws Exception {
         when(usuarioService.update(any(UsuarioUpdateDTO.class), eq("Nome Teste"))).thenReturn(usuarioUpdateDTO);
 
@@ -244,6 +283,26 @@ public class UsuarioControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarUsuarioInexistente() throws Exception{
+        String json = "{"
+        + "\"nome\":\"Nome Teste Update\","
+        + "\"nomeUsuario\":\"NomeUsuarioTesteUpdate\","
+        + "\"fotoPerfil\":\"Foto Teste Update\","
+        + "\"email\":\"email@testeupdate.com\","
+        + "\"senha\":\"senha123\","
+        + "\"celular\":\"(11) 92222-2222\""
+        + "}";
+
+        when(usuarioService.update(any(UsuarioUpdateDTO.class), eq("naoExistente"))).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
+
+        mockMvc.perform(put("/api/v1/usuarios/{nomeUsuario}", "naoExistente")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
+    }
+
+    @Test
     void deveAtualizarParcialUsuario() throws Exception {
         Map<String, Object> updates = Map.of("nome", "Nome Teste Partial");
         when(usuarioService.partialUpdate("Nome Teste", updates)).thenReturn(usuarioPartialUpdate);
@@ -256,11 +315,32 @@ public class UsuarioControllerTest {
     }
 
     @Test
+    void deveRetornarNotFoundAoAtualizarParcialUsuarioInexistente() throws Exception {
+        Map<String, Object> updates = Map.of("nome", "Novo Nome");
+        when(usuarioService.partialUpdate("usuarioTesteErrado", updates)).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
+
+        mockMvc.perform(patch("/api/v1/usuarios/{nomeUsuario}", "usuarioTesteErrado")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updates)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
+    }
+
+    @Test
     void deveDeletarUsuario() throws Exception {
         doNothing().when(usuarioService).delete("Nome Teste");
 
         mockMvc.perform(delete("/api/v1/usuarios/{nomeUsuario}", "Nome Teste"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deveRetornarNotFoundAoDeletarUsuarioInexistente() throws Exception {
+        doThrow(new EntityNotFoundException("Usuário não encontrado")).when(usuarioService).delete("naoExistente");
+
+        mockMvc.perform(delete("/api/v1/usuarios/{nomeUsuario}", "naoExistente"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Usuário não encontrado"));
     }
 
     @Test
