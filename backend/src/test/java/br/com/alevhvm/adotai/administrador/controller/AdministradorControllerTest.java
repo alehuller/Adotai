@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,12 +49,16 @@ public class AdministradorControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private AdministradorService administradorService;
 
     private AdministradorDTO administradorDTO;
     private AdministradorDTO administradorUpdate;
     private AdministradorDTO administradorPartialUpdate;
+    private Map<String, Object> updates;
 
     @BeforeEach
     void setUp() {
@@ -72,10 +77,13 @@ public class AdministradorControllerTest {
 
         administradorPartialUpdate = new AdministradorDTO();
         administradorPartialUpdate.setNome("Novo Nome");
+
+        updates = new HashMap<>();
+        updates = Map.of("nome", "Novo Nome");
     }
 
     @Test
-    void deveListarAdministradores() throws Exception {
+    void deveRetornar200AoListarAdministradores() throws Exception {
         List<EntityModel<AdministradorDTO>> administradores = List.of(EntityModel.of(administradorDTO));
 
         PagedModel<EntityModel<AdministradorDTO>> pagedModel = PagedModel.of(
@@ -96,7 +104,7 @@ public class AdministradorControllerTest {
     }
 
     @Test
-    void deveAcharAdministradorPorId() throws Exception {
+    void deveRetornar200AoAcharAdministradorPorId() throws Exception {
         when(administradorService.findById(1L)).thenReturn(administradorDTO);
 
         mockMvc.perform(get("/api/v1/administradores/{id}", 1L)
@@ -107,7 +115,7 @@ public class AdministradorControllerTest {
     }
 
     @Test
-    void deveRetornarNotFoundQuandoNacoAcharAdministradorPorId() throws Exception {
+    void deveRetornarNotFoundQuandoNaoAcharAdministradorPorId() throws Exception {
         when(administradorService.findById(99L)).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
 
         mockMvc.perform(get("/api/v1/administradores/{id}", 99L))
@@ -116,7 +124,7 @@ public class AdministradorControllerTest {
     }
 
     @Test
-    void deveAcharAdministradorPorNomeUsuario() throws Exception {
+    void deveRetornar200AoAcharAdministradorPorNomeUsuario() throws Exception {
         when(administradorService.findByNomeUsuario("adminTeste")).thenReturn(administradorDTO);
         
         mockMvc.perform(get("/api/v1/administradores/nomeUsuario/{nomeUsuario}", "adminTeste")
@@ -136,7 +144,7 @@ public class AdministradorControllerTest {
     }
 
     @Test
-    void deveAtualizarAdministrador() throws Exception {
+    void deveRetornar200AoAtualizarAdministrador() throws Exception {
         when(administradorService.update(any(AdministradorDTO.class), eq("adminTeste"))).thenReturn(administradorUpdate);
 
         String json = "{"
@@ -180,31 +188,29 @@ public class AdministradorControllerTest {
     }
 
     @Test
-    void deveAtualizarParcialAdministrador() throws Exception {
-        Map<String, Object> updates = Map.of("nome", "Novo Nome");
+    void deveRetornar200AoAtualizarParcialAdministrador() throws Exception {
         when(administradorService.partialUpdate("adminTeste", updates)).thenReturn(administradorPartialUpdate);
 
         mockMvc.perform(patch("/api/v1/administradores/{nomeUsuario}", "adminTeste")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Novo Nome"));
     }
 
     @Test
     void deveRetornarNotFoundAoAtualizarParcialAdministradorInexistente() throws Exception {
-        Map<String, Object> updates = Map.of("nome", "Novo Nome");
         when(administradorService.partialUpdate("adminTesteErrado", updates)).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
 
         mockMvc.perform(patch("/api/v1/administradores/{nomeUsuario}", "adminTesteErrado")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Administrador não encontrado."));
     }
 
     @Test
-    void deveDeletarAdministrador() throws Exception {
+    void deveRetornarNoContentAoDeletarAdministrador() throws Exception {
         doNothing().when(administradorService).delete("adminTeste");
 
         mockMvc.perform(delete("/api/v1/administradores/{nomeUsuario}", "adminTeste"))

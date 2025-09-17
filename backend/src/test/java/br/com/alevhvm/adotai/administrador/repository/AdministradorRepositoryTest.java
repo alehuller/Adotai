@@ -87,7 +87,7 @@ class AdministradorRepositoryTest {
     }
 
     @Test
-    void deveEncontrarAdminitradorPorCell() {
+    void deveEncontrarAdministradorPorCell() {
         Optional<Administrador> resultado = administradorRepository.findByCell("11999999999");
 
         assertTrue(resultado.isPresent());
@@ -104,10 +104,10 @@ class AdministradorRepositoryTest {
 
     @Test
     void deveExcluirAdministradorPorNomeUsuario() {
+        assertTrue(administradorRepository.findByNomeUsuario("AdminTesteNome").isPresent());
+
         administradorRepository.deleteByNomeUsuario("AdminTesteNome");
 
-        Optional<Administrador> resultado = administradorRepository.findByNomeUsuario("AdminTesteNome");
-
-        assertTrue(resultado.isEmpty());
+        assertTrue(administradorRepository.findByNomeUsuario("AdminTesteNome").isEmpty());
     }
 }
