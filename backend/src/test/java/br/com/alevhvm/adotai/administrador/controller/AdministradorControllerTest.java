@@ -136,11 +136,11 @@ public class AdministradorControllerTest {
 
     @Test
     void deveRetornarNotFoundQuandoNaoAcharAdministradorPorNomeUsuario() throws Exception {
-        when(administradorService.findByNomeUsuario("naoExistente")).thenThrow(new EntityNotFoundException("Usuário não encontrado."));
+        when(administradorService.findByNomeUsuario("naoExistente")).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
 
         mockMvc.perform(get("/api/v1/administradores/nomeUsuario/{nomeUsuario}", "naoExistente"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Usuário não encontrado."));
+                .andExpect(jsonPath("$.message").value("Administrador não encontrado."));
     }
 
     @Test

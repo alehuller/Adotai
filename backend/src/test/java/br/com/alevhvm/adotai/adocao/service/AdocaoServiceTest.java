@@ -82,7 +82,7 @@ public class AdocaoServiceTest {
     private Animal animal;
 
     private RedeVO redeVO;
-
+    private Map<String, Object> updates;
 
     @BeforeEach
     void setUp() {
@@ -154,6 +154,9 @@ public class AdocaoServiceTest {
         adocaoDiferente.setStatus(StatusAdocao.CANCELADA);
         adocaoDiferente.setIdAnimal(1L);;
         adocaoDiferente.setIdUsuario(1L);
+
+        updates = new HashMap<>();
+        updates.put("status", "CANCELADA");
     }
 
     @Test
@@ -354,9 +357,6 @@ public class AdocaoServiceTest {
 
     @Test
     void deveAtualizarAdocaoPartialComSucesso() {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("status", "CANCELADA");
-
         when(adocaoRepository.findById(1L)).thenReturn(Optional.of(adocaoEntity));
 
         when(adocaoRepository.save(any(Adocao.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -372,9 +372,6 @@ public class AdocaoServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoNaoEncontrarAdocaoNoPartialUpdate() {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("status", "CANCELADA");
-
         when(adocaoRepository.findById(2L)).thenReturn(Optional.empty());
 
         EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {

@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,9 @@ public class AdocaoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private AdocaoService adocaoService;
 
@@ -59,6 +63,7 @@ public class AdocaoControllerTest {
     private AdocaoDTO adocaoCriada;
     private AdocaoDTO adocaoUpdate;
     private AdocaoDTO adocaoPartialUpdate;
+    private Map<String, Object> updates;
 
     @BeforeEach
     void setUp() {
@@ -77,10 +82,13 @@ public class AdocaoControllerTest {
 
         adocaoPartialUpdate = new AdocaoDTO();
         adocaoPartialUpdate.setStatus(StatusAdocao.CANCELADA);
+
+        updates = new HashMap<>();
+        updates = Map.of("nome", "Novo Nome");
     }
 
     @Test
-    void deveListarAdocoes() throws Exception {
+    void deveRetornar200AoListarAdocoes() throws Exception {
         List<EntityModel<AdocaoDTO>> adocoes = List.of(EntityModel.of(adocaoDTO));
 
         PagedModel<EntityModel<AdocaoDTO>> pagedModel = PagedModel.of(
@@ -101,7 +109,7 @@ public class AdocaoControllerTest {
     }
 
     @Test
-    void deveAcharAdocaoPorId() throws Exception {
+    void deveRetornar200AoAcharAdocaoPorId() throws Exception {
         when(adocaoService.findById(1L)).thenReturn(adocaoDTO);
 
         mockMvc.perform(get("/api/v1/adocoes/{id}", 1L)
@@ -121,7 +129,7 @@ public class AdocaoControllerTest {
     }
 
     @Test
-    void deveRegistrarAdocao() throws Exception {
+    void deveRetornar201AoRegistrarAdocao() throws Exception {
         when(adocaoService.create(any(AdocaoDTO.class))).thenReturn(adocaoCriada);
 
         String json = "{"
@@ -139,7 +147,7 @@ public class AdocaoControllerTest {
     }
 
     @Test
-    void deveAtualizarAdocao() throws Exception {
+    void deveRetornar200AoAtualizarAdocao() throws Exception {
         when(adocaoService.update(any(AdocaoDTO.class), eq(1L))).thenReturn(adocaoUpdate);
 
         String json = "{"
@@ -172,32 +180,30 @@ public class AdocaoControllerTest {
     }
 
     @Test
-    void deveAtualizarParcialAdocao() throws Exception {
-        Map<String, Object> updates = Map.of("status", "CANCELADA");
+    void deveRetornar200AoAtualizarParcialAdocao() throws Exception {
         when(adocaoService.partialUpdate(1L, updates)).thenReturn(adocaoPartialUpdate);
 
         mockMvc.perform(patch("/api/v1/adocoes/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CANCELADA"));
     }
 
     @Test
-    void deveRetornarNotFoundAoAtualizarAdocaoInexistente() throws Exception {
-        Map<String, Object> updates = Map.of("status", "CANCELADA");
+    void deveRetornarNotFoundAoAtualizarParcialAdocaoInexistente() throws Exception {
         when(adocaoService.partialUpdate(99L, updates)).thenThrow(new EntityNotFoundException("Adoção não encontrada."));
 
         mockMvc.perform(patch("/api/v1/adocoes/{id}", 99L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updates)))
+                .content(objectMapper.writeValueAsString(updates)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Adoção não encontrada."));
 
     }
 
     @Test
-    void deveDeletarAdocao() throws Exception {
+    void deveRetornarNoContentAoDeletarAdocao() throws Exception {
         doNothing().when(adocaoService).delete(1L);
 
         mockMvc.perform(delete("/api/v1/adocoes/{id}", 1L))

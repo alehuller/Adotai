@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,6 @@ import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DataJpaTest
 @ActiveProfiles("test")
 public class AdocaoRepositoryTest {
@@ -53,8 +51,9 @@ public class AdocaoRepositoryTest {
     private Ong ong;
 
     private RedeVO redeVO;
+    private Pageable pageable;
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
         usuario = new Usuario();
         usuario.setEmail("teste@email.com");
@@ -111,13 +110,15 @@ public class AdocaoRepositoryTest {
         adocao.setUsuario(usuario);
         adocao.setAnimal(animal);
         adocaoRepository.save(adocao);
+
+        pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
     }
 
     @Test
     void deveEncontrarAdocoesPeloIdDoUsuario() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
+        Long usuarioId = usuario.getIdUsuario();
 
-        Page<Adocao> resultado = adocaoRepository.findAdocoesByUsuarioId(1L, pageable);
+        Page<Adocao> resultado = adocaoRepository.findAdocoesByUsuarioId(usuarioId, pageable);
 
         assertFalse(resultado.isEmpty());
         assertEquals(LocalDate.parse("2024-07-11"), resultado.getContent().get(0).getDataAdocao());
@@ -125,8 +126,6 @@ public class AdocaoRepositoryTest {
 
     @Test
     void deveRetornarVazioQuandoNaoEncontrarAdocaoPeloUsuarioId() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
-
         Page<Adocao> resultado = adocaoRepository.findAdocoesByUsuarioId(2L, pageable);
 
         assertTrue(resultado.isEmpty());
@@ -135,9 +134,9 @@ public class AdocaoRepositoryTest {
 
     @Test
     void deveEncontrarAdocoesPeloIdDaOng() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
+        Long ongId = ong.getIdOng();
 
-        Page<Adocao> resultado = adocaoRepository.findAdocoesByOngId(1L, pageable);
+        Page<Adocao> resultado = adocaoRepository.findAdocoesByOngId(ongId, pageable);
 
         assertFalse(resultado.isEmpty());
         assertEquals(StatusAdocao.APROVADA, resultado.getContent().get(0).getStatus());
@@ -145,8 +144,6 @@ public class AdocaoRepositoryTest {
 
     @Test
     void deveRetornarVazioQuandoNaoEncontrarAdocaoPelaOngId() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
-
         Page<Adocao> resultado = adocaoRepository.findAdocoesByOngId(2L, pageable);
 
         assertTrue(resultado.isEmpty());
@@ -155,8 +152,6 @@ public class AdocaoRepositoryTest {
 
     @Test
     void deveEncontrarAdocoesPeloNomeUsuario() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
-
         Page<Adocao> resultado = adocaoRepository.findAdocoesByNomeUsuario("UserTesteNome", pageable);
 
         assertFalse(resultado.isEmpty());
@@ -165,8 +160,6 @@ public class AdocaoRepositoryTest {
 
     @Test
     void deveRetornarVazioQuandoNaoEncontrarAdocaoPeloNomeUsuario() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "idAdocao");
-
         Page<Adocao> resultado = adocaoRepository.findAdocoesByNomeUsuario("UserTesteNomeErrado", pageable);
 
         assertTrue(resultado.isEmpty());
