@@ -59,9 +59,6 @@ public class AdministradorValidacao {
         if (existsAdministradorWithEmail(entity.getEmail().toLowerCase())) {
             erros.add("E-mail já está em uso");
         }
-        if (existsAdministradorWithNomeUsuario(entity.getNomeUsuario())) {
-            erros.add("Nome de Usuário já está em uso");
-        }
         if (existsAdministradorWithCell(entity.getCell())) {
             erros.add("Cell já está em uso");
         }
@@ -83,11 +80,7 @@ public class AdministradorValidacao {
         }
 
         if (updates.containsKey("nomeUsuario")) {
-            String nomeUsuario2 = updates.get("nomeUsuario").toString();
-            Optional<Administrador> usuarioExistente = administradorRepository.findByNomeUsuario(nomeUsuario2);
-            if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                erros.add("Nome de usuário já está em uso por outro administrador");
-            }
+            erros.add("Não é permitido alterar o nome de usuário.");
         }
 
         if (updates.containsKey("cell")) {

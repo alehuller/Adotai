@@ -44,6 +44,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
 import br.com.alevhvm.adotai.administrador.validations.AdministradorValidacao;
@@ -85,7 +86,7 @@ public class AdministradorServiceTest {
     private AdministradorService administradorService;
 
     private AdministradorDTO administradorDTO;
-    private AdministradorDTO adminDiferente;
+    private AdministradorUpdateDTO adminDiferente;
     private Administrador administradorEntity;
     private List<String> erros;
 
@@ -110,9 +111,8 @@ public class AdministradorServiceTest {
         administradorEntity.setFotoPerfil("teste foto");
         administradorEntity.setRole(Roles.ADMIN);
 
-        adminDiferente = new AdministradorDTO();
+        adminDiferente = new AdministradorUpdateDTO();
         adminDiferente.setNome("AdmNomeDiferente");
-        adminDiferente.setNomeUsuario("AdmNomeDiferente");
         adminDiferente.setFotoPerfil("FotoDiferente");
         adminDiferente.setEmail("admdiferente@email.com");
         adminDiferente.setSenha("senhaDiferente");

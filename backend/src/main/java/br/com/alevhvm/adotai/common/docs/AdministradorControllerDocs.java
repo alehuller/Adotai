@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -65,7 +66,7 @@ public interface AdministradorControllerDocs {
             @Parameter(description = "Nome de usuário do administrador a ser atualizado") 
             @PathVariable String nomeUsuario,
             @Parameter(description = "Dados atualizados do administrador") 
-            @RequestBody @Valid AdministradorDTO administrador);
+            @RequestBody @Valid AdministradorUpdateDTO administrador);
 
     @Operation(summary = "Atualização parcial do administrador", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdministradorDTO.class)))),

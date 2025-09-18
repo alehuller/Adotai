@@ -27,6 +27,7 @@ import br.com.alevhvm.adotai.administrador.controller.AdministradorController;
 import br.com.alevhvm.adotai.auth.dto.LoginDTO;
 import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
@@ -97,17 +98,16 @@ public class AdministradorService {
         return dto;
     }
 
-    public AdministradorDTO update(AdministradorDTO administradorDTO, String nomeUsuario) {
+    public AdministradorDTO update(AdministradorUpdateDTO administradorUpdateDTO, String nomeUsuario) {
 
         Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
 
-        entity.setNome(administradorDTO.getNome());
-        entity.setNomeUsuario(administradorDTO.getNomeUsuario());
-        entity.setFotoPerfil(administradorDTO.getFotoPerfil());
-        entity.setEmail(administradorDTO.getEmail().toLowerCase());
-        entity.setSenha(passwordEncoder.encode(administradorDTO.getSenha()));
-        entity.setCell(administradorDTO.getCell());
+        entity.setNome(administradorUpdateDTO.getNome());
+        entity.setFotoPerfil(administradorUpdateDTO.getFotoPerfil());
+        entity.setEmail(administradorUpdateDTO.getEmail().toLowerCase());
+        entity.setSenha(passwordEncoder.encode(administradorUpdateDTO.getSenha()));
+        entity.setCell(administradorUpdateDTO.getCell());
 
         administradorValidacao.validateUpdate(entity);
 

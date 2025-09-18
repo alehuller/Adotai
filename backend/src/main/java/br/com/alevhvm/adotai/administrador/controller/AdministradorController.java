@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
 import br.com.alevhvm.adotai.common.docs.AdministradorControllerDocs;
 import br.com.alevhvm.adotai.common.util.MediaType;
@@ -71,7 +72,7 @@ public class AdministradorController implements AdministradorControllerDocs{
             MediaType.APPLICATION_XML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
                     MediaType.APPLICATION_XML })
     public ResponseEntity<AdministradorDTO> atualizarAdministrador(@PathVariable(value = "nomeUsuario") String nomeUsuario,
-            @RequestBody @Valid AdministradorDTO administrador) {
+            @RequestBody @Valid AdministradorUpdateDTO administrador) {
         AdministradorDTO dto = administradorService.update(administrador, nomeUsuario);    
         return ResponseEntity.ok(dto);
     }

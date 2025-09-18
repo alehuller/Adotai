@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
 import br.com.alevhvm.adotai.auth.security.SecurityFilter;
 import br.com.alevhvm.adotai.common.util.MediaType;
@@ -145,7 +146,7 @@ public class AdministradorControllerTest {
 
     @Test
     void deveRetornar200AoAtualizarAdministrador() throws Exception {
-        when(administradorService.update(any(AdministradorDTO.class), eq("adminTeste"))).thenReturn(administradorUpdate);
+        when(administradorService.update(any(AdministradorUpdateDTO.class), eq("adminTeste"))).thenReturn(administradorUpdate);
 
         String json = "{"
             + "\"nome\":\"Administrador Teste Diferente\","
@@ -178,7 +179,7 @@ public class AdministradorControllerTest {
         }
         """;
 
-        when(administradorService.update(any(AdministradorDTO.class), eq("naoExistente"))).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
+        when(administradorService.update(any(AdministradorUpdateDTO.class), eq("naoExistente"))).thenThrow(new EntityNotFoundException("Administrador não encontrado."));
 
         mockMvc.perform(put("/api/v1/administradores/{nomeUsuario}", "naoExistente")
         .contentType(MediaType.APPLICATION_JSON)
