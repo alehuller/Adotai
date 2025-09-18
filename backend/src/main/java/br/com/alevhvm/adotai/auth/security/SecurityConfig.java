@@ -1,5 +1,7 @@
 package br.com.alevhvm.adotai.auth.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,8 +37,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // possibilita redirecionamento de dados em cyberataques de um site logado
                                               // para outro
 
+                .cors(cors -> {})
+
                 // gerencia as rotas e os acessos com token e sem
                 .authorizeHttpRequests(authorize -> authorize
+
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**")
                         .permitAll()
@@ -113,4 +122,24 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfig = new CorsConfiguration();
+
+        // Exemplo com allowedOriginPatterns para aceitar curingas (ex: localhost:3000, outros subdomínios, etc)
+        corsConfig.setAllowedOriginPatterns(List.of("http://localhost:3000")); // aqui pode usar curingas
+
+        // Se preferir, pode listar explicitamente as URLs e NÃO usar curingas, mas nesse caso allowedOrigins:
+        // corsConfig.setAllowedOrigins(List.of("http://localhost:3000"));
+
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization", "Accept", "X-Requested-With"));
+        corsConfig.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+        return source;
+    }
+
 }

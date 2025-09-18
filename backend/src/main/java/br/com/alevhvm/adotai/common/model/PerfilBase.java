@@ -30,6 +30,6 @@ public abstract class PerfilBase {
     private String cell;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 255, columnDefinition = "smallint default 0")
+    @Column(name = "role", nullable = false, length = 255, columnDefinition = "varchar default 0")
     private Roles role;
 }

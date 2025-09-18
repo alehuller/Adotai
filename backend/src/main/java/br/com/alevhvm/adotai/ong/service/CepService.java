@@ -13,8 +13,8 @@ public class CepService {
 
     private final RestTemplate restTemplate;
 
-    public CepService() {
-        this.restTemplate = new RestTemplate();
+    public CepService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public CepDTO buscarEnderecoPorCep(String cep) {
