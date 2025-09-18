@@ -168,7 +168,6 @@ public class UsuarioService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         entity.setNome(usuarioUpdate.getNome());
-        entity.setNomeUsuario(usuarioUpdate.getNomeUsuario());
         entity.setFotoPerfil(usuarioUpdate.getFotoPerfil());
         entity.setEmail(usuarioUpdate.getEmail().toLowerCase());
         entity.setSenha(passwordEncoder.encode(usuarioUpdate.getSenha()));

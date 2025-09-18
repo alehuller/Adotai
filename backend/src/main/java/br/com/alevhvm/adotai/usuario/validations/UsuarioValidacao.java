@@ -54,9 +54,6 @@ public class UsuarioValidacao {
         if (existsUsuarioWithCell(entity.getCell())) {
             erros.add("Cell já está em uso");
         }
-        if (existsUsuarioWithNomeUsuario(entity.getNomeUsuario())) {
-            erros.add("Nome de Usuário já está em uso");
-        }
 
         if (!erros.isEmpty()) {
             throw new ValidacaoException(erros);
@@ -87,11 +84,7 @@ public class UsuarioValidacao {
         }
 
         if (updates.containsKey("nomeUsuario")) {
-            String nomeUsuario2 = updates.get("nomeUsuario").toString();
-            Optional<Usuario> usuarioExistente = usuarioRepository.findByNomeUsuario(nomeUsuario2);
-            if (usuarioExistente.isPresent() && !usuarioExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                erros.add("Nome de usuário já está em uso por outro usuário");
-            }
+            erros.add("Não é permitido alterar o nome de usuário.");
         }
 
         if (!erros.isEmpty()) {

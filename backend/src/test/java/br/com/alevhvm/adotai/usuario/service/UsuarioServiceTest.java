@@ -220,7 +220,6 @@ public class UsuarioServiceTest {
         usuarioDiferente = new UsuarioUpdateDTO();
         usuarioDiferente.setNome("Usuario Nome Diferente");
         usuarioDiferente.setEmail("usuariodiferente@email.com");
-        usuarioDiferente.setNomeUsuario("UsuarioNomeUsuarioDiferente");
         usuarioDiferente.setFotoPerfil("Foto Usuario Diferente");
         usuarioDiferente.setSenha("senhaCriptografada");
         usuarioDiferente.setCell("(11) 94345-9970");
