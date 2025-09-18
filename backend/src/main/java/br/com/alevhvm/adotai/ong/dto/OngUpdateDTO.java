@@ -37,11 +37,6 @@ public class OngUpdateDTO extends RepresentationModel<OngUpdateDTO> implements S
     @NotNull(message = "O nome da ong é obrigatório")
     private String nome;
 
-    @NotBlank(message = "O nome de usuário da ong é obrigatório")
-    @NotNull(message = "O nome de usuário da ong é obrigatório")
-    @Pattern(regexp = "^\\S+$", message = "O nome de usuário não pode conter espaços")
-    private String nomeUsuario;
-
     @NotBlank(message = "A foto de perfil da ong é obrigatória")
     @NotNull(message = "A foto de perfil da ong é obrigatória")
     private String fotoPerfil;

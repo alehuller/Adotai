@@ -176,7 +176,6 @@ public class OngService {
         cepService.preencherEndereco(ongUpdate.getEndereco());
         
         entity.setNome(ongUpdate.getNome());
-        entity.setNomeUsuario(ongUpdate.getNomeUsuario());
         entity.setFotoPerfil(ongUpdate.getFotoPerfil());
         entity.setEmail(ongUpdate.getEmail().toLowerCase());
         entity.setSenha(passwordEncoder.encode(ongUpdate.getSenha()));

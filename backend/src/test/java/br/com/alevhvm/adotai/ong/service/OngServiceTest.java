@@ -176,7 +176,6 @@ public class OngServiceTest {
         ongDiferente = new OngUpdateDTO();
         ongDiferente.setKey(2L);
         ongDiferente.setNome("Amigos dos Animais Diferente");
-        ongDiferente.setNomeUsuario("amigosanimaisdiferente");
         ongDiferente.setFotoPerfil("foto_ong_diferente.png");
         ongDiferente.setEmail("contatodiferente@amigosanimais.org");
         ongDiferente.setSenha("123456");

@@ -54,9 +54,6 @@ public class OngValidacao {
         if (existsOngWithCell(entity.getCell())) {
             erros.add("Celular já está em uso");
         }
-        if (existsOngWithNomeUsuario(entity.getNomeUsuario())) {
-            erros.add("Nome Usuário já está em uso");
-        }
 
         if (!erros.isEmpty()) {
             throw new ValidacaoException(erros);
@@ -87,11 +84,7 @@ public class OngValidacao {
         }
 
         if (updates.containsKey("nomeUsuario")) {
-            String nomeUsuario2 = updates.get("nomeUsuario").toString();
-            Optional<Ong> ongExistente = ongRepository.findByNomeUsuario(nomeUsuario2);
-            if (ongExistente.isPresent() && !ongExistente.get().getNomeUsuario().equals(nomeUsuario)) {
-                erros.add("Nome de usuário já está em uso por outra ong");
-            }
+            erros.add("Não é permitido alterar o nome de usuário.");
         }
 
         if (!erros.isEmpty()) {
