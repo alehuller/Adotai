@@ -190,4 +190,19 @@ public class AdministradorService {
             .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
         administradorRepository.delete(admin);
     }
+
+    public AdministradorDTO atualizarAdmNormalParaMaster(String nomeUsuario) {
+        Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
+
+        if (entity.getRole() == Roles.ADMINMASTER) {
+            throw new IllegalStateException("Esse administrador já é ADMINMASTER.");
+        }
+
+        entity.setRole(Roles.ADMINMASTER);
+
+        AdministradorDTO dto = DozerMapper.parseObject(administradorRepository.save(entity), AdministradorDTO.class);
+        dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(dto.getKey())).withSelfRel());
+        return dto;
+    }
 }

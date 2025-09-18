@@ -90,4 +90,17 @@ public interface AdministradorControllerDocs {
     ResponseEntity<?> deletarPorNomeUsuario(
             @Parameter(description = "Nome de usuário do administrador a ser deletado") 
             @PathVariable String nomeUsuario);
+
+    @Operation(summary = "Promove um administrador comum para administrador master", responses = {
+        @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdministradorDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+    })
+        ResponseEntity<AdministradorDTO> atualizarAdmNormalParaMaster(
+                @Parameter(description = "Nome de usuário do administrador a ser promovido para ADMINMASTER")
+                @PathVariable String nomeUsuario);
+
 }

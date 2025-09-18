@@ -94,4 +94,13 @@ public class AdministradorController implements AdministradorControllerDocs{
         administradorService.delete(nomeUsuario);
         return ResponseEntity.noContent().build();
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PatchMapping(value = "/normalParaMaster/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+            MediaType.APPLICATION_XML })
+    public ResponseEntity<AdministradorDTO> atualizarAdmNormalParaMaster(@PathVariable(value = "nomeUsuario") String nomeUsuario) {
+        AdministradorDTO administradorAtualizado = administradorService.atualizarAdmNormalParaMaster(nomeUsuario);
+        return ResponseEntity.ok(administradorAtualizado);
+    }
+
 }
