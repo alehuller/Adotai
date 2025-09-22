@@ -16,6 +16,12 @@ import br.com.alevhvm.adotai.administrador.exception.AdministradorNuloException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
 import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
+import br.com.alevhvm.adotai.ong.exception.CepException;
+import br.com.alevhvm.adotai.ong.exception.ConversaoEnderecoParaJsonException;
+import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaEnderecoException;
+import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaRedeException;
+import br.com.alevhvm.adotai.ong.exception.ConversaoRedeParaJsonException;
+import br.com.alevhvm.adotai.ong.exception.OngNotFoundException;
 
 import java.util.Date;
 import java.util.List;
@@ -165,8 +171,70 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(AnimalNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleAdnimalNotFound(
+    public final ResponseEntity<ExceptionResponse> handleAnimalNotFound(
         AnimalNotFoundException ex, WebRequest request) {
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(),
+            List.of(ex.getMessage()),
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ConversaoEnderecoParaJsonException.class)
+    public final ResponseEntity<ExceptionResponse> handleConversaoEnderecoParaJson(ConversaoEnderecoParaJsonException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ConversaoJsonParaEnderecoException.class)
+    public final ResponseEntity<ExceptionResponse> handleConversaoJsonParaEndereco(ConversaoJsonParaEnderecoException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ConversaoRedeParaJsonException.class)
+    public final ResponseEntity<ExceptionResponse> handleConversaoRedeParaJson(ConversaoRedeParaJsonException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ConversaoJsonParaRedeException.class)
+    public final ResponseEntity<ExceptionResponse> handleConversaoJsonParaRede(ConversaoJsonParaRedeException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CepException.class)
+    public final ResponseEntity<ExceptionResponse> handleCep(CepException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(OngNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleOngNotFound(
+        OngNotFoundException ex, WebRequest request) {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             new Date(),

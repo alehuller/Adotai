@@ -7,7 +7,6 @@ import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
 import br.com.alevhvm.adotai.ong.validations.OngValidacao;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -36,6 +35,8 @@ import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
 import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
 import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
+import br.com.alevhvm.adotai.ong.exception.OngNotFoundException;
+import br.com.alevhvm.adotai.ong.exception.OngNulaException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.ong.model.Ong;
@@ -86,7 +87,7 @@ public class OngService {
     public OngDTO findById(Long id) {
 
         Ong entity = ongRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
@@ -97,7 +98,7 @@ public class OngService {
     public OngDTO findByNomeUsuario(String nomeUsuario) {
 
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
@@ -168,10 +169,10 @@ public class OngService {
 
     public OngDTO update(OngUpdateDTO ongUpdate, String nomeUsuario) {
         if (ongUpdate == null)
-            throw new NullPointerException();
+            throw new OngNulaException("Não há dados");
 
         Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
 
         cepService.preencherEndereco(ongUpdate.getEndereco());
         
@@ -197,7 +198,7 @@ public class OngService {
 
     public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Ong ong = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
 
         ongValidacao.validatePartialUpdate(nomeUsuario, updates);
 
@@ -288,7 +289,7 @@ public class OngService {
     @Transactional
     public void delete(String nomeUsuario) {
         var ong = ongRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+            .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
         ongRepository.deleteByNomeUsuario(nomeUsuario);
     }
 }

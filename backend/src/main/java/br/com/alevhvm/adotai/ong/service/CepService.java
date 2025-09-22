@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.ong.dto.CepDTO;
+import br.com.alevhvm.adotai.ong.exception.CepException;
 
 @Service
 public class CepService {
@@ -25,7 +26,7 @@ public class CepService {
                 && response.getBody().getCep() != null) {
             return response.getBody();
         } else {
-            throw new IllegalArgumentException("CEP inválido ou não encontrado");
+            throw new CepException("CEP inválido ou não encontrado");
         }
     }
 

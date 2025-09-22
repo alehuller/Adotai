@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
+import br.com.alevhvm.adotai.ong.exception.ConversaoEnderecoParaJsonException;
+import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaEnderecoException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -19,7 +21,7 @@ public class EnderecoConverter implements AttributeConverter<EnderecoVO, String>
         try {
             return objectMapper.writeValueAsString(enderecoVO);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Erro ao converterEnderecoVO para JSON", e);
+            throw new ConversaoEnderecoParaJsonException("Erro ao converterEnderecoVO para JSON", e);
         }
     }
 
@@ -28,7 +30,7 @@ public class EnderecoConverter implements AttributeConverter<EnderecoVO, String>
         try {
             return objectMapper.readValue(json, EnderecoVO.class);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Erro ao converterJSON para EnderecoVO", e);
+            throw new ConversaoJsonParaEnderecoException("Erro ao converter JSON para EnderecoVO", e);
         }
     }
 }

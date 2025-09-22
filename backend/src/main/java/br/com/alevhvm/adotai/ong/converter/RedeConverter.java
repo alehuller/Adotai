@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.alevhvm.adotai.common.vo.RedeVO;
+import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaRedeException;
+import br.com.alevhvm.adotai.ong.exception.ConversaoRedeParaJsonException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -19,7 +21,7 @@ public class RedeConverter implements AttributeConverter<RedeVO, String> {
         try {
             return objectMapper.writeValueAsString(siteVO);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Erro ao converter RedeVO para JSON", e);
+            throw new ConversaoRedeParaJsonException("Erro ao converter RedeVO para JSON", e);
         }
     }
 
@@ -28,7 +30,7 @@ public class RedeConverter implements AttributeConverter<RedeVO, String> {
         try {
             return objectMapper.readValue(json, RedeVO.class);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Erro ao converter JSON para SiteVO", e);
+            throw new ConversaoJsonParaRedeException("Erro ao converter JSON para SiteVO", e);
         }
     }
 

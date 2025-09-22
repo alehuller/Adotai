@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import br.com.alevhvm.adotai.common.vo.EnderecoVO;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
+import br.com.alevhvm.adotai.ong.exception.OngNulaException;
 import br.com.alevhvm.adotai.ong.model.Ong;
 import br.com.alevhvm.adotai.ong.repository.OngRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class OngValidacao {
 
     public void validate(OngDTO ong) {
         if (ong == null)
-            throw new NullPointerException("Não há dados");
+            throw new OngNulaException("Não há dados");
 
         List<String> erros = new ArrayList<>();
 
