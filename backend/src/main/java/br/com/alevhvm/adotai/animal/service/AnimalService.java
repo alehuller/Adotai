@@ -22,6 +22,7 @@ import java.util.Set;
 
 import br.com.alevhvm.adotai.animal.controller.AnimalController;
 import br.com.alevhvm.adotai.ong.controller.OngController;
+import br.com.alevhvm.adotai.ong.exception.OngNotFoundException;
 import br.com.alevhvm.adotai.common.vo.DescricaoVO;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
@@ -108,7 +109,7 @@ public class AnimalService {
             throw new AnimalNuloException("Não há dados");
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new AnimalNotFoundException("Ong não encontrada"));
+                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada"));
 
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
         entity.setOng(ong);
@@ -120,7 +121,7 @@ public class AnimalService {
     public AnimalDTO update(AnimalDTO animal, String nome) {
 
         if (animal == null)
-            throw new NullPointerException();
+            throw new AnimalNuloException("Não há dados");
 
         Animal entity = animalRepository.findByNome(nome)
                 .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));

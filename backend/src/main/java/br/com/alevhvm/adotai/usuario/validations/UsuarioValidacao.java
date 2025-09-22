@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
+import br.com.alevhvm.adotai.usuario.exception.UsuarioNuloException;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import br.com.alevhvm.adotai.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UsuarioValidacao {
 
     public void validate(RegistroDTO registroDTO) {
         if (registroDTO == null) {
-            throw new NullPointerException("Não há dados");
+            throw new UsuarioNuloException("Não há dados");
         }
 
         List<String> erros = new ArrayList<>();

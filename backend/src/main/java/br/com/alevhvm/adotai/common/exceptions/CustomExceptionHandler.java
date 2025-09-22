@@ -16,12 +16,16 @@ import br.com.alevhvm.adotai.administrador.exception.AdministradorNuloException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
 import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
+import br.com.alevhvm.adotai.animal.exception.AnimalNuloException;
 import br.com.alevhvm.adotai.ong.exception.CepException;
 import br.com.alevhvm.adotai.ong.exception.ConversaoEnderecoParaJsonException;
 import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaEnderecoException;
 import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaRedeException;
 import br.com.alevhvm.adotai.ong.exception.ConversaoRedeParaJsonException;
 import br.com.alevhvm.adotai.ong.exception.OngNotFoundException;
+import br.com.alevhvm.adotai.ong.exception.OngNulaException;
+import br.com.alevhvm.adotai.usuario.exception.UsuarioNotFoundException;
+import br.com.alevhvm.adotai.usuario.exception.UsuarioNuloException;
 
 import java.util.Date;
 import java.util.List;
@@ -182,6 +186,16 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AnimalNuloException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdnimalNulo(AnimalNuloException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ConversaoEnderecoParaJsonException.class)
     public final ResponseEntity<ExceptionResponse> handleConversaoEnderecoParaJson(ConversaoEnderecoParaJsonException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
@@ -242,5 +256,37 @@ public class CustomExceptionHandler {
             request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OngNulaException.class)
+    public final ResponseEntity<ExceptionResponse> handleOngNula(OngNulaException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleUsuarioNotFound(
+        UsuarioNotFoundException ex, WebRequest request) {
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(),
+            List.of(ex.getMessage()),
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsuarioNuloException.class)
+    public final ResponseEntity<ExceptionResponse> handleUsuarioNulo(UsuarioNuloException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

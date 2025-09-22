@@ -25,8 +25,11 @@ import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
+import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
 import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.ong.exception.OngNotFoundException;
 import br.com.alevhvm.adotai.ong.model.Ong;
+import br.com.alevhvm.adotai.usuario.exception.UsuarioNotFoundException;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import br.com.alevhvm.adotai.adocao.repository.AdocaoRepository;
 import br.com.alevhvm.adotai.animal.repository.AnimalRepository;
@@ -81,10 +84,10 @@ public class AdocaoService {
             throw new AdocaoNulaException("Não há dados");
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new AdocaoNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new AdocaoNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
 
         Adocao entity = DozerMapper.parseObject(adocao, Adocao.class);
         entity.setAnimal(animal);
@@ -103,13 +106,13 @@ public class AdocaoService {
                 .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new AdocaoNotFoundException("Usuário não encontrada."));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrada."));
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new AdocaoNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
 
         Ong ong = ongRepository.findById(animal.getOng().getIdOng())
-                .orElseThrow(() -> new AdocaoNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
 
         entity.setDataAdocao(adocao.getDataAdocao());
         entity.setStatus(adocao.getStatus());
