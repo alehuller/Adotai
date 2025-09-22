@@ -1,6 +1,5 @@
 package br.com.alevhvm.adotai.animal.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -26,6 +25,8 @@ import br.com.alevhvm.adotai.ong.controller.OngController;
 import br.com.alevhvm.adotai.common.vo.DescricaoVO;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalFiltroDTO;
+import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
+import br.com.alevhvm.adotai.animal.exception.AnimalNuloException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.animal.model.Animal;
 import br.com.alevhvm.adotai.ong.model.Ong;
@@ -65,7 +66,7 @@ public class AnimalService {
     public AnimalDTO findById(Long id) {
 
         Animal entity = animalRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(id)).withSelfRel());
@@ -74,7 +75,7 @@ public class AnimalService {
 
     public AnimalDTO findByNome(String nome) {
         Animal entity = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorNome(nome)).withSelfRel());
@@ -104,10 +105,10 @@ public class AnimalService {
 
     public AnimalDTO create(AnimalDTO animal) {
         if (animal == null)
-            throw new NullPointerException();
+            throw new AnimalNuloException("Não há dados");
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada"));
+                .orElseThrow(() -> new AnimalNotFoundException("Ong não encontrada"));
 
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
         entity.setOng(ong);
@@ -122,10 +123,10 @@ public class AnimalService {
             throw new NullPointerException();
 
         Animal entity = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new AnimalNotFoundException("Ong não encontrada."));
 
         entity.setNome(animal.getNome());
         entity.setEspecie(animal.getEspecie());
@@ -145,7 +146,7 @@ public class AnimalService {
 
     public AnimalDTO partialUpdate(String nome, Map<String, Object> updates) {
         Animal animal = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -199,7 +200,7 @@ public class AnimalService {
     @Transactional
     public void delete(String nome) {
         var animal = animalRepository.findByNome(nome)
-            .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
+            .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
         animalRepository.deleteByNome(nome);
     }
 }

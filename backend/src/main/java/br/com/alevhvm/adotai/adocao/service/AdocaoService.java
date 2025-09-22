@@ -97,7 +97,7 @@ public class AdocaoService {
     public AdocaoDTO update(AdocaoDTO adocao, Long id) {
 
         if (adocao == null)
-            throw new NullPointerException();
+            throw new AdocaoNulaException("Não há dados");
 
         Adocao entity = adocaoRepository.findById(id)
                 .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));

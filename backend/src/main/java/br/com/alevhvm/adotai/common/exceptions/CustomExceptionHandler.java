@@ -15,6 +15,7 @@ import br.com.alevhvm.adotai.administrador.exception.AdministradorNotFoundExcept
 import br.com.alevhvm.adotai.administrador.exception.AdministradorNuloException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
+import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
 
 import java.util.Date;
 import java.util.List;
@@ -161,5 +162,17 @@ public class CustomExceptionHandler {
             request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AnimalNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdnimalNotFound(
+        AnimalNotFoundException ex, WebRequest request) {
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(),
+            List.of(ex.getMessage()),
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 }
