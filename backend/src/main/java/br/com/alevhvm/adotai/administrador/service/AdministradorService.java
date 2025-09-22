@@ -1,6 +1,4 @@
 package br.com.alevhvm.adotai.administrador.service;
-
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -28,6 +26,8 @@ import br.com.alevhvm.adotai.auth.dto.LoginDTO;
 import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
+import br.com.alevhvm.adotai.administrador.exception.AdmIsMasterException;
+import br.com.alevhvm.adotai.administrador.exception.AdministradorNotFoundException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
@@ -91,7 +91,7 @@ public class AdministradorService {
 
     public AdministradorDTO findById(Long id) {
         Administrador entity = administradorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(id)).withSelfRel());
@@ -101,7 +101,7 @@ public class AdministradorService {
     public AdministradorDTO update(AdministradorUpdateDTO administradorUpdateDTO, String nomeUsuario) {
 
         Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
 
         entity.setNome(administradorUpdateDTO.getNome());
         entity.setFotoPerfil(administradorUpdateDTO.getFotoPerfil());
@@ -119,7 +119,7 @@ public class AdministradorService {
     public AdministradorDTO findByNomeUsuario(String nomeUsuario) {
 
         Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new AdministradorNotFoundException("Usuário não encontrado."));
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorNomeUsuario(nomeUsuario))
@@ -129,7 +129,7 @@ public class AdministradorService {
 
     public AdministradorDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         Administrador administrador = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> new AdministradorNotFoundException("Usuário não encontrado."));
 
         administradorValidacao.validatePartialUpdate(nomeUsuario, updates);
 
@@ -187,16 +187,16 @@ public class AdministradorService {
     @Transactional
     public void delete(String nomeUsuario) {
         var admin = administradorRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
+            .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado"));
         administradorRepository.delete(admin);
     }
 
     public AdministradorDTO atualizarAdmNormalParaMaster(String nomeUsuario) {
         Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
 
         if (entity.getRole() == Roles.ADMINMASTER) {
-            throw new IllegalStateException("Esse administrador já é ADMINMASTER.");
+            throw new AdmIsMasterException("Esse administrador já é ADMINMASTER.");
         }
 
         entity.setRole(Roles.ADMINMASTER);

@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import br.com.alevhvm.adotai.administrador.exception.AdmIsMasterException;
+import br.com.alevhvm.adotai.administrador.exception.AdministradorNotFoundException;
+import br.com.alevhvm.adotai.administrador.exception.AdministradorNuloException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -101,5 +105,37 @@ public class CustomExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AdministradorNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdministradorNotFound(
+        AdministradorNotFoundException ex, WebRequest request) {
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(),
+            List.of(ex.getMessage()),
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AdmIsMasterException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdmIsMaster(AdmIsMasterException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AdministradorNuloException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdministradorNulo(AdministradorNuloException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

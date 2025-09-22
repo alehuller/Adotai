@@ -1,6 +1,7 @@
 package br.com.alevhvm.adotai.administrador.validations;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
+import br.com.alevhvm.adotai.administrador.exception.AdministradorNuloException;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
@@ -33,7 +34,7 @@ public class AdministradorValidacao {
     public void validate(AdministradorDTO admin) {
 
         if (admin == null) {
-            throw new NullPointerException("Não há dados");
+            throw new AdministradorNuloException("Não há dados");
         }
 
         List<String> erros = new ArrayList<>();
