@@ -1,6 +1,5 @@
 package br.com.alevhvm.adotai.adocao.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -22,6 +21,8 @@ import java.util.Set;
 
 import br.com.alevhvm.adotai.adocao.controller.AdocaoController;
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
+import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.animal.model.Animal;
@@ -68,7 +69,7 @@ public class AdocaoService {
     public AdocaoDTO findById(Long id) {
 
         Adocao entity = adocaoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
 
         AdocaoDTO dto = DozerMapper.parseObject(entity, AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
@@ -77,13 +78,13 @@ public class AdocaoService {
 
     public AdocaoDTO create(AdocaoDTO adocao) {
         if (adocao == null)
-            throw new NullPointerException();
+            throw new AdocaoNulaException("Não há dados");
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> new AdocaoNotFoundException("Animal não encontrado"));
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new AdocaoNotFoundException("Usuário não encontrado"));
 
         Adocao entity = DozerMapper.parseObject(adocao, Adocao.class);
         entity.setAnimal(animal);
@@ -99,16 +100,16 @@ public class AdocaoService {
             throw new NullPointerException();
 
         Adocao entity = adocaoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrada."));
+                .orElseThrow(() -> new AdocaoNotFoundException("Usuário não encontrada."));
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> new AdocaoNotFoundException("Animal não encontrado"));
 
         Ong ong = ongRepository.findById(animal.getOng().getIdOng())
-                .orElseThrow(() -> new EntityNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> new AdocaoNotFoundException("Ong não encontrada."));
 
         entity.setDataAdocao(adocao.getDataAdocao());
         entity.setStatus(adocao.getStatus());
@@ -123,7 +124,7 @@ public class AdocaoService {
 
     public AdocaoDTO partialUpdate(Long id, Map<String, Object> updates) {
         Adocao adocao = adocaoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -160,7 +161,7 @@ public class AdocaoService {
 
     public void delete(Long id) {
         if (!adocaoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Adoção não encontrada.");
+            throw new AdocaoNotFoundException("Adoção não encontrada.");
         }
         adocaoRepository.deleteById(id);
     }

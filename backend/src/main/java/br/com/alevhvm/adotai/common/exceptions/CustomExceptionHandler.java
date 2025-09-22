@@ -13,6 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 import br.com.alevhvm.adotai.administrador.exception.AdmIsMasterException;
 import br.com.alevhvm.adotai.administrador.exception.AdministradorNotFoundException;
 import br.com.alevhvm.adotai.administrador.exception.AdministradorNuloException;
+import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
+import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
 
 import java.util.Date;
 import java.util.List;
@@ -131,6 +133,28 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(AdministradorNuloException.class)
     public final ResponseEntity<ExceptionResponse> handleAdministradorNulo(AdministradorNuloException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(), 
+            List.of(ex.getMessage()), 
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AdocaoNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdocaoNotFound(
+        AdocaoNotFoundException ex, WebRequest request) {
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(),
+            List.of(ex.getMessage()),
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AdocaoNulaException.class)
+    public final ResponseEntity<ExceptionResponse> handleAdocaoNula(AdocaoNulaException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             new Date(), 
             List.of(ex.getMessage()), 
