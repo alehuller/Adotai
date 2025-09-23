@@ -92,8 +92,7 @@ public class UsuarioService {
 
     public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
 
-        Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado."));
+        Usuario entity = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
@@ -165,8 +164,7 @@ public class UsuarioService {
 
     public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, String nomeUsuario) {
 
-        Usuario entity = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado."));
+        Usuario entity = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         entity.setNome(usuarioUpdate.getNome());
         entity.setFotoPerfil(usuarioUpdate.getFotoPerfil());
@@ -182,8 +180,7 @@ public class UsuarioService {
     }
 
     public UsuarioDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
-        Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado."));
+        Usuario usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         usuarioValidacao.validatePartialUpdate(nomeUsuario, updates);
 
@@ -223,8 +220,7 @@ public class UsuarioService {
 
     @Transactional
     public void delete(String nomeUsuario) {
-        var usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
+        var usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
         usuarioRepository.deleteByNomeUsuario(nomeUsuario);
     }
 
@@ -270,8 +266,7 @@ public class UsuarioService {
     // Métodos auxiliares mantidos porém não chamados diretamente
     @Transactional
     public void adicionarAnimalFavorito(String nomeUsuario, Long animalId) {
-        Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
+        Usuario usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
@@ -282,10 +277,14 @@ public class UsuarioService {
 
     @Transactional
     public void removerAnimalFavorito(String nomeUsuario, Long animalId) {
-        Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
+        Usuario usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         usuario.getAnimaisFavoritos().removeIf(animal -> animal.getIdAnimal().equals(animalId));
         usuarioRepository.save(usuario);
+    }
+
+    public Usuario getUsuarioEntityByNomeUsuario(String nomeUsuario) {
+        return usuarioRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
     }
 }

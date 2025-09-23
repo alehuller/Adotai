@@ -97,8 +97,7 @@ public class OngService {
 
     public OngDTO findByNomeUsuario(String nomeUsuario) {
 
-        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+        Ong entity = getOngEntityByNomeUsuario(nomeUsuario);
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
@@ -171,8 +170,7 @@ public class OngService {
         if (ongUpdate == null)
             throw new OngNulaException("Não há dados");
 
-        Ong entity = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+        Ong entity = getOngEntityByNomeUsuario(nomeUsuario);
 
         cepService.preencherEndereco(ongUpdate.getEndereco());
         
@@ -197,8 +195,7 @@ public class OngService {
     }
 
     public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
-        Ong ong = ongRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+        Ong ong = getOngEntityByNomeUsuario(nomeUsuario);
 
         ongValidacao.validatePartialUpdate(nomeUsuario, updates);
 
@@ -288,8 +285,12 @@ public class OngService {
 
     @Transactional
     public void delete(String nomeUsuario) {
-        var ong = ongRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+        var ong = getOngEntityByNomeUsuario(nomeUsuario);
         ongRepository.deleteByNomeUsuario(nomeUsuario);
+    }
+
+    public Ong getOngEntityByNomeUsuario(String nomeUsuario) {
+        return ongRepository.findByNomeUsuario(nomeUsuario)
+            .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
     }
 }

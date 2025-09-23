@@ -100,8 +100,7 @@ public class AdministradorService {
 
     public AdministradorDTO update(AdministradorUpdateDTO administradorUpdateDTO, String nomeUsuario) {
 
-        Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
+        Administrador entity = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         entity.setNome(administradorUpdateDTO.getNome());
         entity.setFotoPerfil(administradorUpdateDTO.getFotoPerfil());
@@ -118,8 +117,7 @@ public class AdministradorService {
 
     public AdministradorDTO findByNomeUsuario(String nomeUsuario) {
 
-        Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new AdministradorNotFoundException("Usuário não encontrado."));
+        Administrador entity = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorNomeUsuario(nomeUsuario))
@@ -128,8 +126,7 @@ public class AdministradorService {
     }
 
     public AdministradorDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
-        Administrador administrador = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new AdministradorNotFoundException("Usuário não encontrado."));
+        Administrador administrador = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         administradorValidacao.validatePartialUpdate(nomeUsuario, updates);
 
@@ -186,14 +183,12 @@ public class AdministradorService {
 
     @Transactional
     public void delete(String nomeUsuario) {
-        var admin = administradorRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado"));
+        var admin = getAdministradorEntityByNomeUsuario(nomeUsuario);
         administradorRepository.delete(admin);
     }
 
     public AdministradorDTO atualizarAdmNormalParaMaster(String nomeUsuario) {
-        Administrador entity = administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
+        Administrador entity = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         if (entity.getRole() == Roles.ADMINMASTER) {
             throw new AdmIsMasterException("Esse administrador já é ADMINMASTER.");
@@ -204,5 +199,10 @@ public class AdministradorService {
         AdministradorDTO dto = DozerMapper.parseObject(administradorRepository.save(entity), AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(dto.getKey())).withSelfRel());
         return dto;
+    }
+
+    public Administrador getAdministradorEntityByNomeUsuario(String nomeUsuario) {
+        return administradorRepository.findByNomeUsuario(nomeUsuario)
+                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
     }
 }

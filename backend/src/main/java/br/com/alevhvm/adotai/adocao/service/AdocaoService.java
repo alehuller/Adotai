@@ -71,8 +71,7 @@ public class AdocaoService {
 
     public AdocaoDTO findById(Long id) {
 
-        Adocao entity = adocaoRepository.findById(id)
-                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
+        Adocao entity = getAdocaoEntityById(id);
 
         AdocaoDTO dto = DozerMapper.parseObject(entity, AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
@@ -102,8 +101,7 @@ public class AdocaoService {
         if (adocao == null)
             throw new AdocaoNulaException("Não há dados");
 
-        Adocao entity = adocaoRepository.findById(id)
-                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
+        Adocao entity = getAdocaoEntityById(id);
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
                 .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrada."));
@@ -126,8 +124,7 @@ public class AdocaoService {
     }
 
     public AdocaoDTO partialUpdate(Long id, Map<String, Object> updates) {
-        Adocao adocao = adocaoRepository.findById(id)
-                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
+        Adocao adocao = getAdocaoEntityById(id);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -167,5 +164,10 @@ public class AdocaoService {
             throw new AdocaoNotFoundException("Adoção não encontrada.");
         }
         adocaoRepository.deleteById(id);
+    }
+
+    public Adocao getAdocaoEntityById(Long id) {
+        return adocaoRepository.findById(id)
+                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
     }
 }

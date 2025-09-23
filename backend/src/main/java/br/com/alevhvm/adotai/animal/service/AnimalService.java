@@ -75,8 +75,7 @@ public class AnimalService {
     }
 
     public AnimalDTO findByNome(String nome) {
-        Animal entity = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
+        Animal entity = getAnimalEntityByNome(nome);
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorNome(nome)).withSelfRel());
@@ -123,8 +122,7 @@ public class AnimalService {
         if (animal == null)
             throw new AnimalNuloException("Não há dados");
 
-        Animal entity = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
+        Animal entity = getAnimalEntityByNome(nome);
 
         Ong ong = ongRepository.findById(animal.getIdOng())
                 .orElseThrow(() -> new AnimalNotFoundException("Ong não encontrada."));
@@ -146,8 +144,7 @@ public class AnimalService {
     }
 
     public AnimalDTO partialUpdate(String nome, Map<String, Object> updates) {
-        Animal animal = animalRepository.findByNome(nome)
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
+        Animal animal = getAnimalEntityByNome(nome);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -200,8 +197,12 @@ public class AnimalService {
 
     @Transactional
     public void delete(String nome) {
-        var animal = animalRepository.findByNome(nome)
-            .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
+        var animal = getAnimalEntityByNome(nome);
         animalRepository.deleteByNome(nome);
+    }
+
+    public Animal getAnimalEntityByNome(String nome) {
+        return animalRepository.findByNome(nome)
+                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
     }
 }
