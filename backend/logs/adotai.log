@@ -1,0 +1,79 @@
+2025-09-23 20:43:52.568 INFO  [background-preinit] o.h.validator.internal.util.Version - [anon] [noreq] HV000001: Hibernate Validator 8.0.2.Final
+2025-09-23 20:43:52.744 INFO  [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] Starting Startup using Java 21.0.7 with PID 14068 (C:\Users\ale_h\OneDrive\Área de Trabalho\sistema-adocao-pets\backend\target\classes started by ale_h in C:\Users\ale_h\OneDrive\Área de Trabalho\sistema-adocao-pets\backend)
+2025-09-23 20:43:52.747 DEBUG [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] Running with Spring Boot v3.4.6, Spring v6.2.7
+2025-09-23 20:43:52.749 INFO  [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] No active profile set, falling back to 1 default profile: "default"
+2025-09-23 20:43:52.891 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [anon] [noreq] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-09-23 20:43:52.892 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [anon] [noreq] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-09-23 20:43:58.183 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - [anon] [noreq] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-23 20:43:58.653 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - [anon] [noreq] Finished Spring Data repository scanning in 432 ms. Found 6 JPA repository interfaces.
+2025-09-23 20:44:00.739 INFO  [restartedMain] o.s.b.w.e.tomcat.TomcatWebServer - [anon] [noreq] Tomcat initialized with port 8080 (http)
+2025-09-23 20:44:00.776 INFO  [restartedMain] o.a.coyote.http11.Http11NioProtocol - [anon] [noreq] Initializing ProtocolHandler ["http-nio-8080"]
+2025-09-23 20:44:00.781 INFO  [restartedMain] o.a.catalina.core.StandardService - [anon] [noreq] Starting service [Tomcat]
+2025-09-23 20:44:00.783 INFO  [restartedMain] o.a.catalina.core.StandardEngine - [anon] [noreq] Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-09-23 20:44:00.988 INFO  [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/] - [anon] [noreq] Initializing Spring embedded WebApplicationContext
+2025-09-23 20:44:00.989 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext - [anon] [noreq] Root WebApplicationContext: initialization completed in 8095 ms
+2025-09-23 20:44:02.131 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - [anon] [noreq] HikariPool-1 - Starting...
+2025-09-23 20:44:02.671 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool - [anon] [noreq] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7232a1e3
+2025-09-23 20:44:02.676 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - [anon] [noreq] HikariPool-1 - Start completed.
+2025-09-23 20:44:02.752 INFO  [restartedMain] org.flywaydb.core.FlywayExecutor - [anon] [noreq] Database: jdbc:postgresql://localhost:5432/ongadocoes (PostgreSQL 17.5)
+2025-09-23 20:44:03.074 INFO  [restartedMain] o.f.core.internal.command.DbValidate - [anon] [noreq] Successfully validated 12 migrations (execution time 00:00.225s)
+2025-09-23 20:44:03.112 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Current version of schema "public": 12
+2025-09-23 20:44:03.125 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Schema "public" is up to date. No migration necessary.
+2025-09-23 20:44:03.566 INFO  [restartedMain] o.h.jpa.internal.util.LogHelper - [anon] [noreq] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-23 20:44:03.843 INFO  [restartedMain] org.hibernate.Version - [anon] [noreq] HHH000412: Hibernate ORM core version 6.6.15.Final
+2025-09-23 20:44:03.993 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator - [anon] [noreq] HHH000026: Second-level cache disabled
+2025-09-23 20:44:04.867 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo - [anon] [noreq] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-23 20:44:05.069 INFO  [restartedMain] o.hibernate.orm.connections.pooling - [anon] [noreq] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-23 20:44:07.606 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator - [anon] [noreq] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-23 20:44:07.753 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean - [anon] [noreq] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-23 20:44:08.562 DEBUG [restartedMain] b.c.a.adotai.common.config.MDCFilter - [anon] [noreq] Filter 'MDCFilter' configured for use
+2025-09-23 20:44:08.564 DEBUG [restartedMain] b.c.a.a.auth.security.SecurityFilter - [anon] [noreq] Filter 'securityFilter' configured for use
+2025-09-23 20:44:08.910 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - [anon] [noreq] Global AuthenticationManager configured with UserDetailsService bean with name authService
+2025-09-23 20:44:09.123 INFO  [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory - [anon] [noreq] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-09-23 20:44:11.408 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2025-09-23 20:44:11.782 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully cleaned schema "public" (execution time 00:00.372s)
+2025-09-23 20:44:11.807 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully cleaned schema "public" (execution time 00:00.024s)
+2025-09-23 20:44:11.808 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2025-09-23 20:44:11.842 INFO  [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory - [anon] [noreq] Schema history table "public"."flyway_schema_history" does not exist yet
+2025-09-23 20:44:11.844 INFO  [restartedMain] o.f.core.internal.command.DbValidate - [anon] [noreq] Successfully validated 12 migrations (execution time 00:00.019s)
+2025-09-23 20:44:11.853 INFO  [restartedMain] org.flywaydb.core.Flyway - [anon] [noreq] All configured schemas are empty; baseline operation skipped. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.
+2025-09-23 20:44:11.858 INFO  [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory - [anon] [noreq] Creating Schema History table "public"."flyway_schema_history" ...
+2025-09-23 20:44:11.932 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Current version of schema "public": << Empty Schema >>
+2025-09-23 20:44:11.943 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "1 - create usuario table"
+2025-09-23 20:44:12.000 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "2 - create ong table"
+2025-09-23 20:44:12.045 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "3 - create animal table"
+2025-09-23 20:44:12.094 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "4 - create adocao table"
+2025-09-23 20:44:12.129 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "5 - create administrador table"
+2025-09-23 20:44:12.170 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "6 - create usuarios animais favoritos table"
+2025-09-23 20:44:12.201 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "7 - create view usuario ong"
+2025-09-23 20:44:12.226 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "8 - insert usuarios iniciais"
+2025-09-23 20:44:12.252 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "9 - insert ongs iniciais"
+2025-09-23 20:44:12.274 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "10 - insert animais iniciais"
+2025-09-23 20:44:12.294 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "11 - insert adocoes inicias"
+2025-09-23 20:44:12.315 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "12 - insert administradores iniciais"
+2025-09-23 20:44:12.337 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Successfully applied 12 migrations to schema "public", now at version v12 (execution time 00:00.188s)
+2025-09-23 20:44:12.692 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - [anon] [noreq] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-23 20:44:14.023 INFO  [restartedMain] o.s.b.a.e.web.EndpointLinksResolver - [anon] [noreq] Exposing 1 endpoint beneath base path '/actuator'
+2025-09-23 20:44:15.393 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer - [anon] [noreq] LiveReload server is running on port 35729
+2025-09-23 20:44:15.483 INFO  [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/] - [anon] [noreq] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-23 20:44:15.484 INFO  [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet - [anon] [noreq] Initializing Servlet 'dispatcherServlet'
+2025-09-23 20:44:15.487 INFO  [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet - [anon] [noreq] Completed initialization in 2 ms
+2025-09-23 20:44:15.644 INFO  [restartedMain] o.a.coyote.http11.Http11NioProtocol - [anon] [noreq] Starting ProtocolHandler ["http-nio-8080"]
+2025-09-23 20:44:15.730 INFO  [restartedMain] o.s.b.w.e.tomcat.TomcatWebServer - [anon] [noreq] Tomcat started on port 8080 (http) with context path '/'
+2025-09-23 20:44:15.743 INFO  [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] Started Startup in 24.593 seconds (process running for 26.286)
+2025-09-23 20:45:51.215 DEBUG [http-nio-8080-exec-3] b.c.a.a.a.s.AdministradorService - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] Iniciando busca do administrador com id = 1
+2025-09-23 20:45:51.247 INFO  [http-nio-8080-exec-3] c.g.d.core.util.RuntimeUtils - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] OSGi support is false
+2025-09-23 20:45:51.252 INFO  [http-nio-8080-exec-3] c.g.d.core.DozerBeanMapperBuilder - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] Initializing Dozer. Version: 7.0.0, Thread Name: http-nio-8080-exec-3
+2025-09-23 20:45:51.265 INFO  [http-nio-8080-exec-3] c.g.d.c.c.r.LegacyPropertiesSettingsResolver - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] Trying to find Dozer configuration file: dozer.properties
+2025-09-23 20:45:51.266 INFO  [http-nio-8080-exec-3] c.g.d.c.c.r.LegacyPropertiesSettingsResolver - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] Failed to find dozer.properties via com.github.dozermapper.core.config.resolvers.LegacyPropertiesSettingsResolver.
+2025-09-23 20:45:51.277 INFO  [http-nio-8080-exec-3] c.g.d.core.el.ELExpressionFactory - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] jakarta.el is not supported; Failed to resolve ExpressionFactory, com.sun.el.ExpressionFactoryImpl
+2025-09-23 20:45:51.661 INFO  [http-nio-8080-exec-3] b.c.a.a.a.s.AdministradorService - [adminmaster@sistema.com] [96976d46-1d07-4693-ba1b-9040e3584b3b] Administrador encontrado com sucesso: id=1, nomeUsuario=NomeAdministradorMestre
+2025-09-23 20:46:40.199 DEBUG [http-nio-8080-exec-4] b.c.a.a.a.s.AdministradorService - [adminmaster@sistema.com] [2dca4c7f-db99-42c3-a373-6687cb561f1e] Iniciando busca do administrador com id = 2
+2025-09-23 20:46:40.239 INFO  [http-nio-8080-exec-4] b.c.a.a.a.s.AdministradorService - [adminmaster@sistema.com] [2dca4c7f-db99-42c3-a373-6687cb561f1e] Administrador encontrado com sucesso: id=2, nomeUsuario=NomeAdministrador1

@@ -1,4 +1,6 @@
 package br.com.alevhvm.adotai.administrador.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -43,6 +45,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AdministradorService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdministradorService.class);
 
     private final AdministradorValidacao administradorValidacao;
 
@@ -90,11 +94,18 @@ public class AdministradorService {
     }
 
     public AdministradorDTO findById(Long id) {
+        logger.debug("Iniciando busca do administrador com id = {}", id);
+
         Administrador entity = administradorRepository.findById(id)
-                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> {
+                    logger.warn("Administrador não encontrado para id = {}", id);
+                    return new AdministradorNotFoundException("Administrador não encontrado.");
+                });
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(id)).withSelfRel());
+
+        logger.info("Administrador encontrado com sucesso: id={}, nomeUsuario={}", entity.getIdAdministrador(), entity.getNomeUsuario());
         return dto;
     }
 
