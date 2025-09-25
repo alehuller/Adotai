@@ -1,5 +1,7 @@
 package br.com.alevhvm.adotai.animal.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -42,6 +44,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AnimalService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AnimalService.class);
+
     private final AnimalRepository animalRepository;
 
     private final OngRepository ongRepository;
@@ -51,8 +55,11 @@ public class AnimalService {
     private final Validator validator;
 
     public PagedModel<EntityModel<AnimalDTO>> findAll(Pageable pageable) {
+        logger.debug("Iniciando busca de todos os animais");
 
         Page<Animal> animalPage = animalRepository.findAll(pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Animal(is)", animalPage.getTotalPages(), animalPage.getTotalElements());
 
         Page<AnimalDTO> animalDtosPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
         animalDtosPage
@@ -65,26 +72,39 @@ public class AnimalService {
     }
 
     public AnimalDTO findById(Long id) {
+        logger.debug("Iniciando busca do Animal de id {}", id);
 
         Animal entity = animalRepository.findById(id)
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado."));
+                .orElseThrow(() -> {
+                    logger.warn("Animal nao encontrado para id = {}", id);
+                    return new AnimalNotFoundException("Animal não encontrado.");
+                });
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(id)).withSelfRel());
+
+        logger.info("Animal encontrado com sucesso: id={}, nome={}", entity.getIdAnimal(), entity.getNome());
         return dto;
     }
 
     public AnimalDTO findByNome(String nome) {
+        logger.debug("Iniciando busca do animal com nome = {}", nome);
+
         Animal entity = getAnimalEntityByNome(nome);
 
         AnimalDTO dto = DozerMapper.parseObject(entity, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorNome(nome)).withSelfRel());
+
+        logger.info("Animal encontrado com sucesso: id={}, nome={}", entity.getIdAnimal(), entity.getNome());
         return dto;
     }
 
     public PagedModel<EntityModel<AnimalDTO>> findAllByOngNome(String nomeUsuario, Pageable pageable) {
+        logger.debug("Iniciando busca de todos os animais de uma ong");
 
         Page<Animal> animalPage = animalRepository.findByOngNomeUsuario(nomeUsuario, pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Animal(is) da ong {}", animalPage.getTotalPages(), animalPage.getTotalElements(), nomeUsuario);
 
         Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
 
@@ -99,33 +119,50 @@ public class AnimalService {
     }
 
     public Page<AnimalDTO> filtrarAnimais(AnimalFiltroDTO filtro, Pageable pageable) {
+        logger.debug("Iniciando filtro de animais");
         Page<Animal> animais = animalRepository.filtrarAnimaisNativo(filtro, pageable);
+        logger.info("Filtro finalizado de animais");
         return animais.map(animal -> DozerMapper.parseObject(animal, AnimalDTO.class));
     }
 
     public AnimalDTO create(AnimalDTO animal) {
-        if (animal == null)
+        logger.debug("Iniciando a criação de um Animal");
+
+        if (animal == null) {
+            logger.warn("Nao ha dados");
             throw new AnimalNuloException("Não há dados");
+        }   
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada"));
+                .orElseThrow(() -> {
+                    logger.warn("Ong nao encontrada por id = {}", animal.getIdOng());
+                    return new OngNotFoundException("Ong não encontrada");
+                });
 
         Animal entity = DozerMapper.parseObject(animal, Animal.class);
         entity.setOng(ong);
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Animal {} criado com sucesso.", entity.getNome());
         return dto;
     }
 
     public AnimalDTO update(AnimalDTO animal, String nome) {
+        logger.debug("Iniciando atualização de animal com nome = {}", nome);
 
-        if (animal == null)
+        if (animal == null) {
+            logger.warn("Nao ha dados");
             throw new AnimalNuloException("Não há dados");
+        }
 
         Animal entity = getAnimalEntityByNome(nome);
 
         Ong ong = ongRepository.findById(animal.getIdOng())
-                .orElseThrow(() -> new AnimalNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> {
+                    logger.warn("Ong nao encontrada para o id = {}", animal.getIdOng());
+                    return new AnimalNotFoundException("Ong não encontrada.");
+                });
 
         entity.setNome(animal.getNome());
         entity.setEspecie(animal.getEspecie());
@@ -140,10 +177,14 @@ public class AnimalService {
 
         AnimalDTO dto = DozerMapper.parseObject(animalRepository.save(entity), AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Animal {} atualizado com sucesso.", entity.getNome());
         return dto;
     }
 
     public AnimalDTO partialUpdate(String nome, Map<String, Object> updates) {
+        logger.debug("Iniciando atualização parcial de animal com nomeU = {}", nome);
+
         Animal animal = getAnimalEntityByNome(nome);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -192,17 +233,24 @@ public class AnimalService {
 
         AnimalDTO dto = DozerMapper.parseObject(animal, AnimalDTO.class);
         dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Animal {} atualizado parcialmente com sucesso.", animal.getNome());
         return dto;
     }
 
     @Transactional
     public void delete(String nome) {
+        logger.debug("Iniciando delecao do animal {}", nome);
         var animal = getAnimalEntityByNome(nome);
         animalRepository.deleteByNome(nome);
+        logger.info("Animal {} deletado com sucesso.", nome);
     }
 
     public Animal getAnimalEntityByNome(String nome) {
         return animalRepository.findByNome(nome)
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> {
+                    logger.warn("Animal nao encontrado para nome = {}", nome);
+                    return new AnimalNotFoundException("Animal não encontrado");
+                });
     }
 }
