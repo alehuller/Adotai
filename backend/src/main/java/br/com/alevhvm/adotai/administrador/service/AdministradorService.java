@@ -63,8 +63,11 @@ public class AdministradorService {
     private final TokenService tokenService;
 
     public PagedModel<EntityModel<AdministradorDTO>> findAll(Pageable pageable) {
+        logger.debug("Iniciando busca de todos os administradores");
 
         Page<Administrador> administradorPage = administradorRepository.findAll(pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Administrador(es)", administradorPage.getTotalPages(), administradorPage.getTotalElements());
 
         Page<AdministradorDTO> administradorDtosPage = administradorPage
                 .map(a -> DozerMapper.parseObject(a, AdministradorDTO.class));
@@ -78,6 +81,7 @@ public class AdministradorService {
     }
 
     public AdministradorDTO create(AdministradorDTO administradorDTO) {
+        logger.debug("Iniciando a criação de um Administrador");
 
         administradorValidacao.validate(administradorDTO);
 
@@ -90,6 +94,8 @@ public class AdministradorService {
         dto.add(
                 linkTo(
                         methodOn(AdministradorController.class).acharAdministradorPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Administrador {} criado com sucesso.", entity.getNomeUsuario());
         return dto;
     }
 
@@ -110,6 +116,7 @@ public class AdministradorService {
     }
 
     public AdministradorDTO update(AdministradorUpdateDTO administradorUpdateDTO, String nomeUsuario) {
+        logger.debug("Iniciando atualização de administrador com nomeUsuario = {}", nomeUsuario);
 
         Administrador entity = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
@@ -123,20 +130,27 @@ public class AdministradorService {
 
         AdministradorDTO dto = DozerMapper.parseObject(administradorRepository.save(entity), AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Administrador {} atualizado com sucesso.", entity.getNomeUsuario());
         return dto;
     }
 
     public AdministradorDTO findByNomeUsuario(String nomeUsuario) {
+        logger.debug("Iniciando busca do administrador com nomeUsuario = {}", nomeUsuario);
 
         Administrador entity = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         AdministradorDTO dto = DozerMapper.parseObject(entity, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorNomeUsuario(nomeUsuario))
                 .withSelfRel());
+
+        logger.info("Administrador encontrado com sucesso: id={}, nomeUsuario={}", entity.getIdAdministrador(), entity.getNomeUsuario());
         return dto;
     }
 
     public AdministradorDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
+        logger.debug("Iniciando atualização parcial do administrador com nomeUsuario = {}", nomeUsuario);
+
         Administrador administrador = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         administradorValidacao.validatePartialUpdate(nomeUsuario, updates);
@@ -172,10 +186,12 @@ public class AdministradorService {
         AdministradorDTO dto = DozerMapper.parseObject(administrador, AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorNomeUsuario(nomeUsuario)).withSelfRel());
 
+        logger.info("Administrador {} atualizado parcialmente com sucesso.", administrador.getNomeUsuario());
         return dto;
     }
 
     public TokenDTO logar(LoginDTO data) {
+        logger.debug("Iniciando login do administrador {}", data.identifier());
 
         String identifier = data.identifier();
 
@@ -189,19 +205,25 @@ public class AdministradorService {
 
         var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
 
+        logger.info("Administrador {} logado com sucesso.", data.identifier());
         return new TokenDTO(token);
     }
 
     @Transactional
     public void delete(String nomeUsuario) {
+        logger.debug("Iniciando delecao do administrador {}", nomeUsuario);
         var admin = getAdministradorEntityByNomeUsuario(nomeUsuario);
         administradorRepository.delete(admin);
+        logger.info("Administrador {} deletado com sucesso.", nomeUsuario);
     }
 
     public AdministradorDTO atualizarAdmNormalParaMaster(String nomeUsuario) {
+        logger.debug("Iniciando atualizacao do administrador normal {} para administrador master", nomeUsuario);
+
         Administrador entity = getAdministradorEntityByNomeUsuario(nomeUsuario);
 
         if (entity.getRole() == Roles.ADMINMASTER) {
+            logger.warn("O Administrador {} já é Master", nomeUsuario);
             throw new AdmIsMasterException("Esse administrador já é ADMINMASTER.");
         }
 
@@ -209,11 +231,16 @@ public class AdministradorService {
 
         AdministradorDTO dto = DozerMapper.parseObject(administradorRepository.save(entity), AdministradorDTO.class);
         dto.add(linkTo(methodOn(AdministradorController.class).acharAdministradorPorId(dto.getKey())).withSelfRel());
+        
+        logger.info("Administrador {} atualizado para Master com sucesso.", nomeUsuario);
         return dto;
     }
 
     public Administrador getAdministradorEntityByNomeUsuario(String nomeUsuario) {
         return administradorRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new AdministradorNotFoundException("Administrador não encontrado."));
+                .orElseThrow(() -> {
+                    logger.warn("Administrador não encontrado para nomeUsuario = {}", nomeUsuario);
+                    return new AdministradorNotFoundException("Administrador não encontrado.");
+                });
     }
 }

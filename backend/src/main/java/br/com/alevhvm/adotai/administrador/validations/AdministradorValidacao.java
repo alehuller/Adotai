@@ -6,6 +6,9 @@ import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.administrador.repository.AdministradorRepository;
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,6 +19,8 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class AdministradorValidacao {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdministradorValidacao.class);
 
     private final AdministradorRepository administradorRepository;
 
@@ -34,6 +39,7 @@ public class AdministradorValidacao {
     public void validate(AdministradorDTO admin) {
 
         if (admin == null) {
+            logger.error("Falha na criação de Administrador: não há dados.");
             throw new AdministradorNuloException("Não há dados");
         }
 
@@ -50,6 +56,7 @@ public class AdministradorValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na criação de Administrador: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -65,6 +72,7 @@ public class AdministradorValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na atualização de Administrador: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -93,6 +101,7 @@ public class AdministradorValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na atualização parcial de Administrador: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
