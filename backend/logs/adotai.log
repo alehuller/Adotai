@@ -478,3 +478,100 @@
 2025-09-25 18:42:34.697 INFO  [http-nio-8080-exec-4] c.g.d.c.c.r.LegacyPropertiesSettingsResolver - [adminmaster@sistema.com] [0af83e45-feb7-420c-bec8-7f2acd3ad8a9] Trying to find Dozer configuration file: dozer.properties
 2025-09-25 18:42:34.698 INFO  [http-nio-8080-exec-4] c.g.d.c.c.r.LegacyPropertiesSettingsResolver - [adminmaster@sistema.com] [0af83e45-feb7-420c-bec8-7f2acd3ad8a9] Failed to find dozer.properties via com.github.dozermapper.core.config.resolvers.LegacyPropertiesSettingsResolver.
 2025-09-25 18:42:34.710 INFO  [http-nio-8080-exec-4] c.g.d.core.el.ELExpressionFactory - [adminmaster@sistema.com] [0af83e45-feb7-420c-bec8-7f2acd3ad8a9] jakarta.el is not supported; Failed to resolve ExpressionFactory, com.sun.el.ExpressionFactoryImpl
+2025-09-25 19:19:04.557 INFO  [background-preinit] o.h.validator.internal.util.Version - [anon] [noreq] HV000001: Hibernate Validator 8.0.2.Final
+2025-09-25 19:19:04.751 INFO  [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] Starting Startup using Java 21.0.7 with PID 4252 (C:\Users\ale_h\OneDrive\Área de Trabalho\sistema-adocao-pets\backend\target\classes started by ale_h in C:\Users\ale_h\OneDrive\Área de Trabalho\sistema-adocao-pets\backend)
+2025-09-25 19:19:04.755 DEBUG [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] Running with Spring Boot v3.4.6, Spring v6.2.7
+2025-09-25 19:19:04.758 INFO  [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] No active profile set, falling back to 1 default profile: "default"
+2025-09-25 19:19:04.943 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [anon] [noreq] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-09-25 19:19:04.943 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [anon] [noreq] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-09-25 19:19:09.575 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - [anon] [noreq] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-25 19:19:10.020 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - [anon] [noreq] Finished Spring Data repository scanning in 388 ms. Found 6 JPA repository interfaces.
+2025-09-25 19:19:12.026 INFO  [restartedMain] o.s.b.w.e.tomcat.TomcatWebServer - [anon] [noreq] Tomcat initialized with port 8080 (http)
+2025-09-25 19:19:12.094 INFO  [restartedMain] o.a.coyote.http11.Http11NioProtocol - [anon] [noreq] Initializing ProtocolHandler ["http-nio-8080"]
+2025-09-25 19:19:12.100 INFO  [restartedMain] o.a.catalina.core.StandardService - [anon] [noreq] Starting service [Tomcat]
+2025-09-25 19:19:12.101 INFO  [restartedMain] o.a.catalina.core.StandardEngine - [anon] [noreq] Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-09-25 19:19:12.304 INFO  [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/] - [anon] [noreq] Initializing Spring embedded WebApplicationContext
+2025-09-25 19:19:12.305 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext - [anon] [noreq] Root WebApplicationContext: initialization completed in 7359 ms
+2025-09-25 19:19:13.486 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - [anon] [noreq] HikariPool-1 - Starting...
+2025-09-25 19:19:14.174 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool - [anon] [noreq] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@8330dcb
+2025-09-25 19:19:14.179 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - [anon] [noreq] HikariPool-1 - Start completed.
+2025-09-25 19:19:14.395 INFO  [restartedMain] org.flywaydb.core.FlywayExecutor - [anon] [noreq] Database: jdbc:postgresql://localhost:5432/ongadocoes (PostgreSQL 17.5)
+2025-09-25 19:19:14.713 INFO  [restartedMain] o.f.core.internal.command.DbValidate - [anon] [noreq] Successfully validated 12 migrations (execution time 00:00.222s)
+2025-09-25 19:19:14.757 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Current version of schema "public": 12
+2025-09-25 19:19:14.778 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Schema "public" is up to date. No migration necessary.
+2025-09-25 19:19:15.236 INFO  [restartedMain] o.h.jpa.internal.util.LogHelper - [anon] [noreq] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-25 19:19:15.482 INFO  [restartedMain] org.hibernate.Version - [anon] [noreq] HHH000412: Hibernate ORM core version 6.6.15.Final
+2025-09-25 19:19:15.648 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator - [anon] [noreq] HHH000026: Second-level cache disabled
+2025-09-25 19:19:16.613 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo - [anon] [noreq] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-25 19:19:16.797 INFO  [restartedMain] o.hibernate.orm.connections.pooling - [anon] [noreq] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-25 19:19:19.426 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator - [anon] [noreq] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-25 19:19:19.568 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean - [anon] [noreq] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-25 19:19:20.471 DEBUG [restartedMain] b.c.a.adotai.common.config.MDCFilter - [anon] [noreq] Filter 'MDCFilter' configured for use
+2025-09-25 19:19:20.472 DEBUG [restartedMain] b.c.a.a.auth.security.SecurityFilter - [anon] [noreq] Filter 'securityFilter' configured for use
+2025-09-25 19:19:20.778 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - [anon] [noreq] Global AuthenticationManager configured with UserDetailsService bean with name authService
+2025-09-25 19:19:20.979 INFO  [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory - [anon] [noreq] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-09-25 19:19:23.130 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2025-09-25 19:19:23.471 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully cleaned schema "public" (execution time 00:00.338s)
+2025-09-25 19:19:23.492 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully cleaned schema "public" (execution time 00:00.020s)
+2025-09-25 19:19:23.493 INFO  [restartedMain] o.f.c.i.command.clean.CleanExecutor - [anon] [noreq] Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2025-09-25 19:19:23.524 INFO  [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory - [anon] [noreq] Schema history table "public"."flyway_schema_history" does not exist yet
+2025-09-25 19:19:23.525 INFO  [restartedMain] o.f.core.internal.command.DbValidate - [anon] [noreq] Successfully validated 12 migrations (execution time 00:00.017s)
+2025-09-25 19:19:23.534 INFO  [restartedMain] org.flywaydb.core.Flyway - [anon] [noreq] All configured schemas are empty; baseline operation skipped. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.
+2025-09-25 19:19:23.539 INFO  [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory - [anon] [noreq] Creating Schema History table "public"."flyway_schema_history" ...
+2025-09-25 19:19:23.603 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Current version of schema "public": << Empty Schema >>
+2025-09-25 19:19:23.614 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "1 - create usuario table"
+2025-09-25 19:19:23.673 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "2 - create ong table"
+2025-09-25 19:19:23.706 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "3 - create animal table"
+2025-09-25 19:19:23.737 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "4 - create adocao table"
+2025-09-25 19:19:23.761 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "5 - create administrador table"
+2025-09-25 19:19:23.796 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "6 - create usuarios animais favoritos table"
+2025-09-25 19:19:23.835 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "7 - create view usuario ong"
+2025-09-25 19:19:23.863 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "8 - insert usuarios iniciais"
+2025-09-25 19:19:23.889 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "9 - insert ongs iniciais"
+2025-09-25 19:19:23.912 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "10 - insert animais iniciais"
+2025-09-25 19:19:23.935 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "11 - insert adocoes inicias"
+2025-09-25 19:19:23.957 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Migrating schema "public" to version "12 - insert administradores iniciais"
+2025-09-25 19:19:23.976 INFO  [restartedMain] o.f.core.internal.command.DbMigrate - [anon] [noreq] Successfully applied 12 migrations to schema "public", now at version v12 (execution time 00:00.162s)
+2025-09-25 19:19:24.318 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - [anon] [noreq] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-25 19:19:25.662 INFO  [restartedMain] o.s.b.a.e.web.EndpointLinksResolver - [anon] [noreq] Exposing 1 endpoint beneath base path '/actuator'
+2025-09-25 19:19:26.960 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer - [anon] [noreq] LiveReload server is running on port 35729
+2025-09-25 19:19:27.241 INFO  [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/] - [anon] [noreq] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-25 19:19:27.242 INFO  [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet - [anon] [noreq] Initializing Servlet 'dispatcherServlet'
+2025-09-25 19:19:27.246 INFO  [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet - [anon] [noreq] Completed initialization in 3 ms
+2025-09-25 19:19:27.274 INFO  [restartedMain] o.a.coyote.http11.Http11NioProtocol - [anon] [noreq] Starting ProtocolHandler ["http-nio-8080"]
+2025-09-25 19:19:27.363 INFO  [restartedMain] o.s.b.w.e.tomcat.TomcatWebServer - [anon] [noreq] Tomcat started on port 8080 (http) with context path '/'
+2025-09-25 19:19:27.379 INFO  [restartedMain] br.com.alevhvm.adotai.Startup - [anon] [noreq] Started Startup in 24.256 seconds (process running for 26.017)
+2025-09-25 19:19:45.859 DEBUG [http-nio-8080-exec-2] b.c.a.a.a.s.AdministradorService - [anonymous] [94d3075a-347c-4bc8-ae8b-62ab470c3303] Iniciando login do administrador adminmaster@sistema.com
+2025-09-25 19:19:46.106 INFO  [http-nio-8080-exec-2] b.c.a.a.a.s.AdministradorService - [anonymous] [94d3075a-347c-4bc8-ae8b-62ab470c3303] Administrador adminmaster@sistema.com logado com sucesso.
+2025-09-25 19:20:02.030 DEBUG [http-nio-8080-exec-3] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] Iniciando busca de todos as adocoes
+2025-09-25 19:20:02.180 INFO  [http-nio-8080-exec-3] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] Encontrada(s) 1 pagina(s), com 5 Adocao(oes)
+2025-09-25 19:20:02.202 INFO  [http-nio-8080-exec-3] c.g.d.core.util.RuntimeUtils - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] OSGi support is false
+2025-09-25 19:20:02.208 INFO  [http-nio-8080-exec-3] c.g.d.core.DozerBeanMapperBuilder - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] Initializing Dozer. Version: 7.0.0, Thread Name: http-nio-8080-exec-3
+2025-09-25 19:20:02.221 INFO  [http-nio-8080-exec-3] c.g.d.c.c.r.LegacyPropertiesSettingsResolver - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] Trying to find Dozer configuration file: dozer.properties
+2025-09-25 19:20:02.222 INFO  [http-nio-8080-exec-3] c.g.d.c.c.r.LegacyPropertiesSettingsResolver - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] Failed to find dozer.properties via com.github.dozermapper.core.config.resolvers.LegacyPropertiesSettingsResolver.
+2025-09-25 19:20:02.236 INFO  [http-nio-8080-exec-3] c.g.d.core.el.ELExpressionFactory - [adminmaster@sistema.com] [3d60c5c3-4730-40c9-b8e1-60d6586d1bdf] jakarta.el is not supported; Failed to resolve ExpressionFactory, com.sun.el.ExpressionFactoryImpl
+2025-09-25 19:20:20.893 WARN  [http-nio-8080-exec-4] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - [adminmaster@sistema.com] [24a2ddaa-7a81-4c79-aae3-b7081648e852] Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/v1/adocoes.]
+2025-09-25 19:20:30.412 DEBUG [http-nio-8080-exec-6] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [c6469ad6-9037-4d48-a858-e62601194e6c] Iniciando busca da adocao com id = 1
+2025-09-25 19:20:30.456 INFO  [http-nio-8080-exec-6] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [c6469ad6-9037-4d48-a858-e62601194e6c] Adocao encontrada com sucesso: id=1, nomeUsuario={}
+2025-09-25 19:20:30.601 DEBUG [http-nio-8080-exec-6] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [c6469ad6-9037-4d48-a858-e62601194e6c] Iniciando busca da adocao com id = 1
+2025-09-25 19:20:30.604 INFO  [http-nio-8080-exec-6] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [c6469ad6-9037-4d48-a858-e62601194e6c] Adocao encontrada com sucesso: id=1, nomeUsuario={}
+2025-09-25 19:20:37.173 DEBUG [http-nio-8080-exec-7] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [1f9169c6-57a0-4107-9676-fa94333ad5ed] Iniciando busca da adocao com id = 1
+2025-09-25 19:20:37.215 INFO  [http-nio-8080-exec-7] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [1f9169c6-57a0-4107-9676-fa94333ad5ed] Adocao encontrada com sucesso: id=1, nomeUsuario={}
+2025-09-25 19:20:37.363 DEBUG [http-nio-8080-exec-7] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [1f9169c6-57a0-4107-9676-fa94333ad5ed] Iniciando busca da adocao com id = 1
+2025-09-25 19:20:37.371 INFO  [http-nio-8080-exec-7] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [1f9169c6-57a0-4107-9676-fa94333ad5ed] Adocao encontrada com sucesso: id=1, nomeUsuario={}
+2025-09-25 19:21:16.743 DEBUG [http-nio-8080-exec-8] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [9a45a13f-fc4f-43b0-9a10-1b8589380547] Iniciando a criacao de uma Adocao
+2025-09-25 19:21:16.858 INFO  [http-nio-8080-exec-8] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [9a45a13f-fc4f-43b0-9a10-1b8589380547] Adocao criado com sucesso.
+2025-09-25 19:21:29.590 DEBUG [http-nio-8080-exec-9] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [5d0ce47e-c1e7-4e24-8ea8-28894069a80f] Iniciando busca da adocao com id = 1
+2025-09-25 19:21:29.606 INFO  [http-nio-8080-exec-9] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [5d0ce47e-c1e7-4e24-8ea8-28894069a80f] Adocao encontrada com sucesso: id=1, nomeUsuario={}
+2025-09-25 19:21:29.625 DEBUG [http-nio-8080-exec-9] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [5d0ce47e-c1e7-4e24-8ea8-28894069a80f] Iniciando delecao da adocao 1
+2025-09-25 19:21:29.670 INFO  [http-nio-8080-exec-9] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [5d0ce47e-c1e7-4e24-8ea8-28894069a80f] Adocao de id 1 deletado com sucesso.
+2025-09-25 19:21:36.348 DEBUG [http-nio-8080-exec-10] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [c7127270-e6e1-40a1-aef5-238f67993b6b] Iniciando busca da adocao com id = 7
+2025-09-25 19:21:36.357 WARN  [http-nio-8080-exec-10] b.c.a.a.adocao.service.AdocaoService - [adminmaster@sistema.com] [c7127270-e6e1-40a1-aef5-238f67993b6b] Adocao nao encontrado para id = 7
+2025-09-25 19:21:36.367 WARN  [http-nio-8080-exec-10] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - [adminmaster@sistema.com] [c7127270-e6e1-40a1-aef5-238f67993b6b] Resolved [br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException: Adoção não encontrada.]

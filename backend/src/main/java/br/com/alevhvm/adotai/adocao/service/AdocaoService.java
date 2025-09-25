@@ -1,5 +1,7 @@
 package br.com.alevhvm.adotai.adocao.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -44,6 +46,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdocaoService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AdocaoService.class);
+
     private final AdocaoRepository adocaoRepository;
 
     private final AnimalRepository animalRepository;
@@ -57,8 +61,11 @@ public class AdocaoService {
     private final Validator validator;
 
     public PagedModel<EntityModel<AdocaoDTO>> findAll(Pageable pageable) {
+        logger.debug("Iniciando busca de todos as adocoes");
 
         Page<Adocao> adocaoPage = adocaoRepository.findAll(pageable);
+
+        logger.info("Encontrada(s) {} pagina(s), com {} Adocao(oes)", adocaoPage.getTotalPages(), adocaoPage.getTotalElements());
 
         Page<AdocaoDTO> adocaoDtosPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
         adocaoDtosPage
@@ -70,47 +77,73 @@ public class AdocaoService {
     }
 
     public AdocaoDTO findById(Long id) {
+        logger.debug("Iniciando busca da adocao com id = {}", id);
 
         Adocao entity = getAdocaoEntityById(id);
 
         AdocaoDTO dto = DozerMapper.parseObject(entity, AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
+
+        logger.info("Adocao encontrada com sucesso: id={}", entity.getIdAdocao());
         return dto;
     }
 
     public AdocaoDTO create(AdocaoDTO adocao) {
-        if (adocao == null)
+        logger.debug("Iniciando a criacao de uma Adocao");
+
+        if (adocao == null) {
+            logger.warn("Nao ha dados");
             throw new AdocaoNulaException("Não há dados");
+        }
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> {
+                    logger.warn("Animal não encontrado para id = {}", adocao.getIdAnimal());
+                    return new AnimalNotFoundException("Animal não encontrado");
+                });
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> {
+                    logger.warn("Usuario não encontrado para id = {}", adocao.getIdUsuario());
+                    return new UsuarioNotFoundException("Usuário não encontrado");
+                });
 
         Adocao entity = DozerMapper.parseObject(adocao, Adocao.class);
         entity.setAnimal(animal);
         entity.setUsuario(usuario);
         AdocaoDTO dto = DozerMapper.parseObject(adocaoRepository.save(entity), AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Adocao criado com sucesso.");
         return dto;
     }
 
     public AdocaoDTO update(AdocaoDTO adocao, Long id) {
+        logger.debug("Iniciando atualização de adocao com id = {}", id);
 
         if (adocao == null)
             throw new AdocaoNulaException("Não há dados");
+            logger.warn("Nao ha dados");
 
         Adocao entity = getAdocaoEntityById(id);
 
         Usuario usuario = usuarioRepository.findById(adocao.getIdUsuario())
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrada."));
+                .orElseThrow(() -> {
+                    logger.warn("Usuario não encontrado para id = {}", adocao.getIdUsuario());
+                    return new UsuarioNotFoundException("Usuário não encontrado");
+                });
 
         Animal animal = animalRepository.findById(adocao.getIdAnimal())
-                .orElseThrow(() -> new AnimalNotFoundException("Animal não encontrado"));
+                .orElseThrow(() -> {
+                    logger.warn("Animal não encontrado para id = {}", adocao.getIdAnimal());
+                    return new AnimalNotFoundException("Animal não encontrado");
+                });
 
         Ong ong = ongRepository.findById(animal.getOng().getIdOng())
-                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> {
+                    logger.warn("Ong não encontrado para id = {}", animal.getOng().getIdOng());
+                    return new OngNotFoundException("Ong não encontrada.");
+                });
 
         entity.setDataAdocao(adocao.getDataAdocao());
         entity.setStatus(adocao.getStatus());
@@ -120,10 +153,14 @@ public class AdocaoService {
 
         AdocaoDTO dto = DozerMapper.parseObject(adocaoRepository.save(entity), AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Adocao {} atualizada com sucesso.", entity.getIdAdocao());
         return dto;
     }
 
     public AdocaoDTO partialUpdate(Long id, Map<String, Object> updates) {
+        logger.debug("Iniciando atualizacao parcial de adocao com id = {}", id);
+
         Adocao adocao = getAdocaoEntityById(id);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -156,18 +193,27 @@ public class AdocaoService {
         AdocaoDTO dto = DozerMapper.parseObject(adocao, AdocaoDTO.class);
         dto.add(linkTo(methodOn(AdocaoController.class).acharAdocaoPorId(id)).withSelfRel());
 
+        logger.info("Adocao {} atualizada com sucesso.", adocao.getIdAdocao());
         return dto;
     }
 
     public void delete(Long id) {
+        logger.debug("Iniciando delecao da adocao {}", id);
+
         if (!adocaoRepository.existsById(id)) {
+            logger.warn("Adoção de id {} não encontrada.", id);
             throw new AdocaoNotFoundException("Adoção não encontrada.");
         }
         adocaoRepository.deleteById(id);
+
+        logger.info("Adocao de id {} deletado com sucesso.", id);
     }
 
     public Adocao getAdocaoEntityById(Long id) {
         return adocaoRepository.findById(id)
-                .orElseThrow(() -> new AdocaoNotFoundException("Adoção não encontrada."));
+                .orElseThrow(() -> {
+                    logger.warn("Adocao nao encontrado para id = {}", id);
+                    return new AdocaoNotFoundException("Adoção não encontrada.");
+                });
     }
 }
