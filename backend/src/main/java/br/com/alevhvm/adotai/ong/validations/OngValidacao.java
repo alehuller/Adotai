@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import br.com.alevhvm.adotai.common.exceptions.ValidacaoException;
@@ -19,11 +21,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OngValidacao {
 
+    private static final Logger logger = LoggerFactory.getLogger(OngValidacao.class);
+
     private final OngRepository ongRepository;
 
     public void validate(OngDTO ong) {
-        if (ong == null)
+        if (ong == null) {
+            logger.error("Nao ha dados");
             throw new OngNulaException("Não há dados");
+        }
+            
 
         List<String> erros = new ArrayList<>();
 
@@ -42,6 +49,7 @@ public class OngValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na criacao de Ong: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -57,6 +65,7 @@ public class OngValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na atualizacao de Ong: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -89,6 +98,7 @@ public class OngValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na atualizacao parcial de Ong: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -110,6 +120,7 @@ public class OngValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na validacao de endereco de Ong: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }

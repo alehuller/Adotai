@@ -7,6 +7,8 @@ import br.com.alevhvm.adotai.auth.dto.TokenDTO;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
 import br.com.alevhvm.adotai.ong.validations.OngValidacao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -52,6 +54,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OngService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OngService.class);
+
     private final OngRepository ongRepository;
 
     private final AdocaoRepository adocaoRepository;
@@ -73,8 +77,11 @@ public class OngService {
     private final CepService cepService;
 
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
+        logger.debug("Iniciando busca de todos as ongs");
 
         Page<Ong> ongPage = ongRepository.findAll(pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Ong(s)", ongPage.getTotalPages(), ongPage.getTotalElements());
 
         Page<OngDTO> ongDtosPage = ongPage.map(o -> DozerMapper.parseObject(o, OngDTO.class));
         ongDtosPage.map(o -> o.add(linkTo(methodOn(OngController.class).acharOngPorId(o.getKey())).withSelfRel()));
@@ -85,29 +92,41 @@ public class OngService {
     }
 
     public OngDTO findById(Long id) {
+        logger.debug("Iniciando busca de ong com id = {}", id);
 
         Ong entity = ongRepository.findById(id)
-                .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+                .orElseThrow(() -> {
+                    logger.warn("Ong não encontrada para id = {}", id);
+                    return new OngNotFoundException("Ong não encontrada.");
+                });
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(id)).withSelfRel());
+
+        logger.info("Ong encontrada com sucesso: id={}, nomeUsuario={}", entity.getIdOng(), entity.getNomeUsuario());
         return dto;
 
     }
 
     public OngDTO findByNomeUsuario(String nomeUsuario) {
+        logger.debug("Iniciando busca de ong com nomeUsuario = {}", nomeUsuario);
 
         Ong entity = getOngEntityByNomeUsuario(nomeUsuario);
 
         OngDTO dto = DozerMapper.parseObject(entity, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
+
+        logger.info("Ong encontrada com sucesso: id={}, nomeUsuario={}", entity.getIdOng(), entity.getNomeUsuario());
         return dto;
 
     }
 
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByOngId(Long idOng, Pageable pageable) {
+        logger.debug("Iniciando busca de todos as Adocoes de uma Ong");
 
         Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByOngId(idOng, pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Adocao(oes)", adocaoPage.getTotalPages(), adocaoPage.getTotalElements());
 
         Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
 
@@ -122,11 +141,14 @@ public class OngService {
     }
 
     public Page<OngDTO> filtrarOngs(OngFiltroDTO filtro, Pageable pageable) {
+        logger.debug("Iniciando filtro de Ongs");
         Page<Ong> ongs = ongRepository.filtrarOngsNativo(filtro, pageable);
+        logger.debug("Filtro finalizado de animais");
         return ongs.map(ong -> DozerMapper.parseObject(ong, OngDTO.class));
     }
 
     public OngDTO create(OngDTO ong) {
+        logger.debug("Iniciando a criacao de uma ong");
 
         // Passo 3: Preenche o endereço com base no CEP usando a API ViaCEP
         cepService.preencherEndereco(ong.getEndereco());
@@ -143,10 +165,12 @@ public class OngService {
         OngDTO dto = DozerMapper.parseObject(ongRepository.save(entity), OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
 
+        logger.info("Ong {} criada com sucesso.", entity.getNome());
         return dto;
     }
 
     public TokenDTO logar(LoginDTO data) {
+        logger.debug("Inciando login da Ong {}", data.identifier());
 
         String identifier = data.identifier();
 
@@ -163,12 +187,17 @@ public class OngService {
 
         var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
 
+        logger.info("Ong {} logada com sucesso.", data.identifier());
         return new TokenDTO(token);
     }
 
     public OngDTO update(OngUpdateDTO ongUpdate, String nomeUsuario) {
-        if (ongUpdate == null)
+        logger.debug("Iniciando atualização de ong com nomeUsuario = {}", nomeUsuario);
+
+        if (ongUpdate == null) {
+            logger.warn("Nao ha dados");
             throw new OngNulaException("Não há dados");
+        }
 
         Ong entity = getOngEntityByNomeUsuario(nomeUsuario);
 
@@ -191,10 +220,13 @@ public class OngService {
 
         dto.add(linkTo(methodOn(OngController.class).acharOngPorId(dto.getKey())).withSelfRel());
 
+        logger.info("Ong {} atualizada com sucesso.", entity.getNomeUsuario());
         return dto;
     }
 
     public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
+        logger.debug("Iniciando atualização parcial de animal com nomeUsuario = {}", nomeUsuario);
+
         Ong ong = getOngEntityByNomeUsuario(nomeUsuario);
 
         ongValidacao.validatePartialUpdate(nomeUsuario, updates);
@@ -280,17 +312,23 @@ public class OngService {
         OngDTO dto = DozerMapper.parseObject(ong, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
 
+        logger.info("Ong {} atualziada parcialmente com sucesso.", ong.getNome());
         return dto;
     }
 
     @Transactional
     public void delete(String nomeUsuario) {
+        logger.debug("Iniciando delecao de ong de nome = {}", nomeUsuario);
         var ong = getOngEntityByNomeUsuario(nomeUsuario);
         ongRepository.deleteByNomeUsuario(nomeUsuario);
+        logger.info("Ong {} deletada com sucesso.", nomeUsuario);
     }
 
     public Ong getOngEntityByNomeUsuario(String nomeUsuario) {
         return ongRepository.findByNomeUsuario(nomeUsuario)
-            .orElseThrow(() -> new OngNotFoundException("Ong não encontrada."));
+            .orElseThrow(() -> {
+                logger.warn("Ong nao encontrda para nomeUsuario = {}", nomeUsuario);
+                return new OngNotFoundException("Ong não encontrada.");
+            });
     }
 }
