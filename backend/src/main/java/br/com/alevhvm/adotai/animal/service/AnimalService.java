@@ -54,6 +54,7 @@ public class AnimalService {
 
     private final Validator validator;
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AnimalDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos os animais");
 
@@ -71,6 +72,7 @@ public class AnimalService {
         // return usuarioRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public AnimalDTO findById(Long id) {
         logger.debug("Iniciando busca do Animal de id {}", id);
 
@@ -87,6 +89,7 @@ public class AnimalService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public AnimalDTO findByNome(String nome) {
         logger.debug("Iniciando busca do animal com nome = {}", nome);
 
@@ -99,6 +102,7 @@ public class AnimalService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AnimalDTO>> findAllByOngNome(String nomeUsuario, Pageable pageable) {
         logger.debug("Iniciando busca de todos os animais de uma ong");
 
@@ -118,6 +122,7 @@ public class AnimalService {
         return assembler.toModel(animalDtoPage, selfLink);
     }
 
+    @Transactional(readOnly = true)
     public Page<AnimalDTO> filtrarAnimais(AnimalFiltroDTO filtro, Pageable pageable) {
         logger.debug("Iniciando filtro de animais");
         Page<Animal> animais = animalRepository.filtrarAnimaisNativo(filtro, pageable);
@@ -125,6 +130,7 @@ public class AnimalService {
         return animais.map(animal -> DozerMapper.parseObject(animal, AnimalDTO.class));
     }
 
+    @Transactional
     public AnimalDTO create(AnimalDTO animal) {
         logger.debug("Iniciando a criação de um Animal");
 
@@ -148,6 +154,7 @@ public class AnimalService {
         return dto;
     }
 
+    @Transactional
     public AnimalDTO update(AnimalDTO animal, String nome) {
         logger.debug("Iniciando atualização de animal com nome = {}", nome);
 
@@ -161,7 +168,7 @@ public class AnimalService {
         Ong ong = ongRepository.findById(animal.getIdOng())
                 .orElseThrow(() -> {
                     logger.warn("Ong nao encontrada para o id = {}", animal.getIdOng());
-                    return new AnimalNotFoundException("Ong não encontrada.");
+                    return new OngNotFoundException("Ong não encontrada.");
                 });
 
         entity.setNome(animal.getNome());
@@ -182,8 +189,9 @@ public class AnimalService {
         return dto;
     }
 
+    @Transactional
     public AnimalDTO partialUpdate(String nome, Map<String, Object> updates) {
-        logger.debug("Iniciando atualização parcial de animal com nomeU = {}", nome);
+        logger.debug("Iniciando atualização parcial de animal com nome = {}", nome);
 
         Animal animal = getAnimalEntityByNome(nome);
 
@@ -246,6 +254,7 @@ public class AnimalService {
         logger.info("Animal {} deletado com sucesso.", nome);
     }
 
+    @Transactional(readOnly = true)
     public Animal getAnimalEntityByNome(String nome) {
         return animalRepository.findByNome(nome)
                 .orElseThrow(() -> {

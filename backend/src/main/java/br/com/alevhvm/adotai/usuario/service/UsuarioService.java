@@ -81,12 +81,13 @@ public class UsuarioService {
 
     private final UsuarioValidacao usuarioValidacao;
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos os usuarios");
 
         Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
 
-        logger.info("Encontrada(s) {} página(s), com {} Administrador(es)", usuarioPage.getTotalPages(), usuarioPage.getTotalElements());
+        logger.info("Encontrada(s) {} página(s), com {} Usuario(s)", usuarioPage.getTotalPages(), usuarioPage.getTotalElements());
 
         Page<UsuarioDTO> usuarioDtosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioDTO.class));
         usuarioDtosPage
@@ -97,6 +98,7 @@ public class UsuarioService {
         return assembler.toModel(usuarioDtosPage, link);
     }
 
+    @Transactional(readOnly = true)
     public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
         logger.debug("Iniciando busca do usuario com nomeUsuario = {}", nomeUsuario);
 
@@ -109,6 +111,7 @@ public class UsuarioService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public UsuarioDTO findById(Long id) {
         logger.debug("Iniciando busca do usuario com id = {}", id);
 
@@ -125,6 +128,7 @@ public class UsuarioService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByNomeUsuario(String nomeUsuario, Pageable pageable) {
         logger.debug("Iniciando busca de todas as adocoes do usuario {}", nomeUsuario);
 
@@ -144,6 +148,7 @@ public class UsuarioService {
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 
+    @Transactional
     public UsuarioDTO create(RegistroDTO registroDTO) {
         logger.debug("Iniciando a criação de um Usuario");
 
@@ -186,6 +191,7 @@ public class UsuarioService {
         return new TokenDTO(token);
     }
 
+    @Transactional
     public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, String nomeUsuario) {
         logger.debug("Iniciando atualização de usuario com nomeUsuario = {}", nomeUsuario);
 
@@ -206,6 +212,7 @@ public class UsuarioService {
         return dto;
     }
 
+    @Transactional
     public UsuarioDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         logger.debug("Iniciando atualização parcial do usuario com nomeUsuario = {}", nomeUsuario);
         
@@ -256,6 +263,7 @@ public class UsuarioService {
         logger.info("Usuario {} deletado com sucesso.", nomeUsuario);
     }
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AnimalDTO>> findAnimaisFavoritosByNomeUsuario(String nomeUsuario, Pageable pageable) {
         logger.debug("Iniciando busca de todos os animais favoritados de usuario {}", nomeUsuario);
 
@@ -323,6 +331,7 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    @Transactional(readOnly = true)
     public Usuario getUsuarioEntityByNomeUsuario(String nomeUsuario) {
         return usuarioRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> {

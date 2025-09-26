@@ -76,6 +76,7 @@ public class OngService {
 
     private final CepService cepService;
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos as ongs");
 
@@ -91,6 +92,7 @@ public class OngService {
         return assembler.toModel(ongDtosPage, link);
     }
 
+    @Transactional(readOnly = true)
     public OngDTO findById(Long id) {
         logger.debug("Iniciando busca de ong com id = {}", id);
 
@@ -108,6 +110,7 @@ public class OngService {
 
     }
 
+    @Transactional(readOnly = true)
     public OngDTO findByNomeUsuario(String nomeUsuario) {
         logger.debug("Iniciando busca de ong com nomeUsuario = {}", nomeUsuario);
 
@@ -121,6 +124,7 @@ public class OngService {
 
     }
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByOngId(Long idOng, Pageable pageable) {
         logger.debug("Iniciando busca de todos as Adocoes de uma Ong");
 
@@ -140,6 +144,7 @@ public class OngService {
         return adocaoDtoAssembler.toModel(adocaoDtoPage, selfLink);
     }
 
+    @Transactional(readOnly = true)
     public Page<OngDTO> filtrarOngs(OngFiltroDTO filtro, Pageable pageable) {
         logger.debug("Iniciando filtro de Ongs");
         Page<Ong> ongs = ongRepository.filtrarOngsNativo(filtro, pageable);
@@ -147,6 +152,7 @@ public class OngService {
         return ongs.map(ong -> DozerMapper.parseObject(ong, OngDTO.class));
     }
 
+    @Transactional
     public OngDTO create(OngDTO ong) {
         logger.debug("Iniciando a criacao de uma ong");
 
@@ -191,6 +197,7 @@ public class OngService {
         return new TokenDTO(token);
     }
 
+    @Transactional
     public OngDTO update(OngUpdateDTO ongUpdate, String nomeUsuario) {
         logger.debug("Iniciando atualização de ong com nomeUsuario = {}", nomeUsuario);
 
@@ -224,8 +231,9 @@ public class OngService {
         return dto;
     }
 
+    @Transactional
     public OngDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
-        logger.debug("Iniciando atualização parcial de animal com nomeUsuario = {}", nomeUsuario);
+        logger.debug("Iniciando atualização parcial de ong com nomeUsuario = {}", nomeUsuario);
 
         Ong ong = getOngEntityByNomeUsuario(nomeUsuario);
 
@@ -312,7 +320,7 @@ public class OngService {
         OngDTO dto = DozerMapper.parseObject(ong, OngDTO.class);
         dto.add(linkTo(methodOn(OngController.class).acharOngPorNomeUsuario(nomeUsuario)).withSelfRel());
 
-        logger.info("Ong {} atualziada parcialmente com sucesso.", ong.getNome());
+        logger.info("Ong {} atualizada parcialmente com sucesso.", ong.getNome());
         return dto;
     }
 
@@ -324,6 +332,7 @@ public class OngService {
         logger.info("Ong {} deletada com sucesso.", nomeUsuario);
     }
 
+    @Transactional(readOnly = true)
     public Ong getOngEntityByNomeUsuario(String nomeUsuario) {
         return ongRepository.findByNomeUsuario(nomeUsuario)
             .orElseThrow(() -> {

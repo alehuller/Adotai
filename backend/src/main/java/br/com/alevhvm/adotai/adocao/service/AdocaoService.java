@@ -9,6 +9,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,6 +61,7 @@ public class AdocaoService {
 
     private final Validator validator;
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AdocaoDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos as adocoes");
 
@@ -76,6 +78,7 @@ public class AdocaoService {
         return assembler.toModel(adocaoDtosPage, link);
     }
 
+    @Transactional(readOnly = true)
     public AdocaoDTO findById(Long id) {
         logger.debug("Iniciando busca da adocao com id = {}", id);
 
@@ -88,6 +91,7 @@ public class AdocaoService {
         return dto;
     }
 
+    @Transactional
     public AdocaoDTO create(AdocaoDTO adocao) {
         logger.debug("Iniciando a criacao de uma Adocao");
 
@@ -118,12 +122,15 @@ public class AdocaoService {
         return dto;
     }
 
+    @Transactional
     public AdocaoDTO update(AdocaoDTO adocao, Long id) {
         logger.debug("Iniciando atualização de adocao com id = {}", id);
 
-        if (adocao == null)
-            throw new AdocaoNulaException("Não há dados");
+        if (adocao == null) {
             logger.warn("Nao ha dados");
+            throw new AdocaoNulaException("Não há dados");
+        }
+            
 
         Adocao entity = getAdocaoEntityById(id);
 
@@ -158,6 +165,7 @@ public class AdocaoService {
         return dto;
     }
 
+    @Transactional
     public AdocaoDTO partialUpdate(Long id, Map<String, Object> updates) {
         logger.debug("Iniciando atualizacao parcial de adocao com id = {}", id);
 
@@ -197,6 +205,7 @@ public class AdocaoService {
         return dto;
     }
 
+    @Transactional
     public void delete(Long id) {
         logger.debug("Iniciando delecao da adocao {}", id);
 
@@ -209,6 +218,7 @@ public class AdocaoService {
         logger.info("Adocao de id {} deletado com sucesso.", id);
     }
 
+    @Transactional(readOnly = true)
     public Adocao getAdocaoEntityById(Long id) {
         return adocaoRepository.findById(id)
                 .orElseThrow(() -> {

@@ -62,6 +62,7 @@ public class AdministradorService {
 
     private final TokenService tokenService;
 
+    @Transactional(readOnly = true)
     public PagedModel<EntityModel<AdministradorDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos os administradores");
 
@@ -80,6 +81,7 @@ public class AdministradorService {
         return assembler.toModel(administradorDtosPage, link);
     }
 
+    @Transactional
     public AdministradorDTO create(AdministradorDTO administradorDTO) {
         logger.debug("Iniciando a criação de um Administrador");
 
@@ -99,6 +101,7 @@ public class AdministradorService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public AdministradorDTO findById(Long id) {
         logger.debug("Iniciando busca do administrador com id = {}", id);
 
@@ -115,6 +118,7 @@ public class AdministradorService {
         return dto;
     }
 
+    @Transactional
     public AdministradorDTO update(AdministradorUpdateDTO administradorUpdateDTO, String nomeUsuario) {
         logger.debug("Iniciando atualização de administrador com nomeUsuario = {}", nomeUsuario);
 
@@ -135,6 +139,7 @@ public class AdministradorService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public AdministradorDTO findByNomeUsuario(String nomeUsuario) {
         logger.debug("Iniciando busca do administrador com nomeUsuario = {}", nomeUsuario);
 
@@ -148,6 +153,7 @@ public class AdministradorService {
         return dto;
     }
 
+    @Transactional
     public AdministradorDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
         logger.debug("Iniciando atualização parcial do administrador com nomeUsuario = {}", nomeUsuario);
 
@@ -217,6 +223,7 @@ public class AdministradorService {
         logger.info("Administrador {} deletado com sucesso.", nomeUsuario);
     }
 
+    @Transactional
     public AdministradorDTO atualizarAdmNormalParaMaster(String nomeUsuario) {
         logger.debug("Iniciando atualizacao do administrador normal {} para administrador master", nomeUsuario);
 
@@ -236,6 +243,7 @@ public class AdministradorService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public Administrador getAdministradorEntityByNomeUsuario(String nomeUsuario) {
         return administradorRepository.findByNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> {
