@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
@@ -18,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UsuarioValidacao {
 
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioValidacao.class);
+
     private final UsuarioRepository usuarioRepository;
 
     public void validate(RegistroDTO registroDTO) {
         if (registroDTO == null) {
+            logger.error("Falha na criação de Usuario: não ha dados.");
             throw new UsuarioNuloException("Não há dados");
         }
 
@@ -42,6 +47,7 @@ public class UsuarioValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na criação de Usuario: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -57,6 +63,7 @@ public class UsuarioValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na atualizacao de Usuario: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }
@@ -89,6 +96,7 @@ public class UsuarioValidacao {
         }
 
         if (!erros.isEmpty()) {
+            logger.error("Falha na atualizacao parcial de Usuario: {}", String.join(", ", erros));
             throw new ValidacaoException(erros);
         }
     }

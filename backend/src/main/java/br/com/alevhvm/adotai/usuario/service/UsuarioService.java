@@ -30,6 +30,8 @@ import br.com.alevhvm.adotai.usuario.validations.UsuarioValidacao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +57,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class UsuarioService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+
     private final UsuarioRepository usuarioRepository;
 
     private final AdocaoRepository adocaoRepository;
@@ -78,8 +82,11 @@ public class UsuarioService {
     private final UsuarioValidacao usuarioValidacao;
 
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
+        logger.debug("Iniciando busca de todos os usuarios");
 
         Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Administrador(es)", usuarioPage.getTotalPages(), usuarioPage.getTotalElements());
 
         Page<UsuarioDTO> usuarioDtosPage = usuarioPage.map(u -> DozerMapper.parseObject(u, UsuarioDTO.class));
         usuarioDtosPage
@@ -91,27 +98,39 @@ public class UsuarioService {
     }
 
     public UsuarioDTO findByNomeUsuario(String nomeUsuario) {
+        logger.debug("Iniciando busca do usuario com nomeUsuario = {}", nomeUsuario);
 
         Usuario entity = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
+        
+        logger.info("Usuario encontrado com sucesso: id={}, nomeUsuario={}", entity.getIdUsuario(), entity.getNomeUsuario());
         return dto;
     }
 
     public UsuarioDTO findById(Long id) {
+        logger.debug("Iniciando busca do usuario com id = {}", id);
 
         Usuario entity = usuarioRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado."));
+                .orElseThrow(() -> {
+                    logger.warn("Usuario nao encontrado para id = {}", id);
+                    return new UsuarioNotFoundException("Usuário não encontrado.");
+                });
 
         UsuarioDTO dto = DozerMapper.parseObject(entity, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(id)).withSelfRel());
+        
+        logger.info("Usuario encontrado com sucesso: id={}, nomeUsuario={}", entity.getIdUsuario(), entity.getNomeUsuario());
         return dto;
     }
 
     public PagedModel<EntityModel<AdocaoDTO>> findAllAdocoesByNomeUsuario(String nomeUsuario, Pageable pageable) {
+        logger.debug("Iniciando busca de todas as adocoes do usuario {}", nomeUsuario);
 
         Page<Adocao> adocaoPage = adocaoRepository.findAdocoesByNomeUsuario(nomeUsuario, pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Adocao(oes)", adocaoPage.getTotalPages(), adocaoPage.getTotalElements());
 
         Page<AdocaoDTO> adocaoDtoPage = adocaoPage.map(a -> DozerMapper.parseObject(a, AdocaoDTO.class));
 
@@ -126,6 +145,7 @@ public class UsuarioService {
     }
 
     public UsuarioDTO create(RegistroDTO registroDTO) {
+        logger.debug("Iniciando a criação de um Usuario");
 
         usuarioValidacao.validate(registroDTO);
 
@@ -138,10 +158,13 @@ public class UsuarioService {
         dto.add(
                 linkTo(
                         methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
+
+        logger.info("Usuario {} criado com sucesso.", entity.getNomeUsuario());
         return dto;
     }
 
     public TokenDTO logar(LoginDTO data) {
+        logger.debug("Iniciando login do usuario {}", data.identifier());
 
         String identifier = data.identifier();
 
@@ -159,10 +182,12 @@ public class UsuarioService {
 
         var token = tokenService.generateToken((LoginIdentityView) auth.getPrincipal());
 
+        logger.info("Usuario {} logado com sucesso.", data.identifier());
         return new TokenDTO(token);
     }
 
     public UsuarioDTO update(UsuarioUpdateDTO usuarioUpdate, String nomeUsuario) {
+        logger.debug("Iniciando atualização de usuario com nomeUsuario = {}", nomeUsuario);
 
         Usuario entity = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
@@ -176,10 +201,14 @@ public class UsuarioService {
 
         UsuarioDTO dto = DozerMapper.parseObject(usuarioRepository.save(entity), UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorId(dto.getKey())).withSelfRel());
+        
+        logger.info("Usuario {} atualizado com sucesso.", entity.getNomeUsuario());
         return dto;
     }
 
     public UsuarioDTO partialUpdate(String nomeUsuario, Map<String, Object> updates) {
+        logger.debug("Iniciando atualização parcial do usuario com nomeUsuario = {}", nomeUsuario);
+        
         Usuario usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
 
         usuarioValidacao.validatePartialUpdate(nomeUsuario, updates);
@@ -215,18 +244,25 @@ public class UsuarioService {
         UsuarioDTO dto = DozerMapper.parseObject(usuario, UsuarioDTO.class);
         dto.add(linkTo(methodOn(UsuarioController.class).acharUsuarioPorNomeUsuario(nomeUsuario)).withSelfRel());
 
+        logger.info("Usuario {} atualizado parcialmente com sucesso.", usuario.getNomeUsuario());
         return dto;
     }
 
     @Transactional
     public void delete(String nomeUsuario) {
+        logger.debug("Iniciando delecao do usuario {}", nomeUsuario);
         var usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
         usuarioRepository.deleteByNomeUsuario(nomeUsuario);
+        logger.info("Usuario {} deletado com sucesso.", nomeUsuario);
     }
 
     public PagedModel<EntityModel<AnimalDTO>> findAnimaisFavoritosByNomeUsuario(String nomeUsuario, Pageable pageable) {
+        logger.debug("Iniciando busca de todos os animais favoritados de usuario {}", nomeUsuario);
+
         Page<Animal> animalPage = usuarioRepository.findAnimaisFavoritosByNomeUsuario(nomeUsuario, pageable);
         Page<AnimalDTO> animalDtoPage = animalPage.map(a -> DozerMapper.parseObject(a, AnimalDTO.class));
+
+        logger.info("Encontrada(s) {} página(s), com {} Animal(is)", animalPage.getTotalPages(), animalPage.getTotalElements());
 
         animalDtoPage = animalDtoPage.map(dto -> {
             dto.add(linkTo(methodOn(AnimalController.class).acharAnimalPorId(dto.getKey())).withSelfRel());
@@ -255,9 +291,13 @@ public class UsuarioService {
         boolean isFavorito = usuarioRepository.existsByNomeUsuarioAndAnimaisFavoritos_IdAnimal(nomeUsuario, animalId);
 
         if (isFavorito) {
+            logger.debug("Usuario {} removendo o favorito no animal de id {}", nomeUsuario, animalId);
             usuarioRepository.removerAnimalDosFavoritos(nomeUsuario, animalId);
+            logger.info("Animal de id {} removido dos favoritos do usuario {}", animalId, nomeUsuario);
         } else {
+            logger.debug("Usuario {} favoritando o animal de id {}", nomeUsuario, animalId);
             usuarioRepository.adicionarAnimalAosFavoritos(nomeUsuario, animalId);
+            logger.info("Animal de id {} favoritado pelo usuario {}", animalId, nomeUsuario);
         }
 
         return !isFavorito;
@@ -285,6 +325,9 @@ public class UsuarioService {
 
     public Usuario getUsuarioEntityByNomeUsuario(String nomeUsuario) {
         return usuarioRepository.findByNomeUsuario(nomeUsuario)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> {
+                    logger.warn("Usuario nao encontrado para nomeUsuario = {}", nomeUsuario);
+                    return new UsuarioNotFoundException("Usuário não encontrado");
+                });
     }
 }
