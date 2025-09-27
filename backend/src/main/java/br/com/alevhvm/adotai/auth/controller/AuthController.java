@@ -91,6 +91,7 @@ public class AuthController implements AuthControllerDocs{
         return ResponseEntity.ok(administradorService.logar(data));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/admin/register")
     public ResponseEntity<AdministradorDTO> registerAdm(@RequestBody @Valid AdministradorDTO data) {
     AdministradorDTO administradorDTO = administradorService.create(data);

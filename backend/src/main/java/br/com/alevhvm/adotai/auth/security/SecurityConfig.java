@@ -49,6 +49,9 @@ public class SecurityConfig {
 
                         // Rotas específicas com restrição
 
+                        // Rotas de auth
+                        .requestMatchers(HttpMethod.POST,"/auth/admin/register").hasRole("ADMINMASTER")
+
                         // Rotas de administrador
                         .requestMatchers("/api/v1/administradores/**").hasRole("ADMINMASTER")
 

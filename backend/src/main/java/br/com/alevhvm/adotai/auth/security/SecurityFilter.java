@@ -33,7 +33,11 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final TokenBlackListService tokenBlackListService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private static final List<String> ROTAS_PUBLICAS = List.of(
-            "/auth",
+            "/auth/user/login",
+            "/auth/user/register",
+            "/auth/ong/login",
+            "/auth/ong/register",
+            "/auth/admin/login",
             "/v3/api-docs",
             "/v3/api-docs/",
             "/v3/api-docs/swagger-config",
