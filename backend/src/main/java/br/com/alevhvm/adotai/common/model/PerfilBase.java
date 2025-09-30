@@ -1,6 +1,7 @@
 package br.com.alevhvm.adotai.common.model;
 
 import br.com.alevhvm.adotai.auth.enums.Roles;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,4 +33,8 @@ public abstract class PerfilBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 255, columnDefinition = "varchar default 0")
     private Roles role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusConta status = StatusConta.ATIVA;
 }

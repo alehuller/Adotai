@@ -6,7 +6,8 @@ INSERT INTO
         cpf,
         cell,
         nome_usuario,
-        role
+        role,
+        status
     )
 VALUES
     (
@@ -16,7 +17,8 @@ VALUES
         '046.625.940-90',
         '(18) 97420-5304',
         'NomeUsuario1',
-        'USER'
+        'USER',
+        'ATIVA'
     ),
     (
         'Usuario 2',
@@ -25,7 +27,8 @@ VALUES
         '367.244.700-56',
         '(13) 99385-5115',
         'NomeUsuario2',
-        'USER'
+        'USER',
+        'ATIVA'
     ),
     (
         'Usuario 3',
@@ -34,7 +37,8 @@ VALUES
         '030.706.100-05',
         '(15) 98823-4176',
         'NomeUsuario3',
-        'USER'
+        'USER',
+        'ATIVA'
     ),
     (
         'Usuario 4',
@@ -43,7 +47,8 @@ VALUES
         '913.146.750-44',
         '(17) 98637-6231',
         'NomeUsuario4',
-        'USER'
+        'USER',
+        'ATIVA'
     ),
     (
         'Usuario 5',
@@ -52,5 +57,6 @@ VALUES
         '072.296.000-06',
         '(14) 98466-3112',
         'NomeUsuario5',
-        'USER'
+        'USER',
+        'ATIVA'
     );

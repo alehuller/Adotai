@@ -30,6 +30,7 @@ import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import br.com.alevhvm.adotai.administrador.exception.AdmIsMasterException;
 import br.com.alevhvm.adotai.administrador.exception.AdministradorNotFoundException;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.administrador.model.Administrador;
 import br.com.alevhvm.adotai.auth.model.LoginIdentityView;
@@ -66,7 +67,7 @@ public class AdministradorService {
     public PagedModel<EntityModel<AdministradorDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos os administradores");
 
-        Page<Administrador> administradorPage = administradorRepository.findAll(pageable);
+        Page<Administrador> administradorPage = administradorRepository.findAllByStatus(StatusConta.ATIVA, pageable);
 
         logger.info("Encontrada(s) {} página(s), com {} Administrador(es)", administradorPage.getTotalPages(), administradorPage.getTotalElements());
 
@@ -241,6 +242,31 @@ public class AdministradorService {
         
         logger.info("Administrador {} atualizado para Master com sucesso.", nomeUsuario);
         return dto;
+    }
+
+    @Transactional
+    public String toggleStatus(String nomeUsuario) {
+        Administrador adm = getAdministradorEntityByNomeUsuario(nomeUsuario);
+
+        if (adm.getStatus() == StatusConta.ATIVA) {
+            logger.debug("Iniciando desativacao da conta {}", nomeUsuario);
+            administradorRepository.desativarAdministrador(nomeUsuario);
+            logger.info("Conta {} desativada com sucesso", nomeUsuario);
+        } else {
+            logger.debug("Iniciando ativacao da conta {}", nomeUsuario);
+            administradorRepository.ativarAdministrador(nomeUsuario);
+            logger.info("Conta {} ativada com sucesso", nomeUsuario);
+        }
+
+        return "Status atualizado com sucesso!";
+    }
+
+    @Transactional
+    public StatusConta bloquearConta(String nomeUsuario) {
+        logger.debug("Iniciando o bloqueio do administrador {}", nomeUsuario);
+        administradorRepository.bloquearAdministrador(nomeUsuario);
+        logger.info("Administrador {} bloqueado com sucesso", nomeUsuario);
+        return StatusConta.BLOQUEADA;
     }
 
     @Transactional(readOnly = true)

@@ -8,6 +8,7 @@ import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
 import br.com.alevhvm.adotai.administrador.service.AdministradorService;
 import br.com.alevhvm.adotai.common.docs.AdministradorControllerDocs;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -104,4 +105,19 @@ public class AdministradorController implements AdministradorControllerDocs{
         return ResponseEntity.ok(administradorAtualizado);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @PatchMapping(value = "/mudarStatus/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+            MediaType.APPLICATION_XML })
+    public ResponseEntity<String> toggleStatus(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+        String resposta = administradorService.toggleStatus(nomeUsuario);
+        return ResponseEntity.ok(resposta);
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PatchMapping(value = "/bloquearAdm/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+            MediaType.APPLICATION_XML })
+    public ResponseEntity<StatusConta> bloquearAdministrador(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+        StatusConta status = administradorService.bloquearConta(nomeUsuario);
+        return ResponseEntity.ok(status);
+    }
 }
