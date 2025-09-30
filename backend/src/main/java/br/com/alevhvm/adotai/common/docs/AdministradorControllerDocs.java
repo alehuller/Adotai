@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.alevhvm.adotai.administrador.dto.AdministradorDTO;
 import br.com.alevhvm.adotai.administrador.dto.AdministradorUpdateDTO;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -103,5 +104,29 @@ public interface AdministradorControllerDocs {
         ResponseEntity<AdministradorDTO> atualizarAdmNormalParaMaster(
                 @Parameter(description = "Nome de usuário do administrador a ser promovido para ADMINMASTER")
                 @PathVariable String nomeUsuario);
+
+    @Operation(summary = "Ativa ou desativa a conta do administrador", responses = {
+        @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<String> toggleStatus(
+                @Parameter(description = "Nome de usuário do administrador") 
+                @PathVariable String nomeUsuario);
+
+
+        @Operation(summary = "Bloqueia a conta do administrador", responses = {
+                @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusConta.class))),
+                @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+                @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<StatusConta> bloquearAdministrador(
+                @Parameter(description = "Nome de usuário do administrador") 
+                @PathVariable String nomeUsuario);
+
 
 }

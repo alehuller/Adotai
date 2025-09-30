@@ -6,7 +6,8 @@ INSERT INTO
         nome_usuario,
         foto_perfil,
         cell,
-        role
+        role,
+        status
     )
 VALUES
     (
@@ -16,7 +17,8 @@ VALUES
         'NomeAdministradorMestre',
         'foto',
         '(11) 99999-9999',
-        'ADMINMASTER'
+        'ADMINMASTER',
+        'ATIVA'
     ),
     (
         'Administrador 1',
@@ -25,5 +27,6 @@ VALUES
         'NomeAdministrador1',
         'foto',
         '(11) 91234-6789',
-        'ADMIN'
+        'ADMIN',
+        'ATIVA'
     );
