@@ -39,6 +39,7 @@ import br.com.alevhvm.adotai.ong.dto.OngFiltroDTO;
 import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
 import br.com.alevhvm.adotai.ong.exception.OngNotFoundException;
 import br.com.alevhvm.adotai.ong.exception.OngNulaException;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.ong.model.Ong;
@@ -80,7 +81,7 @@ public class OngService {
     public PagedModel<EntityModel<OngDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos as ongs");
 
-        Page<Ong> ongPage = ongRepository.findAll(pageable);
+        Page<Ong> ongPage = ongRepository.findAllByStatus(StatusConta.ATIVA, pageable);
 
         logger.info("Encontrada(s) {} página(s), com {} Ong(s)", ongPage.getTotalPages(), ongPage.getTotalElements());
 
@@ -330,6 +331,31 @@ public class OngService {
         var ong = getOngEntityByNomeUsuario(nomeUsuario);
         ongRepository.deleteByNomeUsuario(nomeUsuario);
         logger.info("Ong {} deletada com sucesso.", nomeUsuario);
+    }
+
+    @Transactional
+    public String toggleStatus(String nomeUsuario) {
+        Ong ong = getOngEntityByNomeUsuario(nomeUsuario);
+
+        if (ong.getStatus() == StatusConta.ATIVA) {
+            logger.debug("Iniciando desativacao da conta {}", nomeUsuario);
+            ongRepository.desativarOng(nomeUsuario);
+            logger.info("Conta {} desativada com sucesso", nomeUsuario);
+        } else {
+            logger.debug("Iniciando ativacao da conta {}", nomeUsuario);
+            ongRepository.ativarOng(nomeUsuario);
+            logger.info("Conta {} ativada com sucesso", nomeUsuario);
+        }
+
+        return "Status atualizado com sucesso!";
+    }
+
+    @Transactional
+    public StatusConta bloquearConta(String nomeUsuario) {
+        logger.debug("Iniciando o bloqueio da ong {}", nomeUsuario);
+        ongRepository.bloquearOng(nomeUsuario);
+        logger.info("Ong {} bloqueado com sucesso", nomeUsuario);
+        return StatusConta.BLOQUEADA;
     }
 
     @Transactional(readOnly = true)
