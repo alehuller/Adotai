@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.alevhvm.adotai.auth.enums.Roles;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,6 +33,9 @@ public class LoginIdentityView implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
+    @Enumerated(EnumType.STRING)
+    private StatusConta status;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities().stream()
@@ -47,5 +51,15 @@ public class LoginIdentityView implements UserDetails {
     @Override
     public String getUsername() {
         return getEmail();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.status == StatusConta.ATIVA;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.status != StatusConta.BLOQUEADA;
     }
 }

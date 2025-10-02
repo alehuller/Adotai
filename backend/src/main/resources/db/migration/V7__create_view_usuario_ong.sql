@@ -5,7 +5,8 @@ SELECT
     email,
     senha,
     nome_usuario,
-    role
+    role,
+    status
 FROM
     usuario
 UNION
@@ -14,7 +15,8 @@ SELECT
     email,
     senha,
     nome_usuario,
-    role
+    role,
+    status
 FROM
     ong
 UNION
@@ -23,6 +25,7 @@ SELECT
     email,
     senha,
     nome_usuario,
-    role
+    role,
+    status
 from
     administrador;
