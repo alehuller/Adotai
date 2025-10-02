@@ -1,6 +1,7 @@
 package br.com.alevhvm.adotai.usuario.repository;
 
 import br.com.alevhvm.adotai.animal.model.Animal;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.usuario.model.Usuario;
 import jakarta.transaction.Transactional;
 
@@ -43,4 +44,18 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Transactional
     @Query(value = "INSERT INTO usuario_animais_favoritos (usuario_id, animal_id) VALUES ((SELECT id FROM usuario WHERE nome_usuario = ?1), ?2)", nativeQuery = true)
     void adicionarAnimalAosFavoritos(String nomeUsuario, Long animalId);
+
+    Page<Usuario> findAllByStatus(StatusConta status, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Usuario u SET u.status = 'INATIVA' WHERE u.nomeUsuario = :nomeUsuario")
+    void desativarUsuario(String nomeUsuario);
+
+    @Modifying
+    @Query("UPDATE Usuario u SET u.status = 'ATIVA' WHERE u.nomeUsuario = :nomeUsuario")
+    void ativarUsuario(String nomeUsuario);
+
+    @Modifying
+    @Query("UPDATE Usuario u SET u.status = 'BLOQUEADA' WHERE u.nomeUsuario = :nomeUsuario")
+    void bloquearUsuario(String nomeUsuario);
 }

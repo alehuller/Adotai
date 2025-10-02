@@ -66,6 +66,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/{nomeUsuario}").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/{nomeUsuario}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/mudarStatus/{nomeUsuario}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/usuarios/bloquearUsuario/{nomeUsuario}").hasAnyRole("ADMIN")
 
                         // Rotas de ong
                         .requestMatchers(HttpMethod.GET, "/api/v1/ongs/{id}").hasRole("ADMIN")

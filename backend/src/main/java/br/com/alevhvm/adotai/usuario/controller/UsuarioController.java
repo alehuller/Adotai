@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevhvm.adotai.common.docs.UsuarioControllerDocs;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
@@ -179,5 +180,22 @@ public class UsuarioController implements UsuarioControllerDocs {
                                 .findAnimaisFavoritosByNomeUsuario(nomeUsuario, pageable);
 
                 return ResponseEntity.ok(pagedModel);
+        }
+
+        @SecurityRequirement(name = "bearerAuth")
+        @PreAuthorize("#nomeUsuario == principal.nomeUsuario or hasRole('ADMIN')")
+        @PatchMapping(value = "/mudarStatus/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                MediaType.APPLICATION_XML })
+        public ResponseEntity<String> toggleStatus(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+                String resposta = usuarioService.toggleStatus(nomeUsuario);
+                return ResponseEntity.ok(resposta);
+        }
+
+        @SecurityRequirement(name = "bearerAuth")
+        @PatchMapping(value = "/bloquearUsuario/{nomeUsuario}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                MediaType.APPLICATION_XML })
+        public ResponseEntity<StatusConta> bloquearUsuario(@PathVariable(name = "nomeUsuario") String nomeUsuario) {
+                StatusConta status = usuarioService.bloquearConta(nomeUsuario);
+                return ResponseEntity.ok(status);
         }
 }

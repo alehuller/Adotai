@@ -12,6 +12,7 @@ import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
 import br.com.alevhvm.adotai.usuario.exception.UsuarioNotFoundException;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.common.mapper.DozerMapper;
 import br.com.alevhvm.adotai.adocao.model.Adocao;
 import br.com.alevhvm.adotai.animal.model.Animal;
@@ -85,7 +86,7 @@ public class UsuarioService {
     public PagedModel<EntityModel<UsuarioDTO>> findAll(Pageable pageable) {
         logger.debug("Iniciando busca de todos os usuarios");
 
-        Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
+        Page<Usuario> usuarioPage = usuarioRepository.findAllByStatus(StatusConta.ATIVA, pageable);
 
         logger.info("Encontrada(s) {} página(s), com {} Usuario(s)", usuarioPage.getTotalPages(), usuarioPage.getTotalElements());
 
@@ -329,6 +330,31 @@ public class UsuarioService {
 
         usuario.getAnimaisFavoritos().removeIf(animal -> animal.getIdAnimal().equals(animalId));
         usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public String toggleStatus(String nomeUsuario) {
+        Usuario usuario = getUsuarioEntityByNomeUsuario(nomeUsuario);
+
+        if (usuario.getStatus() == StatusConta.ATIVA) {
+            logger.debug("Iniciando desativacao da conta {}", nomeUsuario);
+            usuarioRepository.desativarUsuario(nomeUsuario);
+            logger.info("Conta {} desativada com sucesso", nomeUsuario);
+        } else {
+            logger.debug("Iniciando ativacao da conta {}", nomeUsuario);
+            usuarioRepository.ativarUsuario(nomeUsuario);
+            logger.info("Conta {} ativada com sucesso", nomeUsuario);
+        }
+
+        return "Status atualizado com sucesso!";
+    }
+
+    @Transactional
+    public StatusConta bloquearConta(String nomeUsuario) {
+        logger.debug("Iniciando o bloqueio do usuario {}", nomeUsuario);
+        usuarioRepository.bloquearUsuario(nomeUsuario);
+        logger.info("Usuario {} bloqueado com sucesso", nomeUsuario);
+        return StatusConta.BLOQUEADA;
     }
 
     @Transactional(readOnly = true)
