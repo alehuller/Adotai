@@ -94,6 +94,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/adocoes/{id}").hasRole("ONG")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/adocoes/{id}").hasRole("ONG")
 
+                        // Rotas de avaliação
+                        .requestMatchers(HttpMethod.GET, "/api/v1/avaliacoes/{id}").hasAnyRole("ONG", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/avaliacoes").hasAnyRole("USER", "ADMIN")
+
                         // Qualquer outra rota com permissão não especificada fica liberada
                         .anyRequest().permitAll())
 
