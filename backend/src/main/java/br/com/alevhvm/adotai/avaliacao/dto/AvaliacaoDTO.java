@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonPropertyOrder({ "id", "nota", "comentario", "dataCriacao"})
 public class AvaliacaoDTO extends RepresentationModel<AvaliacaoDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
