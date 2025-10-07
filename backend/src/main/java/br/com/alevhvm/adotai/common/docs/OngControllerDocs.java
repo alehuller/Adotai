@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
 import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
 import br.com.alevhvm.adotai.ong.dto.OngDTO;
 import br.com.alevhvm.adotai.ong.dto.OngUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -129,4 +130,27 @@ public interface OngControllerDocs {
     ResponseEntity<?> deletarOngPorNomeUsuario(
             @Parameter(description = "Nome de usuário da ONG a ser deletada") 
             @PathVariable String nomeUsuario);
+
+    @Operation(summary = "Ativa ou desativa a conta da ong", responses = {
+        @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<String> toggleStatus(
+                @Parameter(description = "Nome de usuário da ong") 
+                @PathVariable String nomeUsuario);
+
+
+        @Operation(summary = "Bloqueia a conta da ong", responses = {
+                @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusConta.class))),
+                @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+                @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<StatusConta> bloquearOng(
+                @Parameter(description = "Nome de usuário da ong") 
+                @PathVariable String nomeUsuario);
 }

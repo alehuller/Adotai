@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alevhvm.adotai.avaliacao.dto.AvaliacaoDTO;
 import br.com.alevhvm.adotai.avaliacao.service.AvaliacaoService;
+import br.com.alevhvm.adotai.common.docs.AvaliacaoControllerDocs;
 import br.com.alevhvm.adotai.common.util.MediaType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/avaliacoes")
-public class AvaliacaoController {
+public class AvaliacaoController implements AvaliacaoControllerDocs{
     
     private final AvaliacaoService avaliacaoService;
 

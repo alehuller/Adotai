@@ -3,13 +3,17 @@ package br.com.alevhvm.adotai.common.docs;
 import java.util.Map;
 
 import br.com.alevhvm.adotai.auth.dto.RegistroDTO;
+import br.com.alevhvm.adotai.common.enums.StatusConta;
+
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.alevhvm.adotai.adocao.dto.AdocaoDTO;
+import br.com.alevhvm.adotai.animal.dto.AnimalDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioDTO;
 import br.com.alevhvm.adotai.usuario.dto.UsuarioUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -117,4 +121,69 @@ public interface UsuarioControllerDocs {
     ResponseEntity<?> deletarPorNomeUsuario(
             @Parameter(description = "Nome de usuário do usuário a ser deletado") 
             @PathVariable String nomeUsuario);
+
+    @Operation(summary = "Adiciona ou remove um animal dos favoritos do usuário", 
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Success", 
+                content = @Content(mediaType = "application/json", 
+                schema = @Schema(implementation = Map.class))),
+                @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+                @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<Map<String, Object>> toggleFavorito(
+                @Parameter(description = "Nome de usuário do dono da conta") 
+                @PathVariable String nomeUsuario,
+                @Parameter(description = "ID do animal a ser favoritado ou removido dos favoritos") 
+                @PathVariable Long animalId);
+
+
+        @Operation(summary = "Lista os animais favoritados de um usuário", 
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Success", 
+                content = @Content(mediaType = "application/json", 
+                array = @ArraySchema(schema = @Schema(implementation = AnimalDTO.class)))),
+                @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
+                @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+                @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<PagedModel<EntityModel<AnimalDTO>>> listarAnimaisFavoritos(
+                @Parameter(description = "Nome de usuário do dono da conta") 
+                @PathVariable String nomeUsuario,
+                @Parameter(description = "Número da página (padrão 0)") 
+                @RequestParam(value = "page", defaultValue = "0") int page,
+                @Parameter(description = "Tamanho da página (padrão 10)") 
+                @RequestParam(value = "size", defaultValue = "10") int size,
+                @Parameter(description = "Direção da ordenação: asc ou desc (padrão asc)") 
+                @RequestParam(value = "direction", defaultValue = "asc") String direction,
+                @Parameter(description = "Campo de ordenação (padrão nome)") 
+                @RequestParam(value = "sort", defaultValue = "nome") String sort);
+
+
+    @Operation(summary = "Ativa ou desativa a conta do usuario", responses = {
+        @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<String> toggleStatus(
+                @Parameter(description = "Nome de usuário") 
+                @PathVariable String nomeUsuario);
+
+        @Operation(summary = "Bloqueia a conta do usuario", responses = {
+                @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusConta.class))),
+                @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+                @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
+        })
+        ResponseEntity<StatusConta> bloquearUsuario(
+                @Parameter(description = "Nome de usuário") 
+                @PathVariable String nomeUsuario);
 }
