@@ -17,6 +17,7 @@ import br.com.alevhvm.adotai.adocao.exception.AdocaoNotFoundException;
 import br.com.alevhvm.adotai.adocao.exception.AdocaoNulaException;
 import br.com.alevhvm.adotai.animal.exception.AnimalNotFoundException;
 import br.com.alevhvm.adotai.animal.exception.AnimalNuloException;
+import br.com.alevhvm.adotai.avaliacao.exception.AvaliacaoNotFoundException;
 import br.com.alevhvm.adotai.ong.exception.CepException;
 import br.com.alevhvm.adotai.ong.exception.ConversaoEnderecoParaJsonException;
 import br.com.alevhvm.adotai.ong.exception.ConversaoJsonParaEnderecoException;
@@ -288,5 +289,15 @@ public class CustomExceptionHandler {
             request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AvaliacaoNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleAvaliacaoNotFound(AvaliacaoNotFoundException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            new Date(),
+            List.of(ex.getMessage()),
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 }
