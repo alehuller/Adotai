@@ -2,6 +2,12 @@ package br.com.alevhvm.adotai.avaliacao.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +42,48 @@ public class AvaliacaoService {
     private final OngRepository ongRepository;
 
     private final AvaliacaoRepository avaliacaoRepository;
+
+    private final PagedResourcesAssembler<AvaliacaoDTO> assembler;
+
+    private final PagedResourcesAssembler<AvaliacaoDTO> avaliacaoDtoAssembler;
     
+    @Transactional(readOnly = true)
+    public PagedModel<EntityModel<AvaliacaoDTO>> findAll(Pageable pageable) {
+        logger.debug("Iniciando busca de todos as avaliacoes");
+
+        Page<Avaliacao> avaliacaoPage = avaliacaoRepository.findAll(pageable);
+        
+        logger.info("Encontrada(s) {} pagina(s), com {} Avaliacao(oes)", avaliacaoPage.getTotalPages(), avaliacaoPage.getTotalElements());
+
+        Page<AvaliacaoDTO> avaliacaoDtosPage = avaliacaoPage.map(a -> DozerMapper.parseObject(a, AvaliacaoDTO.class));
+        avaliacaoDtosPage
+                .map(a -> a.add(linkTo(methodOn(AvaliacaoController.class).acharAvaliacaoPorId(a.getKey())).withSelfRel()));
+
+        Link link = linkTo(methodOn(AvaliacaoController.class).listarTodasAvaliacoes(pageable.getPageNumber(),
+                pageable.getPageSize(), "asc")).withSelfRel();
+        return assembler.toModel(avaliacaoDtosPage, link);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedModel<EntityModel<AvaliacaoDTO>> findAllAvaliacoesByOngId(Long id, Pageable pageable) {
+        logger.debug("Iniciando busca de todas as avaliacoes da ong de id {}", id);
+
+        Page<Avaliacao> avaliacaoPage = avaliacaoRepository.findAvaliacoesByOngId(id, pageable);
+
+        logger.info("Encontrada(s) {} página(s), com {} Avaliacao(oes)", avaliacaoPage.getTotalPages(), avaliacaoPage.getTotalElements());
+
+        Page<AvaliacaoDTO> avaliacaoDtoPage = avaliacaoPage.map(a -> DozerMapper.parseObject(a, AvaliacaoDTO.class));
+
+        avaliacaoDtoPage = avaliacaoDtoPage.map(
+                dto -> dto.add(linkTo(methodOn(AvaliacaoController.class).acharAvaliacaoPorId(dto.getKey())).withSelfRel()));
+
+        Link selfLink = linkTo(methodOn(AvaliacaoController.class)
+                .listarAvaliacoesDeUmaOng(id, pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return avaliacaoDtoAssembler.toModel(avaliacaoDtoPage, selfLink);
+    }
+
     @Transactional(readOnly = true)
     public AvaliacaoDTO findById(Long id) {
         logger.debug("Iniciando busca de avaliacao com id = {}", id);
@@ -83,5 +130,11 @@ public class AvaliacaoService {
 
         logger.info("Avaliacao criada com sucesso.");
         return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public Double calcularMedia(Long id) {
+        logger.debug("Iniciando o calculo da media de uma Ong");
+        return avaliacaoRepository.calcularMediaByOngId(id);
     }
 }
