@@ -95,6 +95,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/adocoes/{id}").hasRole("ONG")
 
                         // Rotas de avaliação
+                        .requestMatchers(HttpMethod.GET, "/api/v1/avaliacoes").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/avaliacoes/{id}").hasAnyRole("ONG", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/avaliacoes").hasAnyRole("USER", "ADMIN")
 
