@@ -30,6 +30,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -136,5 +138,20 @@ public class AvaliacaoService {
     public Double calcularMedia(Long id) {
         logger.debug("Iniciando o calculo da media de uma Ong");
         return avaliacaoRepository.calcularMediaByOngId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> findAllAverage() {
+        logger.debug("Iniciando busca de todas as medias de avaliacao das ongs");
+
+        List<Map<String, Object>> resultado = avaliacaoRepository.calcularMediaPorTodasOngs();
+
+        if(resultado.isEmpty()) {
+            logger.warn("Nenhuma media encontrada");
+        } else {
+            logger.info("Medias calculadas com sucesso para {} ONGs.", resultado.size());
+        }
+
+        return resultado;
     }
 }

@@ -1,6 +1,8 @@
 package br.com.alevhvm.adotai.avaliacao.controller;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -89,5 +91,12 @@ public class AvaliacaoController implements AvaliacaoControllerDocs{
     public ResponseEntity<Double> media(@PathVariable(value = "id") Long id) {
         Double media = avaliacaoService.calcularMedia(id);
         return ResponseEntity.ok(media);
+    }
+
+    @GetMapping(value = "/ongs/medias", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_YML,
+                    MediaType.APPLICATION_XML })
+    public ResponseEntity<List<Map<String, Object>>> listarTodasMediasDeAvaliacaoDasOngs() {
+            List<Map<String, Object>> medias = avaliacaoService.findAllAverage();
+            return ResponseEntity.ok(medias);
     }
 }
